@@ -1,0 +1,697 @@
+{
+ "problems": [
+  {
+   "id": "kth-largest-element",
+   "num": 1,
+   "leet_id": 215,
+   "title_cn": "数组中的第K个最大元素",
+   "title_en": "Kth Largest Element in an Array",
+   "difficulty": "中等",
+   "category": "heap",
+   "tags": [
+    "数组",
+    "分治",
+    "快速选择",
+    "排序",
+    "堆（优先队列）"
+   ],
+   "statement": {
+    "desc": [
+     "给定整数数组 `nums` 和整数 `k`，请返回数组中第 `k` 个最大的元素。注意是排序后的第 k 个最大元素，而不是第 k 个不同的元素。你必须设计并实现时间复杂度为 `O(n)` 的算法解决此问题。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [3,2,1,5,6,4], k = 2",
+      "output": "5"
+     },
+     {
+      "input": "nums = [3,2,3,1,2,4,5,5,6], k = 4",
+      "output": "4"
+     }
+    ],
+    "constraints": [
+     "1 <= k <= nums.length <= 10⁵",
+     "-10⁴ <= nums[i] <= 10⁴"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "维护一个**大小为 k 的小顶堆**：遍历数组逐个 push；堆超过 k 时弹出堆顶（当前最小）。扫完后堆里恰好是最大的 k 个数，**堆顶就是第 k 大**。",
+     "为什么小顶堆而不是大顶堆？大顶堆要装下全部 n 个；小顶堆永远只留 k 个「擂主」，规模恒定 → O(n log k)，且当 k ≪ n 时远快于排序。",
+     "O(n) 正解是快速选择（partition 后只递归一侧），期望 O(n)；面试常两者都写。"
+    ],
+    "steps": [
+     "建空堆，遍历 nums",
+     "push 当前数并上浮（siftUp，O(log k)）",
+     "堆大小 > k → 弹出堆顶（换到尾 pop，再下沉 siftDown）",
+     "遍历结束返回堆顶"
+    ],
+    "complexity": {
+     "time": "O(n log k)",
+     "space": "O(k)"
+    },
+    "code": "class Solution:\n    def findKthLargest(self, nums: List[int], k: int) -> int:\n        import heapq\n        heap = []                        # 小顶堆，最多 k 个\n        for x in nums:\n            heapq.heappush(heap, x)\n            if len(heap) > k:\n                heapq.heappop(heap)      # 弹掉最小的\n        return heap[0]                   # 堆顶 = 第 k 大"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       3,
+       2,
+       1,
+       5,
+       6,
+       4
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "heap",
+      "id": "h",
+      "items": [],
+      "label": "小顶堆（≤k 个）"
+     },
+     {
+      "t": "var",
+      "id": "k",
+      "v": 2,
+      "label": "k"
+     },
+     {
+      "t": "var",
+      "id": "ans",
+      "v": "?",
+      "label": "答案"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：nums=[3,2,1,5,6,4] 求 k=2 的最大元素 → 4? 不，第 2 大是 5。策略：小顶堆只留 k 个「擂主」，堆顶 = 第 k 大"
+     },
+     {
+      "say": "push 3 → 堆 = [3]",
+      "add": {
+       "h": [
+        3
+       ]
+      }
+     },
+     {
+      "say": "push 2：2 < 父 3 → 上浮。小顶堆：堆顶永远是堆里最小的",
+      "add": {
+       "h": [
+        2
+       ]
+      },
+      "swap": {
+       "h": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "push 1：1 < 父 3 → 上浮",
+      "add": {
+       "h": [
+        1
+       ]
+      },
+      "swap": {
+       "h": [
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "继续上浮到顶 → 堆 = [1,2,3]",
+      "swap": {
+       "h": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "堆大小 3 > k=2！把堆顶（最小者）换到尾部准备弹出",
+      "swap": {
+       "h": [
+        0,
+        2
+       ]
+      }
+     },
+     {
+      "say": "弹出 1 → 堆里永远只装当前最大的 2 个数",
+      "swap": {
+       "h": [
+        0,
+        1
+       ]
+      },
+      "del": {
+       "h": 1
+      }
+     },
+     {
+      "say": "push 5：5 ≥ 父 3，无需上浮（堆 = [2,3,5]）",
+      "add": {
+       "h": [
+        5
+       ]
+      }
+     },
+     {
+      "say": "超 k：堆顶 2 换到尾",
+      "swap": {
+       "h": [
+        0,
+        2
+       ]
+      }
+     },
+     {
+      "say": "弹出 2，下沉调整 → 堆 = [3,5]",
+      "swap": {
+       "h": [
+        0,
+        1
+       ]
+      },
+      "del": {
+       "h": 1
+      }
+     },
+     {
+      "say": "push 6：6 > 父 5，不上浮（堆 = [3,5,6]）",
+      "add": {
+       "h": [
+        6
+       ]
+      }
+     },
+     {
+      "say": "超 k：堆顶 3 换到尾",
+      "swap": {
+       "h": [
+        0,
+        2
+       ]
+      }
+     },
+     {
+      "say": "弹出 3 → 堆 = [5,6]",
+      "swap": {
+       "h": [
+        0,
+        1
+       ]
+      },
+      "del": {
+       "h": 1
+      }
+     },
+     {
+      "say": "push 4：4 < 父 6 → 上浮",
+      "add": {
+       "h": [
+        4
+       ]
+      },
+      "swap": {
+       "h": [
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "4 < 父 5 → 继续上浮到顶",
+      "swap": {
+       "h": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "但 4 比堆里已有的都小 → 它就是下一个要弹的：堆顶换到尾",
+      "swap": {
+       "h": [
+        0,
+        2
+       ]
+      }
+     },
+     {
+      "say": "弹出 4 → 堆稳定在 [5,6]",
+      "swap": {
+       "h": [
+        0,
+        1
+       ]
+      },
+      "del": {
+       "h": 1
+      }
+     },
+     {
+      "say": "遍历结束：堆里是最大的 k=2 个数，堆顶 = 第 2 大 = 5 ✓。复杂度 O(n log k)",
+      "set": {
+       "ans": "5"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "top-k-frequent-elements",
+   "num": 2,
+   "leet_id": 347,
+   "title_cn": "前 K 个高频元素",
+   "title_en": "Top K Frequent Elements",
+   "difficulty": "中等",
+   "category": "heap",
+   "tags": [
+    "数组",
+    "哈希表",
+    "分治",
+    "桶排序",
+    "计数",
+    "堆（优先队列）"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个整数数组 `nums` 和一个整数 `k`，请你返回其中出现频率前 `k` 高的元素。你可以按**任意顺序**返回答案。进阶：时间复杂度必须优于 `O(n log n)`。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [1,1,1,2,2,3], k = 2",
+      "output": "[1,2]"
+     },
+     {
+      "input": "nums = [1], k = 1",
+      "output": "[1]"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 10⁵",
+     "k 的取值范围是 [1, 数组中不相同的元素的个数]",
+     "题目保证答案唯一"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "两步走：① HashMap 一遍扫描统计频次；② 按「频次」选前 k 大 —— 正是 215 题的堆套路：小顶堆按频次保 k 个，堆顶就是第 k 高频。",
+     "push/pop 的比较键是**频次**而不是元素值；堆里每个元素记录 `(元素, 频次)`。",
+     "复杂度 O(n log k)，优于 O(n log n)。进阶：频次上限为 n，可用 n+1 个桶按频次分装，从高往低收集 → O(n)。"
+    ],
+    "steps": [
+     "HashMap 统计每个元素的出现次数",
+     "遍历计数表：`(元素, 频次)` push 进按频次的小顶堆",
+     "堆大小 > k → 弹出堆顶（频次最小）",
+     "弹出堆中全部元素，收集元素值"
+    ],
+    "complexity": {
+     "time": "O(n log k)",
+     "space": "O(n)（哈希表）"
+    },
+    "code": "class Solution:\n    def topKFrequent(self, nums: List[int], k: int) -> List[int]:\n        import heapq\n        from collections import Counter\n        cnt = Counter(nums)                       # ① 统计频次\n        heap = []                                 # ② 小顶堆按频次保 k 个\n        for num, c in cnt.items():\n            heapq.heappush(heap, (c, num))\n            if len(heap) > k:\n                heapq.heappop(heap)\n        return [num for c, num in heap]           # ③ 收集"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       1,
+       1,
+       1,
+       2,
+       2,
+       3
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "map",
+      "id": "cnt",
+      "label": "频次表"
+     },
+     {
+      "t": "heap",
+      "id": "h",
+      "items": [],
+      "label": "小顶堆（按频次，≤k 个）"
+     },
+     {
+      "t": "array",
+      "id": "ans",
+      "vals": [],
+      "label": "答案"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：nums=[1,1,1,2,2,3]，k=2 → 前 2 高频 [1,2]。① HashMap 统计频次"
+     },
+     {
+      "say": "一遍扫描得频次表：1→3 次、2→2 次、3→1 次",
+      "add": {
+       "cnt": [
+        [
+         "1",
+         3
+        ],
+        [
+         "2",
+         2
+        ],
+        [
+         "3",
+         1
+        ]
+       ]
+      },
+      "hl": {
+       "cnt": [
+        [
+         0,
+         null
+        ],
+        [
+         1,
+         null
+        ],
+        [
+         2,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "② 按「频次」建小顶堆保 k=2 个：堆顶 = 第 2 高频。push (1, 频次 3)",
+      "add": {
+       "h": [
+        "1:3"
+       ]
+      }
+     },
+     {
+      "say": "push (2, 频次 2)：2 < 3 → 上浮，堆顶变为频次最小者",
+      "add": {
+       "h": [
+        "2:2"
+       ]
+      },
+      "swap": {
+       "h": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "push (3, 频次 1)：比父小，上浮",
+      "add": {
+       "h": [
+        "3:1"
+       ]
+      },
+      "swap": {
+       "h": [
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "继续上浮到顶 —— 频次 1 的元素 3 位于堆顶",
+      "swap": {
+       "h": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "堆大小 3 > k=2：堆顶换到尾部准备弹出",
+      "swap": {
+       "h": [
+        0,
+        2
+       ]
+      }
+     },
+     {
+      "say": "弹出 3:1（频次最低者被淘汰）→ 堆里只剩前 2 高频",
+      "swap": {
+       "h": [
+        0,
+        1
+       ]
+      },
+      "del": {
+       "h": 1
+      }
+     },
+     {
+      "say": "③ 收集：堆中元素为 1 和 2 → 答案 [1,2] ✓（顺序任意）",
+      "set": {
+       "ans": [
+        [
+         0,
+         "1"
+        ],
+        [
+         1,
+         "2"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "复杂度 O(n log k)。进阶 O(n) 桶排序：频次 ∈ [1,n]，建 n+1 个桶按频次放元素，从高频桶向低频桶收集直到取满 k 个"
+     }
+    ]
+   }
+  },
+  {
+   "id": "find-median-from-data-stream",
+   "num": 3,
+   "leet_id": 295,
+   "title_cn": "数据流的中位数",
+   "title_en": "Find Median from Data Stream",
+   "difficulty": "困难",
+   "category": "heap",
+   "tags": [
+    "设计",
+    "双指针",
+    "数据流",
+    "排序",
+    "堆（优先队列）"
+   ],
+   "statement": {
+    "desc": [
+     "中位数是有序整数列表中的中间值。如果列表长度为偶数，中位数是中间两个值的平均值。实现 `MedianFinder` 类：`addNum(num)` 从数据流中添加一个整数；`findMedian()` 返回目前所有元素的中位数。"
+    ],
+    "examples": [
+     {
+      "input": "[\"MedianFinder\",\"addNum\",\"addNum\",\"findMedian\",\"addNum\",\"findMedian\"]\n[[],[1],[2],[],[3],[]]",
+      "output": "[null,null,null,1.50000,null,2.00000]"
+     },
+     {
+      "input": "[\"MedianFinder\",\"addNum\",\"findMedian\"]\n[[],[2],[]]",
+      "output": "[null,null,2.00000]"
+     }
+    ],
+    "constraints": [
+     "-10⁵ <= num <= 10⁵",
+     "在调用 findMedian 之前，数据结构中至少有一个元素",
+     "最多 5 × 10⁴ 次调用 addNum / findMedian"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "**对顶堆**：左堆是大顶堆（存较小一半），右堆是小顶堆（存较大一半），且左堆元素数 = 右堆数或多 1。",
+     "addNum 三步规范化：① 先 push 进左堆；② 把左堆最大挪给右堆；③ 若右堆比左堆长，把右堆最小挪回左堆。每个数至多被挪 2 次，O(log n)。",
+     "findMedian O(1)：总数奇数 → 左堆顶；偶数 → (左顶 + 右顶) / 2。两堆顶恰好卡在中位数两侧，这就是「对顶」的含义。"
+    ],
+    "steps": [
+     "维护 left（大顶堆，较小一半）与 right（小顶堆，较大一半）",
+     "addNum：push 进 left → left 顶挪给 right → right 过长时把最小挪回 left",
+     "findMedian：奇数个返回 left 顶；偶数个返回两顶均值"
+    ],
+    "complexity": {
+     "time": "addNum O(log n)，findMedian O(1)",
+     "space": "O(n)"
+    },
+    "code": "class MedianFinder:\n    def __init__(self):\n        import heapq\n        self.left = []    # 大顶堆（存负数模拟）：较小的一半\n        self.right = []   # 小顶堆：较大的一半\n\n    def addNum(self, num: int) -> None:\n        import heapq\n        heapq.heappush(self.left, -num)             # ① 先进左堆\n        heapq.heappush(self.right, -heapq.heappop(self.left))  # ② 左堆最大给右堆\n        if len(self.right) > len(self.left):        # ③ 右堆过长则挪回\n            heapq.heappush(self.left, -heapq.heappop(self.right))\n\n    def findMedian(self) -> float:\n        import heapq\n        if len(self.left) > len(self.right):\n            return float(-self.left[0])\n        return (-self.left[0] + self.right[0]) / 2"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "heap",
+      "id": "lo",
+      "items": [],
+      "label": "左堆（大顶，较小一半）"
+     },
+     {
+      "t": "heap",
+      "id": "hi",
+      "items": [],
+      "label": "右堆（小顶，较大一半）"
+     },
+     {
+      "t": "var",
+      "id": "median",
+      "v": "?",
+      "label": "中位数"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：数据流依次来 2、3、4，每次 addNum 后可随时 findMedian。用对顶堆：左堆大顶存较小一半、右堆小顶存较大一半（图中堆均按值正确排堆序）"
+     },
+     {
+      "say": "addNum(2)：先丢进左堆",
+      "add": {
+       "lo": [
+        2
+       ]
+      }
+     },
+     {
+      "say": "规范化①：左堆最大挪给右堆",
+      "add": {
+       "hi": [
+        2
+       ]
+      },
+      "del": {
+       "lo": 1
+      }
+     },
+     {
+      "say": "规范化②：右堆(1 个) > 左堆(0 个) → 最小挪回左堆。findMedian = 左堆顶 2 ✓",
+      "add": {
+       "lo": [
+        2
+       ]
+      },
+      "set": {
+       "median": 2
+      },
+      "del": {
+       "hi": 1
+      }
+     },
+     {
+      "say": "addNum(3)：push 进左堆后上浮，保持大顶",
+      "add": {
+       "lo": [
+        3
+       ]
+      },
+      "swap": {
+       "lo": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "左堆最大（堆顶 3）准备挪走：堆顶换到尾",
+      "swap": {
+       "lo": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "弹出 3 给右堆 → 左=[2] 右=[3]。右堆(1)不比左堆(1)长，无需再挪",
+      "add": {
+       "hi": [
+        3
+       ]
+      },
+      "del": {
+       "lo": 1
+      }
+     },
+     {
+      "say": "addNum(3) 完成：findMedian = (左顶 2 + 右顶 3) / 2 = 2.5 ✓",
+      "set": {
+       "median": "2.5"
+      }
+     },
+     {
+      "say": "addNum(4)：push 进左堆，上浮成大顶 [4,2]",
+      "add": {
+       "lo": [
+        4
+       ]
+      },
+      "swap": {
+       "lo": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "堆顶 4 换到尾",
+      "swap": {
+       "lo": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "弹出 4 给右堆 → 右堆 = [3,4]，比左堆长 2 个 → 顶 3 换到尾",
+      "add": {
+       "hi": [
+        4
+       ]
+      },
+      "del": {
+       "lo": 1
+      }
+     },
+     {
+      "say": "右堆又过长：堆顶 3 换到尾",
+      "swap": {
+       "hi": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "挪回后：左=[3,2] 右=[4]。findMedian = 左堆顶 = 3 ✓（[2,3,4] 的中位数）",
+      "add": {
+       "lo": [
+        3
+       ]
+      },
+      "set": {
+       "median": 3
+      },
+      "del": {
+       "hi": 1
+      }
+     },
+     {
+      "say": "总结：addNum 每次至多 3 次 push/pop（O(log n)），findMedian O(1)。平衡不变量：len(左) - len(右) ∈ {0, 1}"
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,986 @@
+{
+ "problems": [
+  {
+   "id": "number-of-islands",
+   "num": 1,
+   "leet_id": 200,
+   "title_cn": "岛屿数量",
+   "title_en": "Number of Islands",
+   "difficulty": "中等",
+   "category": "graph",
+   "tags": [
+    "深度优先搜索",
+    "广度优先搜索",
+    "并查集",
+    "矩阵"
+   ],
+   "statement": {
+    "desc": [
+     "给你 `'1'`（陆地）和 `'0'`（水）组成的二维网格，计算岛屿数量。",
+     "岛屿：由相邻陆地连接形成（只算上下左右，不算对角）。假设网格四周都被水包围。"
+    ],
+    "examples": [
+     {
+      "input": "grid = [[\"1\",\"1\",\"0\",\"0\"],[\"1\",\"0\",\"1\",\"1\"],[\"0\",\"0\",\"1\",\"0\"]]",
+      "output": "2"
+     },
+     {
+      "input": "grid = [[\"1\",\"1\",\"1\"],[\"0\",\"0\",\"0\"],[\"1\",\"0\",\"1\"]]",
+      "output": "3"
+     }
+    ],
+    "constraints": [
+     "1 <= m, n <= 300",
+     "grid[i][j] 为 '0' 或 '1'"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "岛屿问题 = **连通块计数**。扫描网格，每遇到一个没访问过的 '1' 就意味着发现一座新岛：计数 +1，然后用 DFS/BFS 把整座岛「沉没」（都改成 '0'）防止重复统计。",
+     "DFS 沉岛：从起点向四个方向扩散，越界或遇到水就返回。每个格子最多被访问常数次。",
+     "如果不允许修改原网格，可以用 visited 数组或并查集（把相邻陆地合并，答案 = 连通分量数）。"
+    ],
+    "steps": [
+     "遍历每个格子 `(r, c)`",
+     "若 `grid[r][c] == '1'`：岛屿数 +1",
+     "从 `(r, c)` 出发 DFS：置 `'0'` 并向上下左右扩散",
+     "扫描结束后返回计数"
+    ],
+    "complexity": {
+     "time": "O(mn)",
+     "space": "O(mn)（最坏递归深度）"
+    },
+    "code": "class Solution:\n    def numIslands(self, grid: List[List[str]]) -> int:\n        def sink(r, c):                    # DFS 沉没整座岛\n            if not (0 <= r < len(grid) and 0 <= c < len(grid[0])):\n                return\n            if grid[r][c] != \"1\":\n                return\n            grid[r][c] = \"0\"               # 标记已访问\n            sink(r + 1, c); sink(r - 1, c)\n            sink(r, c + 1); sink(r, c - 1)\n        cnt = 0\n        for r in range(len(grid)):\n            for c in range(len(grid[0])):\n                if grid[r][c] == \"1\":      # 发现新岛\n                    cnt += 1\n                    sink(r, c)\n        return cnt"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "grid",
+      "id": "g",
+      "m": [
+       [
+        "1",
+        "1",
+        "0",
+        "0"
+       ],
+       [
+        "1",
+        "0",
+        "1",
+        "1"
+       ],
+       [
+        "0",
+        "0",
+        "1",
+        "0"
+       ]
+      ],
+      "label": "grid"
+     },
+     {
+      "t": "var",
+      "id": "cnt",
+      "v": 0,
+      "label": "岛屿数"
+     }
+    ],
+    "frames": [
+     {
+      "say": "连通块计数：扫到未访问的 '1' = 发现新岛，计数 +1 后 DFS 沉没整座岛",
+      "hl": {
+       "g": [
+        [
+         "0,0",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "扫到 (0,0)='1' → 发现第 1 座岛！开始 DFS 沉岛",
+      "set": {
+       "cnt": 1
+      },
+      "hl": {
+       "g": [
+        [
+         "0,0",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "沉没 (0,0)；它向右、向下都是陆地，继续扩散",
+      "set": {
+       "g": [
+        [
+         0,
+         [
+          0,
+          "0",
+          "0",
+          "0"
+         ]
+        ],
+        [
+         1,
+         [
+          "1",
+          "0",
+          "1",
+          "1"
+         ]
+        ],
+        [
+         2,
+         [
+          "0",
+          "0",
+          "1",
+          "0"
+         ]
+        ]
+       ]
+      },
+      "hl": {
+       "g": [
+        [
+         "0,0",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "沉没 (0,1)；继续向下到 (1,0)",
+      "set": {
+       "g": [
+        [
+         1,
+         [
+          "0",
+          "0",
+          "1",
+          "1"
+         ]
+        ]
+       ]
+      },
+      "hl": {
+       "g": [
+        [
+         "1,0",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "沉没 (1,0) → 第 1 座岛全部沉完（3 格），继续扫描",
+      "set": {
+       "g": [
+        [
+         1,
+         [
+          "0",
+          "0",
+          "1",
+          "1"
+         ]
+        ]
+       ]
+      },
+      "hl": {
+       "g": [
+        [
+         "1,0",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "扫到 (1,2)='1' → 发现第 2 座岛！",
+      "set": {
+       "cnt": 2
+      },
+      "hl": {
+       "g": [
+        [
+         "1,2",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "DFS 沉没 (1,2)、(1,3)、(2,2) → 第 2 座岛沉完",
+      "set": {
+       "g": [
+        [
+         1,
+         [
+          "0",
+          "0",
+          "0",
+          "0"
+         ]
+        ],
+        [
+         2,
+         [
+          "0",
+          "0",
+          "0",
+          "0"
+         ]
+        ]
+       ]
+      },
+      "hl": {
+       "g": [
+        [
+         "1,3",
+         null
+        ],
+        [
+         "2,2",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "扫描结束：共 2 座岛屿 ✓ — 每格进出各一次 O(mn)",
+      "hl": {
+       "g": [
+        [
+         "0,0",
+         null
+        ],
+        [
+         "1,2",
+         null
+        ]
+       ]
+      },
+      "set": {
+       "cnt": "2 ✓"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "rotting-oranges",
+   "num": 2,
+   "leet_id": 994,
+   "title_cn": "腐烂的橘子",
+   "title_en": "Rotting Oranges",
+   "difficulty": "中等",
+   "category": "graph",
+   "tags": [
+    "广度优先搜索",
+    "矩阵"
+   ],
+   "statement": {
+    "desc": [
+     "网格中：`0` 空、`1` 新鲜橘子、`2` 腐烂橘子。",
+     "每分钟，腐烂橘子**上下左右相邻**的新鲜橘子也会腐烂。返回直到单元格中没有新鲜橘子为止所必须经过的最小分钟数；若永远做不到，返回 `-1`。"
+    ],
+    "examples": [
+     {
+      "input": "grid = [[2,1,1],[1,1,0],[0,1,1]]",
+      "output": "4"
+     },
+     {
+      "input": "grid = [[2,1,1],[0,1,1],[1,0,1]]",
+      "output": "-1",
+      "explain": "左下角永远烂不到"
+     }
+    ],
+    "constraints": [
+     "m == grid.length, n == grid[i].length",
+     "1 <= m, n <= 10"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "**多源 BFS**：所有腐烂橘子是同一个起跑线上的源点，同时向外扩散——这正是「最小分钟数」的语义。把所有源点一次性入队，按层扩散。",
+     "先扫描网格：烂橘子入队、统计新鲜数 `fresh`。每轮（1 分钟）处理当前队列全部节点，把四邻的新鲜橘子腐烂并入队。",
+     "扩散结束后：`fresh == 0` 返回轮数，否则有孤立的橘子返回 -1。"
+    ],
+    "steps": [
+     "扫描：所有 2 入队；统计新鲜数",
+     "队列非空且仍有新鲜橘子时循环",
+     "一轮 = 处理当前队列全部节点（同一分钟）",
+     "四邻中新鲜的腐烂：`fresh -= 1` 并入队",
+     "结束：`fresh == 0` ? 轮数 : -1"
+    ],
+    "complexity": {
+     "time": "O(mn)",
+     "space": "O(mn)"
+    },
+    "code": "from collections import deque\n\nclass Solution:\n    def orangesRotting(self, grid: List[List[int]]) -> int:\n        m, n = len(grid), len(grid[0])\n        q, fresh = deque(), 0\n        for r in range(m):\n            for c in range(n):\n                if grid[r][c] == 2:   q.append((r, c))   # 多源起点\n                elif grid[r][c] == 1: fresh += 1\n        minutes = 0\n        while q and fresh:\n            minutes += 1\n            for _ in range(len(q)):  # 本轮同时扩散\n                r, c = q.popleft()\n                for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)):\n                    nr, nc = r + dr, c + dc\n                    if 0 <= nr < m and 0 <= nc < n and grid[nr][nc] == 1:\n                        grid[nr][nc] = 2\n                        fresh -= 1\n                        q.append((nr, nc))\n        return minutes if fresh == 0 else -1"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "grid",
+      "id": "g",
+      "m": [
+       [
+        2,
+        1,
+        1
+       ],
+       [
+        1,
+        1,
+        0
+       ],
+       [
+        0,
+        1,
+        1
+       ]
+      ],
+      "label": "grid（2烂 1鲜 0空）"
+     },
+     {
+      "t": "var",
+      "id": "t",
+      "v": 0,
+      "label": "分钟"
+     }
+    ],
+    "frames": [
+     {
+      "say": "多源 BFS：唯一的烂橘子 (0,0) 作为源点，每分钟同时向四邻扩散一格",
+      "hl": {
+       "g": [
+        [
+         "0,0",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 1 分钟：(0,0) 的邻居 (0,1)、(1,0) 腐烂",
+      "set": {
+       "t": 1,
+       "g": [
+        [
+         0,
+         [
+          2,
+          2,
+          1
+         ]
+        ],
+        [
+         1,
+         [
+          2,
+          1,
+          0
+         ]
+        ]
+       ]
+      },
+      "hl": {
+       "g": [
+        [
+         "0,1",
+         null
+        ],
+        [
+         "1,0",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 2 分钟：(0,1)→(0,2)；(1,0)→(1,1) 腐烂",
+      "set": {
+       "t": 2,
+       "g": [
+        [
+         0,
+         [
+          2,
+          2,
+          2
+         ]
+        ],
+        [
+         1,
+         [
+          2,
+          2,
+          0
+         ]
+        ]
+       ]
+      },
+      "hl": {
+       "g": [
+        [
+         "0,2",
+         null
+        ],
+        [
+         "1,1",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 3 分钟：(1,1)→(2,1) 腐烂（(1,2) 是空格，阻断扩散）",
+      "set": {
+       "t": 3,
+       "g": [
+        [
+         2,
+         [
+          0,
+          2,
+          1
+         ]
+        ]
+       ]
+      },
+      "hl": {
+       "g": [
+        [
+         "2,1",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 4 分钟：(2,1)→(2,2) 腐烂 → 全部腐烂！",
+      "set": {
+       "t": 4,
+       "g": [
+        [
+         2,
+         [
+          0,
+          2,
+          2
+         ]
+        ]
+       ]
+      },
+      "hl": {
+       "g": [
+        [
+         "2,2",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "新鲜数为 0 → 返回 4 分钟 ✓",
+      "hl": {
+       "g": [
+        [
+         "0,0",
+         null
+        ]
+       ]
+      },
+      "set": {
+       "t": "4 ✓"
+      }
+     },
+     {
+      "say": "注意扩散被空格挡住的情况：例 2 的左下角永远烂不到 → fresh>0，返回 -1",
+      "hl": {
+       "g": [
+        [
+         "0,0",
+         null
+        ]
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "course-schedule",
+   "num": 3,
+   "leet_id": 207,
+   "title_cn": "课程表",
+   "title_en": "Course Schedule",
+   "difficulty": "中等",
+   "category": "graph",
+   "tags": [
+    "深度优先搜索",
+    "广度优先搜索",
+    "图",
+    "拓扑排序"
+   ],
+   "statement": {
+    "desc": [
+     "`numCourses` 门课程，编号 0 到 n-1。`prerequisites[i] = [a, b]` 表示修 a 前必须先修 b。",
+     "判断是否能修完所有课程（依赖图中**无环**即可）。"
+    ],
+    "examples": [
+     {
+      "input": "numCourses = 4, prerequisites = [[1,0],[2,1],[3,2]]",
+      "output": "true",
+      "explain": "链式依赖 0→1→2→3，按顺序修"
+     },
+     {
+      "input": "numCourses = 2, prerequisites = [[1,0],[0,1]]",
+      "output": "false",
+      "explain": "互相等待成环"
+     }
+    ],
+    "constraints": [
+     "1 <= numCourses <= 2000",
+     "0 <= prerequisites.length <= 5000"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "课程 = 节点，先修关系 = 有向边。「能修完」⇔ 图中**无环**。标准解法是 **Kahn 拓扑排序（BFS）**。",
+     "统计每个节点的入度；入度为 0 的节点（无先修依赖）入队。出队一个课程就完成它，并把它的后继入度 -1——减到 0 的后继入队。",
+     "最后比较出队数量与课程数：有环的节点入度永远不会减到 0，数量对不上 → false。"
+    ],
+    "steps": [
+     "建邻接表 + 入度数组（`[a,b]`：b→a，a 的入度 +1）",
+     "所有入度为 0 的课程入队",
+     "出队 u：完成数 +1；把 u 的后继入度 -1",
+     "后继入度减到 0 → 入队",
+     "结束时 `done == numCourses` ? true : false"
+    ],
+    "complexity": {
+     "time": "O(V + E)",
+     "space": "O(V + E)"
+    },
+    "code": "from collections import deque\n\nclass Solution:\n    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:\n        g = [[] for _ in range(numCourses)]\n        indeg = [0] * numCourses\n        for a, b in prerequisites:   # b 是 a 的先修\n            g[b].append(a)\n            indeg[a] += 1\n        q = deque(i for i in range(numCourses) if indeg[i] == 0)\n        done = 0\n        while q:\n            u = q.popleft()\n            done += 1\n            for v in g[u]:           # 释放 u 的后继依赖\n                indeg[v] -= 1\n                if indeg[v] == 0:\n                    q.append(v)\n        return done == numCourses    # 有环则凑不满"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "graph",
+      "id": "g",
+      "nodes": [
+       0,
+       1,
+       2,
+       3
+      ],
+      "edges": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ]
+      ],
+      "label": "依赖图（箭头 = 先修→后修）"
+     },
+     {
+      "t": "map",
+      "id": "deg",
+      "kvs": [
+       [
+        "0",
+        0
+       ],
+       [
+        "1",
+        1
+       ],
+       [
+        "2",
+        1
+       ],
+       [
+        "3",
+        1
+       ]
+      ],
+      "label": "入度表"
+     },
+     {
+      "t": "queue",
+      "id": "q",
+      "items": [],
+      "label": "队列（入度=0）"
+     },
+     {
+      "t": "var",
+      "id": "done",
+      "v": 0,
+      "label": "已完成"
+     }
+    ],
+    "frames": [
+     {
+      "say": "能修完 ⇔ 无环。Kahn 拓扑：入度 0 的课程入队，完成后释放后继依赖",
+      "hl": {
+       "g": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "课程 0 入度 0（没有先修）→ 直接入队",
+      "add": {
+       "q": [
+        "0"
+       ]
+      },
+      "hl": {
+       "g": [
+        0
+       ],
+       "deg": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "出队 0 → 完成 1 门；后继 1 的入度 1-1=0 → 入队",
+      "del": {
+       "q": 1
+      },
+      "set": {
+       "done": 1
+      },
+      "add": {
+       "q": [
+        "1"
+       ],
+       "deg": [
+        [
+         "1",
+         0
+        ]
+       ]
+      },
+      "hl": {
+       "g": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "出队 1 → 完成 2 门；后继 2 入度归零 → 入队",
+      "del": {
+       "q": 1
+      },
+      "set": {
+       "done": 2
+      },
+      "add": {
+       "q": [
+        "2"
+       ],
+       "deg": [
+        [
+         "2",
+         0
+        ]
+       ]
+      },
+      "hl": {
+       "g": [
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "出队 2 → 完成 3 门；后继 3 入队",
+      "del": {
+       "q": 1
+      },
+      "set": {
+       "done": 3
+      },
+      "add": {
+       "q": [
+        "3"
+       ],
+       "deg": [
+        [
+         "3",
+         0
+        ]
+       ]
+      },
+      "hl": {
+       "g": [
+        2,
+        3
+       ]
+      }
+     },
+     {
+      "say": "出队 3 → 完成 4 门 = 课程总数！队列为空，无环 → 返回 true",
+      "del": {
+       "q": 1
+      },
+      "set": {
+       "done": "4 = 4 ✓"
+      },
+      "hl": {
+       "g": [
+        0,
+        1,
+        2,
+        3
+       ]
+      }
+     },
+     {
+      "say": "反例 [[1,0],[0,1]]：0 和 1 入度都是 1，永远没有入度 0 的起点 → 队列空时 done=1<2 → false",
+      "hl": {
+       "g": [
+        0
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "implement-trie-prefix-tree",
+   "num": 4,
+   "leet_id": 208,
+   "title_cn": "实现 Trie (前缀树)",
+   "title_en": "Implement Trie (Prefix Tree)",
+   "difficulty": "中等",
+   "category": "graph",
+   "tags": [
+    "设计",
+    "字典树",
+    "哈希表",
+    "字符串"
+   ],
+   "statement": {
+    "desc": [
+     "实现 **Trie（前缀树）**，支持：`insert(word)` 插入单词、`search(word)` 搜索完整单词、`startsWith(prefix)` 搜索前缀。",
+     "Trie：每个节点存一个字符，从根到节点的路径拼成字符串；查询 O(L) 与词表大小无关。"
+    ],
+    "examples": [
+     {
+      "input": "[\"Trie\",\"insert\",\"search\",\"search\",\"startsWith\"]",
+      "output": "-"
+     },
+     {
+      "input": "insert(\"apple\"); search(\"apple\") → true; search(\"app\") → false; startsWith(\"app\") → true",
+      "output": "-"
+     }
+    ],
+    "constraints": [
+     "1 <= word.length, prefix.length <= 2000",
+     "所有输入由小写字母组成"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "Trie 节点 = 哈希表（字符→孩子）+ 词尾标记 `is_end`。三个操作共用一个「沿字符走路」的辅助逻辑。",
+     "`insert`：逐字符下走，缺节点就建；走完把末节点标记 `is_end = True`（区分「单词」与「仅前缀」）。",
+     "`search` 与 `startsWith`：同样逐字符下走——任何字符缺失就失败；区别在于前者还要求末节点 `is_end == True`，后者只要路走通了就算前缀存在。"
+    ],
+    "steps": [
+     "节点结构：`children` 哈希表 + `is_end` 标记",
+     "`insert`：逐字符走，缺则建节点；末节点 `is_end = True`",
+     "`search`：逐字符走到底，要求 `is_end == True`",
+     "`startsWith`：逐字符走到底，不要求 `is_end`"
+    ],
+    "complexity": {
+     "time": "O(L)（L 为单词长度）",
+     "space": "O(字符集 × 总字符数)"
+    },
+    "code": "class Trie:\n    def __init__(self):\n        self.children = {}    # 字符 → 子节点\n        self.is_end = False   # 词尾标记\n\n    def insert(self, word: str) -> None:\n        node = self\n        for ch in word:\n            if ch not in node.children:\n                node.children[ch] = Trie()\n            node = node.children[ch]\n        node.is_end = True\n\n    def search(self, word: str) -> bool:\n        node = self._walk(word)\n        return node is not None and node.is_end\n\n    def startsWith(self, prefix: str) -> bool:\n        return self._walk(prefix) is not None\n\n    def _walk(self, s):\n        node = self\n        for ch in s:\n            if ch not in node.children:\n                return None\n            node = node.children[ch]\n        return node"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "t",
+      "mode": "dyn",
+      "root": {
+       "val": "root",
+       "children": [],
+       "id": 0
+      },
+      "label": "Trie"
+     },
+     {
+      "t": "var",
+      "id": "cur",
+      "v": "-",
+      "label": "当前插入"
+     }
+    ],
+    "frames": [
+     {
+      "say": "Trie = 前缀树：路径拼单词，词尾打标记。先插入 \"app\"",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "insert(\"app\")：根下无 'a' → 新建节点 a，游标移入",
+      "tree": {
+       "t": {
+        "add": "a"
+       }
+      },
+      "hl": {
+       "t": [
+        1
+       ]
+      },
+      "set": {
+       "cur": "app"
+      }
+     },
+     {
+      "say": "a 下无 'p' → 新建 p",
+      "tree": {
+       "t": {
+        "add": "p"
+       }
+      },
+      "hl": {
+       "t": [
+        2
+       ]
+      },
+      "set": {
+       "cur": "app"
+      }
+     },
+     {
+      "say": "再建 p → \"app\" 走完，末节点打上词尾标记 ★",
+      "tree": {
+       "t": {
+        "add": "p",
+        "edge": [
+         [
+          3,
+          "#f5a623"
+         ]
+        ]
+       }
+      },
+      "hl": {
+       "t": [
+        3
+       ]
+      },
+      "set": {
+       "cur": "app ✓"
+      }
+     },
+     {
+      "say": "insert(\"apple\")：前缀 app 已存在 → 沿路径走到末尾，只新建 l、e",
+      "tree": {
+       "t": {
+        "add": "l"
+       }
+      },
+      "hl": {
+       "t": [
+        4
+       ]
+      },
+      "set": {
+       "cur": "apple"
+      }
+     },
+     {
+      "say": "新建 e → \"apple\" 完成并标记 ★。前缀 app 与单词 apple 共享同一条路径！",
+      "tree": {
+       "t": {
+        "add": "e",
+        "edge": [
+         [
+          5,
+          "#f5a623"
+         ]
+        ]
+       }
+      },
+      "hl": {
+       "t": [
+        5
+       ]
+      },
+      "set": {
+       "cur": "apple ✓"
+      }
+     },
+     {
+      "say": "游标上移回根（节点保留），准备插入新单词",
+      "tree": {
+       "t": {
+        "up": 5
+       }
+      },
+      "hl": {
+       "t": [
+        0
+       ]
+      },
+      "set": {
+       "cur": "回到 root"
+      }
+     },
+     {
+      "say": "insert(\"bat\")：根下新建 b（后续 p、a、t 同理挂在 b 下）",
+      "tree": {
+       "t": {
+        "add": "b"
+       }
+      },
+      "hl": {
+       "t": [
+        6
+       ]
+      },
+      "set": {
+       "cur": "bat"
+      }
+     },
+     {
+      "say": "search(\"app\")：走到 app 节点 ✓ 且 is_end=★ → true；search(\"ap\")：路通但无 ★ → false；startsWith(\"ap\")：路通即 true。查询全部 O(L)",
+      "hl": {
+       "t": [
+        3
+       ]
+      }
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,282 @@
+{
+  "problems": [
+    {
+      "id": "valid-parentheses",
+      "num": 1,
+      "leet_id": 20,
+      "title_cn": "有效的括号",
+      "title_en": "Valid Parentheses",
+      "difficulty": "简单",
+      "category": "stack",
+      "tags": ["栈", "字符串"],
+      "statement": {
+        "desc": [
+          "给定一个只包括 `'('`，`')'`，`'{'`，`'}'`，`'['`，`']'` 的字符串 `s` ，判断字符串是否有效。",
+          "有效字符串需满足：左括号必须用相同类型的右括号闭合；左括号必须以正确的顺序闭合；每个右括号都有一个对应的相同类型的左括号。"
+        ],
+        "examples": [
+          { "input": "s = \"()[]{}\"", "output": "true" },
+          { "input": "s = \"(]\"", "output": "false" },
+          { "input": "s = \"([)]\"", "output": "false" },
+          { "input": "s = \"{[]}\"", "output": "true" }
+        ],
+        "constraints": ["1 <= s.length <= 10^4", "s 仅由括号 '()[]{}' 组成"]
+      },
+      "solution": {
+        "idea": [
+          "括号匹配是栈的教科书式应用：遇到**左括号入栈**等待匹配；遇到**右括号**时，栈顶必须恰好是对应的左括号——匹配则弹出，不匹配立即失败。",
+          "哈希表存配对关系 `{')': '(', ']': '[', '}': '{'}`。",
+          "最后栈必须为空（还有没被匹配的左括号也是无效）。"
+        ],
+        "steps": [
+          "初始化空栈与配对表 `pairs`",
+          "遍历字符：若是左括号，压栈",
+          "若是右括号：栈空或栈顶不是对应左括号 → 无效；否则弹栈",
+          "遍历结束后栈为空则有效，否则无效"
+        ],
+        "complexity": { "time": "O(n)", "space": "O(n)" },
+        "code": "class Solution:\n    def isValid(self, s: str) -> bool:\n        pairs = {')': '(', ']': '[', '}': '{'}\n        st = []\n        for ch in s:\n            if ch not in pairs:        # 左括号\n                st.append(ch)\n            elif not st or st.pop() != pairs[ch]:\n                return False           # 右括号无匹配\n        return not st                  # 栈空才有效\n"
+      },
+      "anim": {
+        "version": 1,
+        "meta": { "title": "有效的括号 · 栈匹配" },
+        "views": [
+          { "t": "array", "id": "s", "vals": ["{", "[", "(", ")", "]", "}"], "label": "s" },
+          { "t": "ptr", "id": "i", "on": "s", "name": "i", "i": 0, "dy": 1 },
+          { "t": "stack", "id": "st", "label": "栈", "items": [] },
+          { "t": "var", "id": "ok", "v": "?", "label": "结果" }
+        ],
+        "frames": [
+          { "say": "左括号入栈等匹配；右括号来时，栈顶必须是同类型的左括号", "hl": { "s": [0] } },
+          { "say": "i=0 '{'：左括号 → 入栈", "add": { "st": ["{"] }, "hl": { "s": [0] } },
+          { "say": "i=1 '['：入栈；i=2 '('：入栈。栈从底到顶 { [ (", "ptr": { "i": 2 }, "add": { "st": ["[", "("] }, "hl": { "s": [1, 2] } },
+          { "say": "i=3 ')'：右括号！栈顶 '(' 恰好匹配 → 弹出", "ptr": { "i": 3 }, "del": { "st": 1 }, "hl": { "s": [3] } },
+          { "say": "i=4 ']'：栈顶 '[' 匹配 → 弹出", "ptr": { "i": 4 }, "del": { "st": 1 }, "hl": { "s": [4] } },
+          { "say": "i=5 '}'：栈顶 '{' 匹配 → 弹出", "ptr": { "i": 5 }, "del": { "st": 1 }, "hl": { "s": [5] } },
+          { "say": "栈空 → 全部括号正确配对，返回 true。若中途栈顶不匹配或最后栈非空都是无效", "set": { "ok": "true ✓" }, "hl": { "ok": ["v"] } }
+        ]
+      }
+    },
+    {
+      "id": "min-stack",
+      "num": 2,
+      "leet_id": 155,
+      "title_cn": "最小栈",
+      "title_en": "Min Stack",
+      "difficulty": "中等",
+      "category": "stack",
+      "tags": ["栈", "设计"],
+      "statement": {
+        "desc": [
+          "设计一个支持 `push` ，`pop` ，`top` 操作，并能在常数时间内检索到最小元素的栈。",
+          "实现 MinStack 类：`push(x)` 将元素压入栈；`pop()` 删除栈顶元素；`top()` 获取栈顶元素；`getMin()` 获取栈中最小元素，每个函数时间复杂度均为 O(1)。"
+        ],
+        "examples": [
+          { "input": "[\"MinStack\",\"push\",\"push\",\"push\",\"getMin\",\"pop\",\"top\",\"getMin\"]\n[[],[-2],[0],[-3],[],[],[],[]]", "output": "[null,null,null,null,-3,null,0,-2]" }
+        ],
+        "constraints": ["-2^31 <= val <= 2^31 - 1", "pop、top 和 getMin 操作总是在非空栈上调用", "push、pop、top 和 getMin 最多被调用 3 * 10^4 次"]
+      },
+      "solution": {
+        "idea": [
+          "核心难点是 `getMin()` 要 O(1)。用一个**辅助栈**与主栈同步增减：辅助栈顶始终保存「当前栈内所有元素的最小值」。",
+          "push 时：辅助栈压入 `min(x, 辅助栈顶)`；pop 时两栈同步弹出。这样任意时刻辅助栈顶都是主栈的最小值。",
+          "也可以用「(值, 当前最小) 元组栈」或差值编码实现，本质相同。"
+        ],
+        "steps": [
+          "主栈 `st` 存数据，辅助栈 `min_st` 存「每个状态下的最小值」",
+          "`push(x)`：`st.push(x)`，`min_st.push(min(x, min_st.top))`",
+          "`pop()`：两栈同时弹出",
+          "`getMin()`：直接读 `min_st.top`"
+        ],
+        "complexity": { "time": "各操作均 O(1)", "space": "O(n)（辅助栈）" },
+        "code": "class MinStack:\n    def __init__(self):\n        self.st = []\n        self.min_st = []          # min_st[i] = st[:i+1] 的最小值\n\n    def push(self, val: int) -> None:\n        self.st.append(val)\n        cur = self.min_st[-1] if self.min_st else val\n        self.min_st.append(min(cur, val))\n\n    def pop(self) -> None:\n        self.st.pop()\n        self.min_st.pop()\n\n    def top(self) -> int:\n        return self.st[-1]\n\n    def getMin(self) -> int:\n        return self.min_st[-1]\n"
+      },
+      "anim": {
+        "version": 1,
+        "meta": { "title": "最小栈 · 辅助同步栈" },
+        "views": [
+          { "t": "stack", "id": "st", "label": "主栈", "items": [] },
+          { "t": "stack", "id": "mst", "label": "辅助栈", "items": [] },
+          { "t": "var", "id": "out", "v": "-", "label": "输出" }
+        ],
+        "frames": [
+          { "say": "push(-2)：主栈压 -2；辅助栈压 min(-2, 空) = -2", "add": { "st": [-2], "mst": [-2] }, "hl": { "st": [0], "mst": [0] } },
+          { "say": "push(0)：主栈压 0；辅助栈压 min(0, -2) = -2（不更新最小）", "add": { "st": [0], "mst": [-2] }, "hl": { "st": [1], "mst": [1] } },
+          { "say": "push(-3)：主栈压 -3；辅助栈压 min(-3, -2) = -3 ← 新最小", "add": { "st": [-3], "mst": [-3] }, "hl": { "st": [2], "mst": [2] } },
+          { "say": "getMin()：读辅助栈顶 → -3 ✓ O(1) 直接取，无需遍历", "set": { "out": "getMin = -3" }, "hl": { "mst": [2] } },
+          { "say": "pop()：两栈同步弹出 -3。最小值自动「回退」到 -2", "del": { "st": 1, "mst": 1 }, "set": { "out": "pop" } },
+          { "say": "top()：主栈顶 → 0", "set": { "out": "top = 0" }, "hl": { "st": [1] } },
+          { "say": "getMin()：辅助栈顶 → -2 ✓ 辅助栈与主栈严格同步，任意时刻栈顶即全局最小", "set": { "out": "getMin = -2" }, "hl": { "mst": [1] } }
+        ]
+      }
+    },
+    {
+      "id": "decode-string",
+      "num": 3,
+      "leet_id": 394,
+      "title_cn": "字符串解码",
+      "title_en": "Decode String",
+      "difficulty": "中等",
+      "category": "stack",
+      "tags": ["栈", "递归", "字符串"],
+      "statement": {
+        "desc": [
+          "给定一个经过编码的字符串，返回它解码后的字符串。",
+          "编码规则为: `k[encoded_string]`，表示其中方括号内部的 `encoded_string` 正好重复 `k` 次。保证 k 为正整数且输入有效。你可以认为输入字符串总是有效的；输入字符串中没有额外的空格，且方括号总是符合格式要求的。"
+        ],
+        "examples": [
+          { "input": "s = \"3[a]2[bc]\"", "output": "\"aaabcbc\"" },
+          { "input": "s = \"3[a2[c]]\"", "output": "\"accaccacc\"" },
+          { "input": "s = \"2[abc]3[cd]ef\"", "output": "\"abcabccdcdcdef\"" }
+        ],
+        "constraints": ["1 <= s.length <= 30", "s 由小写英文字母、数字和方括号 '[]' 组成", "s 保证是一个有效输入"]
+      },
+      "solution": {
+        "idea": [
+          "嵌套的 `k[...]` 天然适合栈：用栈保存「外层的字符串」和「外层的重复次数」，进括号时压栈、出括号时弹出拼回。",
+          "具体：`cur` 记录当前层已解码的串，`num` 记录正在读的数字。遇到 `[` 把 `(cur, num)` 压栈并重置；遇到 `]` 弹出 `(prev, k)`，令 `cur = prev + cur * k`；遇到字母直接追加到 `cur`。"
+        ],
+        "steps": [
+          "初始化 `cur = \"\"`、`num = 0`、空栈",
+          "遇数字：`num = num*10 + int(ch)`（数字可能多位）",
+          "遇 `[`：压栈 `(cur, num)`，重置 `cur = \"\"`、`num = 0`",
+          "遇字母：`cur += ch`",
+          "遇 `]`：弹出 `(prev, k)`，`cur = prev + cur * k`",
+          "遍历结束，`cur` 即解码结果"
+        ],
+        "complexity": { "time": "O(n × 展开后长度)", "space": "O(展开深度)" },
+        "code": "class Solution:\n    def decodeString(self, s: str) -> str:\n        cur = \"\"\n        num = 0\n        st = []  # 保存 (外层串, 重复次数)\n        for ch in s:\n            if ch.isdigit():\n                num = num * 10 + int(ch)\n            elif ch == '[':\n                st.append((cur, num))   # 记住外层状态\n                cur, num = \"\", 0\n            elif ch == ']':\n                prev, k = st.pop()\n                cur = prev + cur * k    # 内层展开后拼回外层\n            else:\n                cur += ch\n        return cur\n"
+      },
+      "anim": {
+        "version": 1,
+        "meta": { "title": "字符串解码 · 双状态栈" },
+        "views": [
+          { "t": "array", "id": "s", "vals": ["3", "[", "a", "2", "[", "c", "]", "]"], "label": "s" },
+          { "t": "ptr", "id": "i", "on": "s", "name": "i", "i": 0, "dy": 1 },
+          { "t": "stack", "id": "st", "label": "栈(外层串|次数)", "items": [] },
+          { "t": "var", "id": "cur", "v": "\"\"", "label": "cur" }
+        ],
+        "frames": [
+          { "say": "读入 '3' → num=3", "set": { "cur": "num=3" }, "hl": { "s": [0] } },
+          { "say": "读入 '['：把外层状态 (\"\", 3) 压栈，cur、num 重置", "add": { "st": ["\"\"|3"] }, "set": { "cur": "\"\"" }, "hl": { "s": [1] } },
+          { "say": "读入 'a' → cur=\"a\"", "set": { "cur": "\"a\"" }, "hl": { "s": [2] } },
+          { "say": "读入 '2' → num=2；读入 '[' → 压栈 (\"a\", 2)，cur 重置", "ptr": { "i": 4 }, "add": { "st": ["a|2"] }, "set": { "cur": "\"\"" }, "hl": { "s": [3, 4] } },
+          { "say": "读入 'c' → cur=\"c\"", "ptr": { "i": 5 }, "set": { "cur": "\"c\"" }, "hl": { "s": [5] } },
+          { "say": "读入 ']'：弹出 (\"a\", 2) → cur = \"a\" + \"c\"×2 = \"acc\"", "ptr": { "i": 6 }, "del": { "st": 1 }, "set": { "cur": "\"acc\"" }, "hl": { "s": [6] } },
+          { "say": "读入 ']'：弹出 (\"\", 3) → cur = \"\" + \"acc\"×3 = \"accaccacc\"", "ptr": { "i": 7 }, "del": { "st": 1 }, "set": { "cur": "\"accaccacc\"" }, "hl": { "s": [7] } },
+          { "say": "解码完成 \"accaccacc\"。嵌套括号被栈完美展开，每层状态进出各一次", "hl": { "cur": ["v"] } }
+        ]
+      }
+    },
+    {
+      "id": "daily-temperatures",
+      "num": 4,
+      "leet_id": 739,
+      "title_cn": "每日温度",
+      "title_en": "Daily Temperatures",
+      "difficulty": "中等",
+      "category": "stack",
+      "tags": ["栈", "数组", "单调栈"],
+      "statement": {
+        "desc": [
+          "给定一个整数数组 `temperatures` ，表示每天的温度，返回一个数组 `answer` ，其中 `answer[i]` 是指：对于第 `i` 天，**下一个**更高温度出现在几天后。如果气温在这之后都不会升高，请在该位置用 `0` 来代替。"
+        ],
+        "examples": [
+          { "input": "temperatures = [73,74,75,71,69,72,76,73]", "output": "[1,1,4,2,1,1,0,0]" },
+          { "input": "temperatures = [30,40,50,60]", "output": "[1,1,1,0]" }
+        ],
+        "constraints": ["1 <= temperatures.length <= 10^5", "30 <= temperatures[i] <= 100"]
+      },
+      "solution": {
+        "idea": [
+          "暴力对每个 i 向右找是 O(n²)。**单调栈**把它降到 O(n)：栈里存下标，对应的温度从栈底到栈顶单调递减。",
+          "新的一天温度比栈顶高时，栈顶元素的「下一个更高温」就是今天——弹出并结算 `ans[栈顶] = i - 栈顶`。重复直到栈顶不小于当前温度，然后当前下标入栈。",
+          "每个下标最多入栈、出栈各一次，总时间 O(n)。"
+        ],
+        "steps": [
+          "初始化 `ans` 全 0，空栈（存下标）",
+          "遍历 `i`：当栈非空且 `temperatures[i] > temperatures[栈顶]`，弹出栈顶 `j` 并 `ans[j] = i - j`",
+          "把 `i` 入栈",
+          "结束后栈中残留的下标对应 `ans = 0`（右边没有更高温）"
+        ],
+        "complexity": { "time": "O(n)", "space": "O(n)" },
+        "code": "class Solution:\n    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:\n        n = len(temperatures)\n        ans = [0] * n\n        st = []  # 下标，对应温度单调递减\n        for i, t in enumerate(temperatures):\n            while st and temperatures[st[-1]] < t:\n                j = st.pop()\n                ans[j] = i - j       # j 的下一个更高温在 i\n            st.append(i)\n        return ans\n"
+      },
+      "anim": {
+        "version": 1,
+        "meta": { "title": "每日温度 · 单调栈" },
+        "views": [
+          { "t": "array", "id": "t", "vals": [73, 74, 75, 71, 69, 72, 76, 73], "label": "温度" },
+          { "t": "ptr", "id": "i", "on": "t", "name": "i", "i": 0, "dy": 1 },
+          { "t": "stack", "id": "st", "label": "栈(下标:温度)", "items": [] },
+          { "t": "array", "id": "ans", "vals": [0, 0, 0, 0, 0, 0, 0, 0], "label": "answer" }
+        ],
+        "frames": [
+          { "say": "栈内温度从底到顶递减。新温度更高时，被弹出的下标立即得到答案 i-j", "hl": { "t": [0] } },
+          { "say": "i=0 (73°)：入栈 → [0:73]", "add": { "st": ["0:73"] }, "hl": { "t": [0] } },
+          { "say": "i=1 (74°)：74>73 → 弹 0，ans[0]=1；74 入栈", "ptr": { "i": 1 }, "del": { "st": 1 }, "add": { "st": ["1:74"] }, "set": { "ans": [[0, 1]] }, "hl": { "t": [0, 1] } },
+          { "say": "i=2 (75°)：75>74 → 弹 1，ans[1]=1；75 入栈", "ptr": { "i": 2 }, "del": { "st": 1 }, "add": { "st": ["2:75"] }, "set": { "ans": [[1, 1]] }, "hl": { "t": [1, 2] } },
+          { "say": "i=3 (71°)、i=4 (69°)：都比栈顶小 → 直接入栈 [2:75, 3:71, 4:69]", "ptr": { "i": 4 }, "add": { "st": ["3:71", "4:69"] }, "hl": { "t": [3, 4] } },
+          { "say": "i=5 (72°)：72>69 弹 4（ans[4]=1）、72>71 弹 3（ans[3]=2）、72<75 停止 → 72 入栈", "ptr": { "i": 5 }, "del": { "st": 2 }, "add": { "st": ["5:72"] }, "set": { "ans": [[3, 2], [4, 1]] }, "hl": { "t": [3, 4, 5] } },
+          { "say": "i=6 (76°)：76>72 弹 5（ans[5]=1）、76>75 弹 2（ans[2]=4）→ 76 入栈", "ptr": { "i": 6 }, "del": { "st": 2 }, "add": { "st": ["6:76"] }, "set": { "ans": [[2, 4], [5, 1]] }, "hl": { "t": [2, 5, 6] } },
+          { "say": "i=7 (73°)：73<76 入栈后结束。栈中残留 [6:76, 7:73] 的 ans 保持 0 → 答案 [1,1,4,2,1,1,0,0]", "ptr": { "i": 7 }, "add": { "st": ["7:73"] }, "hl": { "ans": [0, 1, 2, 3, 4, 5, 6, 7] } }
+        ]
+      }
+    },
+    {
+      "id": "largest-rectangle-in-histogram",
+      "num": 5,
+      "leet_id": 84,
+      "title_cn": "柱状图中最大的矩形",
+      "title_en": "Largest Rectangle in Histogram",
+      "difficulty": "困难",
+      "category": "stack",
+      "tags": ["栈", "数组", "单调栈"],
+      "statement": {
+        "desc": [
+          "给定 n 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1 。",
+          "求在该柱状图中，能够勾勒出来的矩形的最大面积。"
+        ],
+        "examples": [
+          { "input": "heights = [2,1,5,6,2,3]", "output": "10", "explain": "最大的矩形为图中红色区域，面积 10（下标 2-3 的柱子，高 5 宽 2）" },
+          { "input": "heights = [2,4]", "output": "4" }
+        ],
+        "constraints": ["1 <= heights.length <= 10^5", "0 <= heights[i] <= 10^4"]
+      },
+      "solution": {
+        "idea": [
+          "对每根柱子问一句：以它为**高度**、能向左右延伸多宽？左右延伸到「第一根比它矮的柱子」为止。单调栈一次遍历同时算出所有柱子的这两个边界。",
+          "栈存下标、高度单调递增。遇到更矮的柱子时，栈顶柱子的左右边界都确定了：高 = 栈顶高度，宽 = `i - 新栈顶 - 1`，弹出并结算面积。",
+          "末尾加一根高度 0 的哨兵柱，保证所有柱子都被弹出结算。"
+        ],
+        "steps": [
+          "初始化空栈与 `best = 0`",
+          "遍历 `i`（含末尾哨兵 0）：当栈顶柱高 ≥ 当前柱高时，弹出栈顶 `j`，",
+          "结算以 `j` 为高的矩形：宽 = `i - 新栈顶 - 1`（若栈空则宽 = i），更新 `best`",
+          "当前 `i` 入栈，最后返回 `best`"
+        ],
+        "complexity": { "time": "O(n)", "space": "O(n)" },
+        "code": "class Solution:\n    def largestRectangleArea(self, heights: List[int]) -> int:\n        st = []            # 下标，高度单调递增\n        best = 0\n        hs = heights + [0] # 末尾哨兵，逼出栈中全部元素\n        for i, h in enumerate(hs):\n            while st and hs[st[-1]] >= h:\n                j = st.pop()\n                left = st[-1] if st else -1\n                best = max(best, hs[j] * (i - left - 1))\n            st.append(i)\n        return best\n"
+      },
+      "anim": {
+        "version": 1,
+        "meta": { "title": "柱状图最大矩形 · 单调递增栈" },
+        "views": [
+          { "t": "array", "id": "h", "vals": [2, 1, 5, 6, 2, 3], "label": "heights" },
+          { "t": "ptr", "id": "i", "on": "h", "name": "i", "i": 0, "dy": 1 },
+          { "t": "stack", "id": "st", "label": "栈(下标:高)", "items": [] },
+          { "t": "var", "id": "best", "v": 0, "label": "best" }
+        ],
+        "frames": [
+          { "say": "栈内高度递增。遇到更矮的柱子时，栈顶柱子的左右边界确定，可结算其最大矩形", "hl": { "h": [0] } },
+          { "say": "i=0 (高2)、i=1 (高1)：2≥1 → 弹 0 结算：高2×宽1=2，best=2；1 入栈", "ptr": { "i": 1 }, "add": { "st": ["1:1"] }, "set": { "best": 2 }, "hl": { "h": [0, 1] } },
+          { "say": "i=2 (高5)、i=3 (高6)：都比栈顶高 → 依次入栈 [1:1, 2:5, 3:6]", "ptr": { "i": 3 }, "add": { "st": ["2:5", "3:6"] }, "hl": { "h": [2, 3] } },
+          { "say": "i=4 (高2)：6≥2 弹 3 → 高6×宽1=6；5≥2 弹 2 → 高5×宽2=10，best=10！然后 2 入栈", "ptr": { "i": 4 }, "del": { "st": 2 }, "add": { "st": ["4:2"] }, "set": { "best": 10 }, "hl": { "h": [2, 3, 4] } },
+          { "say": "i=5 (高3)：3>2 入栈 → [1:1, 4:2, 5:3]", "ptr": { "i": 5 }, "add": { "st": ["5:3"] }, "hl": { "h": [5] } },
+          { "say": "末尾哨兵 0：3≥0 弹 5 → 3×1=3；2≥0 弹 4 → 2×4=8；1≥0 弹 1 → 1×6=6。best 仍是 10", "set": { "best": 10 }, "hl": { "h": [1, 4, 5] } },
+          { "say": "最大矩形面积 10（下标 2-3、高 5 宽 2）。每根柱子进出栈各一次 O(n)", "hl": { "h": [2, 3], "best": ["v"] } }
+        ]
+      }
+    }
+  ]
+}

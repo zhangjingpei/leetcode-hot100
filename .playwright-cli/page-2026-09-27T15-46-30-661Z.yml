@@ -1,0 +1,119 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "LC Hot 100 · 图解刷题" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: LC
+        - generic [ref=e6]: Hot 100 · 图解刷题
+      - generic [ref=e7] [cursor=pointer]: 标记为已完成
+  - main [ref=e10]:
+    - generic [ref=e11]:
+      - generic [ref=e12]: 回溯 · Hot 100 第 1 题
+      - heading "1. 全排列 中等" [level=1] [ref=e13]:
+        - text: 1. 全排列
+        - generic [ref=e14]: 中等
+      - generic [ref=e15]:
+        - generic [ref=e16]: Permutations
+        - text: LeetCode 46
+        - generic [ref=e17]: 数组
+        - generic [ref=e18]: 回溯
+    - generic [ref=e19]:
+      - heading "题目描述" [level=2] [ref=e20]
+      - paragraph [ref=e22]:
+        - text: 给定一个不含重复数字的数组
+        - code [ref=e23]: nums
+        - text: ，返回其所有可能的全排列。你可以按任意顺序返回答案。
+      - generic [ref=e24]:
+        - generic [ref=e25]: 示例 1：
+        - generic [ref=e26]: 输入：nums = [1,2,3] 输出：[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+      - generic [ref=e27]:
+        - generic [ref=e28]: 示例 2：
+        - generic [ref=e29]: 输入：nums = [0,1] 输出：[[0,1],[1,0]]
+      - generic [ref=e30]:
+        - text: 提示：
+        - list [ref=e31]:
+          - listitem [ref=e32]: 1 <= nums.length <= 6
+          - listitem [ref=e33]: "-10 <= nums[i] <= 10"
+          - listitem [ref=e34]: nums 中所有数字互不相同
+    - generic [ref=e35]:
+      - heading "思路讲解" [level=2] [ref=e36]
+      - generic [ref=e37]:
+        - paragraph [ref=e38]: 全排列 = 「每个位置依次选一个没用过的数」：第 0 位有 n 种选法，第 1 位有 n-1 种……走到叶子就收集一个排列。
+        - paragraph [ref=e39]:
+          - text: 用
+          - code [ref=e40]: used[]
+          - text: 标记哪些数已被当前路径占用：进入下一层前 做选择（标记 + 加入 path），递归返回后 撤销选择（取消标记 + 弹出 path）——这一来一回就是「回溯」。
+        - paragraph [ref=e41]: n 个元素每个都选一遍才到叶子，叶子共 n! 个，是典型的指数级搜索。
+      - list [ref=e42]:
+        - listitem [ref=e43]:
+          - text: 维护
+          - code [ref=e44]: path
+          - text: （当前排列）与
+          - code [ref=e45]: used[]
+          - text: （占用标记）
+        - listitem [ref=e46]:
+          - text: 若
+          - code [ref=e47]: path
+          - text: 长度 == n：收集一个排列，返回
+        - listitem [ref=e48]:
+          - text: 否则遍历每个未被使用的
+          - code [ref=e49]: nums[i]
+          - text: ：标记 → 加入 path → 递归
+        - listitem [ref=e50]: 递归返回后弹出 path、清除标记（回溯）
+    - generic [ref=e51]:
+      - heading "复杂度分析" [level=2] [ref=e52]
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - text: ⏱ 时间复杂度
+          - generic [ref=e55]: O(n × n!)（共 n! 个排列，每个拷贝 O(n)）
+        - generic [ref=e56]:
+          - text: 💾 空间复杂度
+          - generic [ref=e57]: O(n)（递归栈 + path + used）
+    - generic [ref=e58]:
+      - heading "Python 题解" [level=2] [ref=e59]
+      - generic [ref=e60]:
+        - button "复制代码" [ref=e61] [cursor=pointer]
+        - code [ref=e63]: "class Solution: def permute(self, nums: List[int]) -> List[List[int]]: res, path, used = [], [], [False] * len(nums) def dfs(): if len(path) == len(nums): # 填满 n 位，收集排列 res.append(path[:]) return for i in range(len(nums)): # 每层尝试每个没用过的数 if used[i]: continue used[i] = True # 做选择 path.append(nums[i]) dfs() # 进入下一层 path.pop() # 撤销选择（回溯） used[i] = False dfs() return res"
+    - generic [ref=e64]:
+      - heading "2D 算法动画讲解" [level=2] [ref=e65]
+      - generic [ref=e66]: ▶ 播放 · 空格 播放/暂停 · ← → 单步 · 拖动进度条可跳到任意一步
+      - generic [ref=e68]:
+        - img [ref=e70]:
+          - generic [ref=e73]: ∅
+          - generic [ref=e75]: 当前排列
+          - generic [ref=e77]: used
+          - generic [ref=e81]: "1"
+          - generic [ref=e83]: "0"
+          - generic [ref=e87]: "1"
+          - generic [ref=e89]: "1"
+          - generic [ref=e93]: "0"
+          - generic [ref=e95]: "2"
+          - generic [ref=e99]: 方案数
+          - generic [ref=e101]: "2"
+          - generic [ref=e123]: "2"
+          - generic [ref=e125]: "0"
+          - generic [ref=e133]: "1"
+          - generic [ref=e135]: "1"
+          - generic [ref=e145]: "2"
+          - generic [ref=e157]: "2"
+          - generic [ref=e161]: "1"
+        - generic [ref=e103]:
+          - generic [ref=e104]: 12/14
+          - generic [ref=e105]: 第 2 位选 1（跳过已用的 2）
+        - generic [ref=e106]:
+          - button "⏮" [ref=e107] [cursor=pointer]
+          - button "◀" [ref=e108] [cursor=pointer]
+          - button "▶" [ref=e109] [cursor=pointer]
+          - button "▶|" [active] [ref=e110] [cursor=pointer]
+          - button "⏭" [ref=e111] [cursor=pointer]
+          - slider [ref=e112] [cursor=pointer]: "11"
+          - combobox "播放速度" [ref=e113] [cursor=pointer]:
+            - option "0.5x"
+            - option "1x" [selected]
+            - option "1.5x"
+            - option "2x"
+  - generic [ref=e114]:
+    - link "← 4. 实现 Trie (前缀树)" [ref=e115] [cursor=pointer]:
+      - /url: /problem/implement-trie-prefix-tree
+    - link "2. 子集 →" [ref=e116] [cursor=pointer]:
+      - /url: /problem/subsets

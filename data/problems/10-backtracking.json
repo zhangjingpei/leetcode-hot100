@@ -1,0 +1,2325 @@
+{
+ "problems": [
+  {
+   "id": "permutations",
+   "num": 1,
+   "leet_id": 46,
+   "title_cn": "全排列",
+   "title_en": "Permutations",
+   "difficulty": "中等",
+   "category": "backtracking",
+   "tags": [
+    "数组",
+    "回溯"
+   ],
+   "statement": {
+    "desc": [
+     "给定一个**不含重复数字**的数组 `nums`，返回其所有可能的全排列。你可以按任意顺序返回答案。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [1,2,3]",
+      "output": "[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]"
+     },
+     {
+      "input": "nums = [0,1]",
+      "output": "[[0,1],[1,0]]"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 6",
+     "-10 <= nums[i] <= 10",
+     "nums 中所有数字互不相同"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "全排列 = 「每个位置依次选一个没用过的数」：第 0 位有 n 种选法，第 1 位有 n-1 种……走到叶子就收集一个排列。",
+     "用 `used[]` 标记哪些数已被当前路径占用：进入下一层前 **做选择**（标记 + 加入 path），递归返回后 **撤销选择**（取消标记 + 弹出 path）——这一来一回就是「回溯」。",
+     "n 个元素每个都选一遍才到叶子，叶子共 n! 个，是典型的指数级搜索。"
+    ],
+    "steps": [
+     "维护 `path`（当前排列）与 `used[]`（占用标记）",
+     "若 `path` 长度 == n：收集一个排列，返回",
+     "否则遍历每个未被使用的 `nums[i]`：标记 → 加入 path → 递归",
+     "递归返回后弹出 path、清除标记（回溯）"
+    ],
+    "complexity": {
+     "time": "O(n × n!)（共 n! 个排列，每个拷贝 O(n)）",
+     "space": "O(n)（递归栈 + path + used）"
+    },
+    "code": "class Solution:\n    def permute(self, nums: List[int]) -> List[List[int]]:\n        res, path, used = [], [], [False] * len(nums)\n\n        def dfs():\n            if len(path) == len(nums):          # 填满 n 位，收集排列\n                res.append(path[:])\n                return\n            for i in range(len(nums)):          # 每层尝试每个没用过的数\n                if used[i]:\n                    continue\n                used[i] = True                  # 做选择\n                path.append(nums[i])\n                dfs()                           # 进入下一层\n                path.pop()                      # 撤销选择（回溯）\n                used[i] = False\n\n        dfs()\n        return res"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "bt",
+      "mode": "dyn",
+      "root": {
+       "val": "∅",
+       "children": [],
+       "id": 0
+      },
+      "label": "回溯树"
+     },
+     {
+      "t": "array",
+      "id": "path",
+      "vals": [],
+      "label": "当前排列"
+     },
+     {
+      "t": "array",
+      "id": "used",
+      "vals": [
+       "0",
+       "0",
+       "0"
+      ],
+      "label": "used",
+      "cmap": {
+       "1": "#fde68a"
+      }
+     },
+     {
+      "t": "var",
+      "id": "cnt",
+      "v": 0,
+      "label": "方案数"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：nums = [1,2,3] 返回所有全排列。回溯树：每层从「还没用过的数」里选一个放到当前位置"
+     },
+     {
+      "say": "选 1 放第 1 位，used[0] 打标记，进入下一层",
+      "tree": {
+       "bt": {
+        "add": "1"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         0,
+         "1"
+        ]
+       ],
+       "used": [
+        [
+         0,
+         "1"
+        ]
+       ]
+      },
+      "hl": {
+       "path": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 2 位选 2（跳过已用的 1）",
+      "tree": {
+       "bt": {
+        "add": "2"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         1,
+         "2"
+        ]
+       ],
+       "used": [
+        [
+         1,
+         "1"
+        ]
+       ]
+      },
+      "hl": {
+       "path": [
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 3 位只能选 3 → 填满！收集排列 [1,2,3]",
+      "tree": {
+       "bt": {
+        "add": "3"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         2,
+         "3"
+        ]
+       ],
+       "used": [
+        [
+         2,
+         "1"
+        ]
+       ],
+       "cnt": 1
+      },
+      "hl": {
+       "path": [
+        [
+         2,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "回溯：撤销 3，used[2] 复位，返回上一层",
+      "tree": {
+       "bt": {
+        "back": 1
+       }
+      },
+      "set": {
+       "path": [
+        [
+         2,
+         ""
+        ]
+       ],
+       "used": [
+        [
+         2,
+         "0"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 2 位（选过 2）也没有别的可试，撤销 2",
+      "tree": {
+       "bt": {
+        "back": 1
+       }
+      },
+      "set": {
+       "path": [
+        [
+         1,
+         ""
+        ]
+       ],
+       "used": [
+        [
+         1,
+         "0"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 2 位换选 3",
+      "tree": {
+       "bt": {
+        "add": "3"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         1,
+         "3"
+        ]
+       ],
+       "used": [
+        [
+         2,
+         "1"
+        ]
+       ]
+      },
+      "hl": {
+       "path": [
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 3 位选 2 → [1,3,2]，再收一个",
+      "tree": {
+       "bt": {
+        "add": "2"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         2,
+         "2"
+        ]
+       ],
+       "used": [
+        [
+         1,
+         "1"
+        ]
+       ],
+       "cnt": 2
+      },
+      "hl": {
+       "path": [
+        [
+         2,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "1 开头的排列全部枚举完，连续回退两层",
+      "tree": {
+       "bt": {
+        "back": 2
+       }
+      },
+      "set": {
+       "path": [
+        [
+         2,
+         ""
+        ],
+        [
+         1,
+         ""
+        ]
+       ],
+       "used": [
+        [
+         1,
+         "0"
+        ],
+        [
+         2,
+         "0"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "撤销第 1 位的 1，回到根，换 2 开头",
+      "tree": {
+       "bt": {
+        "back": 1
+       }
+      },
+      "set": {
+       "path": [
+        [
+         0,
+         ""
+        ]
+       ],
+       "used": [
+        [
+         0,
+         "0"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "选 2 放第 1 位",
+      "tree": {
+       "bt": {
+        "add": "2"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         0,
+         "2"
+        ]
+       ],
+       "used": [
+        [
+         0,
+         "1"
+        ]
+       ]
+      },
+      "hl": {
+       "path": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 2 位选 1（跳过已用的 2）",
+      "tree": {
+       "bt": {
+        "add": "1"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         1,
+         "1"
+        ]
+       ],
+       "used": [
+        [
+         1,
+         "1"
+        ]
+       ]
+      },
+      "hl": {
+       "path": [
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 3 位选 3 → [2,1,3] ✓",
+      "tree": {
+       "bt": {
+        "add": "3"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         2,
+         "3"
+        ]
+       ],
+       "used": [
+        [
+         2,
+         "1"
+        ]
+       ],
+       "cnt": 3
+      },
+      "hl": {
+       "path": [
+        [
+         2,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "其余子树同理（[2,3,1]、[3,1,2]、[3,2,1]）→ 最终 3! = 6 个排列",
+      "tree": {
+       "bt": {
+        "back": 3
+       }
+      },
+      "set": {
+       "path": [
+        [
+         2,
+         ""
+        ],
+        [
+         1,
+         ""
+        ],
+        [
+         0,
+         ""
+        ]
+       ],
+       "used": [
+        [
+         2,
+         "0"
+        ],
+        [
+         1,
+         "0"
+        ],
+        [
+         0,
+         "0"
+        ]
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "subsets",
+   "num": 2,
+   "leet_id": 78,
+   "title_cn": "子集",
+   "title_en": "Subsets",
+   "difficulty": "中等",
+   "category": "backtracking",
+   "tags": [
+    "位运算",
+    "数组",
+    "回溯"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个整数数组 `nums`，数组中的元素**互不相同**。返回该数组所有可能的子集（幂集），解集**不能**包含重复的子集。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [1,2,3]",
+      "output": "[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]"
+     },
+     {
+      "input": "nums = [0]",
+      "output": "[[],[0]]"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 10",
+     "-10 <= nums[i] <= 10",
+     "nums 中所有元素互不相同"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "把子集看成「按顺序挑元素」：每层从当前下标 `i` 之后选一个数加入 path，进入每个节点时 path 恰好是一个子集。",
+     "关键在「只向前选」（`dfs(j+1)`）：2 永远不会回头选 1，因此 `[1,2]` 只会被生成一次，天然去重。",
+     "对比排列：排列每层可选所有未用元素（n! 个叶子），子集只向前选（2ⁿ 个节点），每个节点都收集。"
+    ],
+    "steps": [
+     "`dfs(i)`：从 `nums[i:]` 中选下一个元素",
+     "进入函数先把 `path` 拷贝进答案（每个节点都是一个子集）",
+     "枚举 `j ∈ [i, n)`：加入 `nums[j]` → `dfs(j+1)` → 弹出",
+     "根节点（i=0）先记录空集"
+    ],
+    "complexity": {
+     "time": "O(n × 2ⁿ)（2ⁿ 个子集，每个拷贝 O(n)）",
+     "space": "O(n)（递归栈 + path）"
+    },
+    "code": "class Solution:\n    def subsets(self, nums: List[int]) -> List[List[int]]:\n        res, path = [], []\n\n        def dfs(i):                      # 从 nums[i] 开始选下一个元素\n            res.append(path[:])          # 进入节点即收集：当前 path 是一个子集\n            for j in range(i, len(nums)):\n                path.append(nums[j])\n                dfs(j + 1)               # 只向前选，保证不重复\n                path.pop()\n\n        dfs(0)\n        return res"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "bt",
+      "mode": "dyn",
+      "root": {
+       "val": "∅",
+       "children": [],
+       "id": 0
+      },
+      "label": "回溯树"
+     },
+     {
+      "t": "array",
+      "id": "path",
+      "vals": [],
+      "label": "path"
+     },
+     {
+      "t": "var",
+      "id": "cnt",
+      "v": 0,
+      "label": "子集数"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：nums=[1,2,3] 的所有子集（2ⁿ 个）。回溯树：每层「从剩余元素里选下一个」，进入节点时 path 就是一个子集（以 [1,2] 演示）"
+     },
+     {
+      "say": "根节点：空集 [] 也是子集，先记录",
+      "set": {
+       "cnt": 1
+      }
+     },
+     {
+      "say": "选 1 → 子集 [1] ✓",
+      "tree": {
+       "bt": {
+        "add": "1"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         0,
+         "1"
+        ]
+       ],
+       "cnt": 2
+      },
+      "hl": {
+       "path": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "再选 2 —— 只能选比 1 大的（防止 [2,1] 重复）→ [1,2] ✓",
+      "tree": {
+       "bt": {
+        "add": "2"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         1,
+         "2"
+        ]
+       ],
+       "cnt": 3
+      },
+      "hl": {
+       "path": [
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "1 之后没有更大的元素，回溯",
+      "tree": {
+       "bt": {
+        "back": 1
+       }
+      },
+      "set": {
+       "path": [
+        [
+         1,
+         ""
+        ]
+       ]
+      }
+     },
+     {
+      "say": "撤销 1，回到根",
+      "tree": {
+       "bt": {
+        "back": 1
+       }
+      },
+      "set": {
+       "path": [
+        [
+         0,
+         ""
+        ]
+       ]
+      }
+     },
+     {
+      "say": "从 2 开始 → 子集 [2] ✓",
+      "tree": {
+       "bt": {
+        "add": "2"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         0,
+         "2"
+        ]
+       ],
+       "cnt": 4
+      },
+      "hl": {
+       "path": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "回溯，2 的分支到此结束",
+      "tree": {
+       "bt": {
+        "back": 1
+       }
+      },
+      "set": {
+       "path": [
+        [
+         0,
+         ""
+        ]
+       ]
+      }
+     },
+     {
+      "say": "[1,2] 共 4 = 2² 个子集集齐：[],[1],[2],[1,2]。「只向前选」是不重复的关键；n=3 时同样方式得 8 个"
+     }
+    ]
+   }
+  },
+  {
+   "id": "letter-combinations",
+   "num": 3,
+   "leet_id": 17,
+   "title_cn": "电话号码的字母组合",
+   "title_en": "Letter Combinations of a Phone Number",
+   "difficulty": "中等",
+   "category": "backtracking",
+   "tags": [
+    "哈希表",
+    "字符串",
+    "回溯"
+   ],
+   "statement": {
+    "desc": [
+     "给定一个仅包含数字 `2-9` 的字符串，返回所有它能表示的字母组合。数字到字母的映射与电话九宫格一致（2→abc, 3→def … 9→wxyz）。答案按任意顺序返回。"
+    ],
+    "examples": [
+     {
+      "input": "digits = \"23\"",
+      "output": "[\"ad\",\"ae\",\"af\",\"bd\",\"be\",\"bf\",\"cd\",\"ce\",\"cf\"]"
+     },
+     {
+      "input": "digits = \"\"",
+      "output": "[]"
+     }
+    ],
+    "constraints": [
+     "0 <= digits.length <= 4",
+     "digits[i] 是 ['2','9'] 的数字"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "这是最「纯粹」的组合回溯：第 i 位数字有若干候选字母，树的第 i 层就在这些候选里选一个。",
+     "树的高度 = 数字个数，路径 root→叶 拼出一个组合；组合总数 = 各层候选数之积（如 \"23\" → 3×3 = 9）。",
+     "注意空串特判：`dfs(0)` 直接进不去循环，返回空列表。"
+    ],
+    "steps": [
+     "建立数字 → 字母串的映射表 `phone`",
+     "`dfs(i)`：处理第 i 位数字，遍历其每个候选字母",
+     "字母入 buf → `dfs(i+1)` → 出 buf",
+     "i == len(digits) 时把 buf 拼成字符串收集"
+    ],
+    "complexity": {
+     "time": "O(4ⁿ × n)（最坏每位 4 个候选，拼接 O(n)）",
+     "space": "O(n)（递归栈 + buf）"
+    },
+    "code": "class Solution:\n    def letterCombinations(self, digits: str) -> List[str]:\n        if not digits:\n            return []\n        phone = {\"2\": \"abc\", \"3\": \"def\", \"4\": \"ghi\", \"5\": \"jkl\",\n                 \"6\": \"mno\", \"7\": \"pqrs\", \"8\": \"tuv\", \"9\": \"wxyz\"}\n        res, buf = [], []\n\n        def dfs(i):                      # 处理第 i 位数字\n            if i == len(digits):\n                res.append(\"\".join(buf))\n                return\n            for ch in phone[digits[i]]:  # 该位数字的每个候选字母\n                buf.append(ch)\n                dfs(i + 1)\n                buf.pop()\n\n        dfs(0)\n        return res"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "bt",
+      "mode": "dyn",
+      "root": {
+       "val": "∅",
+       "children": [],
+       "id": 0
+      },
+      "label": "回溯树"
+     },
+     {
+      "t": "var",
+      "id": "buf",
+      "v": "",
+      "label": "当前组合"
+     },
+     {
+      "t": "var",
+      "id": "cnt",
+      "v": 0,
+      "label": "组合数"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：digits='23'，2→abc、3→def，求所有字母组合。树的第 1 层 = '2' 的候选，第 2 层 = '3' 的候选"
+     },
+     {
+      "say": "第 1 位选 a",
+      "tree": {
+       "bt": {
+        "add": "a"
+       }
+      },
+      "set": {
+       "buf": "a"
+      },
+      "hl": {
+       "buf": [
+        [
+         "v",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 2 位选 d → 组合 \"ad\" ✓",
+      "tree": {
+       "bt": {
+        "add": "d"
+       }
+      },
+      "set": {
+       "buf": "ad",
+       "cnt": 1
+      },
+      "hl": {
+       "buf": [
+        [
+         "v",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "回溯：撤销 d",
+      "tree": {
+       "bt": {
+        "back": 1
+       }
+      },
+      "set": {
+       "buf": "a"
+      }
+     },
+     {
+      "say": "换选 e → \"ae\" ✓",
+      "tree": {
+       "bt": {
+        "add": "e"
+       }
+      },
+      "set": {
+       "buf": "ae",
+       "cnt": 2
+      },
+      "hl": {
+       "buf": [
+        [
+         "v",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "撤销 e",
+      "tree": {
+       "bt": {
+        "back": 1
+       }
+      },
+      "set": {
+       "buf": "a"
+      }
+     },
+     {
+      "say": "换选 f → \"af\" ✓ — a 开头的组合枚举完毕",
+      "tree": {
+       "bt": {
+        "add": "f"
+       }
+      },
+      "set": {
+       "buf": "af",
+       "cnt": 3
+      },
+      "hl": {
+       "buf": [
+        [
+         "v",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "连续回溯到根，换 b 开头",
+      "tree": {
+       "bt": {
+        "back": 2
+       }
+      },
+      "set": {
+       "buf": ""
+      }
+     },
+     {
+      "say": "第 1 位选 b",
+      "tree": {
+       "bt": {
+        "add": "b"
+       }
+      },
+      "set": {
+       "buf": "b"
+      },
+      "hl": {
+       "buf": [
+        [
+         "v",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 2 位选 d → \"bd\" ✓（be/bf/cd/ce/cf 同理）",
+      "tree": {
+       "bt": {
+        "add": "d"
+       }
+      },
+      "set": {
+       "buf": "bd",
+       "cnt": 4
+      },
+      "hl": {
+       "buf": [
+        [
+         "v",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "全部 3 × 3 = 9 个组合 —— 组合总数 = 各层候选数之乘积",
+      "tree": {
+       "bt": {
+        "back": 2
+       }
+      },
+      "set": {
+       "buf": ""
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "combination-sum",
+   "num": 4,
+   "leet_id": 39,
+   "title_cn": "组合总和",
+   "title_en": "Combination Sum",
+   "difficulty": "中等",
+   "category": "backtracking",
+   "tags": [
+    "数组",
+    "回溯",
+    "剪枝"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个**无重复元素**的整数数组 `candidates` 和目标整数 `target`，找出 `candidates` 中可以使数字和为目标数的所有不同组合。同一个数字可以**无限制重复**选取。"
+    ],
+    "examples": [
+     {
+      "input": "candidates = [2,3,6,7], target = 7",
+      "output": "[[2,2,3],[7]]"
+     },
+     {
+      "input": "candidates = [2,3,5], target = 8",
+      "output": "[[2,2,2,2],[2,3,3],[3,5]]"
+     }
+    ],
+    "constraints": [
+     "1 <= candidates.length <= 30",
+     "2 <= candidates[i] <= 40",
+     "candidates 无重复元素",
+     "1 <= target <= 40"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "与子集同款「只向前选」骨架，唯一区别：允许重复 → 递归传 `j` 而不是 `j+1`（本轮选过的还能再选）。",
+     "去重靠「起点递增」：组合 [2,2,3] 只会以 2,2,3 的顺序出现，不会出现 [3,2,2]。",
+     "剪枝：先把数组排序，若 `candidates[j] > remain` 直接 `break`——后面的数更大，全都不用试了。"
+    ],
+    "steps": [
+     "排序 candidates（便于剪枝）",
+     "`dfs(j, remain)`：从下标 j 开始凑 remain",
+     "remain == 0 → 收集方案；`candidates[j] > remain` → break 剪枝",
+     "选 `candidates[j]` 后递归 `dfs(j, remain - candidates[j])`（注意是 j，可重复）→ 回溯弹出"
+    ],
+    "complexity": {
+     "time": "O(2^target)（上界，实际剪枝后远小于）",
+     "space": "O(target)（递归栈深不超过 target/最小值）"
+    },
+    "code": "class Solution:\n    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:\n        candidates.sort()                # 排序便于剪枝\n        res, path = [], []\n\n        def dfs(j, remain):              # 从 candidates[j:] 凑 remain\n            if remain == 0:              # 凑够了，收集方案\n                res.append(path[:])\n                return\n            for k in range(j, len(candidates)):\n                if candidates[k] > remain:   # 剪枝：后面只会更大\n                    break\n                path.append(candidates[k])\n                dfs(k, remain - candidates[k])   # 传 k：允许重复选自己\n                path.pop()\n\n        dfs(0, target)\n        return res"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "bt",
+      "mode": "dyn",
+      "root": {
+       "val": "∅",
+       "children": [],
+       "id": 0
+      },
+      "label": "回溯树"
+     },
+     {
+      "t": "array",
+      "id": "path",
+      "vals": [],
+      "label": "path"
+     },
+     {
+      "t": "var",
+      "id": "sum",
+      "v": 0,
+      "label": "当前和"
+     },
+     {
+      "t": "var",
+      "id": "cnt",
+      "v": 0,
+      "label": "方案数"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：candidates=[2,3,6,7]，target=7，数字可无限重复选。树每层「从当前索引开始选」——起点递增保证组合不重复"
+     },
+     {
+      "say": "选 2（sum=2）。下一层仍可从 2 开始 ——「可重复选」就体现在递归传 k 而非 k+1",
+      "tree": {
+       "bt": {
+        "add": "2"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         0,
+         "2"
+        ]
+       ],
+       "sum": 2
+      },
+      "hl": {
+       "path": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "再选 2（sum=4）",
+      "tree": {
+       "bt": {
+        "add": "2"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         1,
+         "2"
+        ]
+       ],
+       "sum": 4
+      },
+      "hl": {
+       "path": [
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "再选 2（sum=6），离 7 只差 1",
+      "tree": {
+       "bt": {
+        "add": "2"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         2,
+         "2"
+        ]
+       ],
+       "sum": 6
+      },
+      "hl": {
+       "path": [
+        [
+         2,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "再选 2？2 > 7-6=1 —— 剪枝！（排序后后面的更大，直接 break 整个循环）",
+      "hl": {
+       "bt": [
+        [
+         3,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "剪枝后换试 3 → sum = 7 ✓ 收集 [2,2,3]",
+      "tree": {
+       "bt": {
+        "add": "3"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         3,
+         "3"
+        ]
+       ],
+       "sum": 7,
+       "cnt": 1
+      },
+      "hl": {
+       "path": [
+        [
+         3,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "回溯（3 之后试 6、7 都会超）",
+      "tree": {
+       "bt": {
+        "back": 1
+       }
+      },
+      "set": {
+       "path": [
+        [
+         3,
+         ""
+        ]
+       ],
+       "sum": 6
+      }
+     },
+     {
+      "say": "2 的子树探完，一路回退到根",
+      "tree": {
+       "bt": {
+        "back": 3
+       }
+      },
+      "set": {
+       "path": [
+        [
+         2,
+         ""
+        ],
+        [
+         1,
+         ""
+        ],
+        [
+         0,
+         ""
+        ]
+       ],
+       "sum": 0
+      }
+     },
+     {
+      "say": "换 3 开头：3+3=6 差 1 无解，3+6、3+7 都超 —— 整棵子树被剪掉",
+      "tree": {
+       "bt": {
+        "add": "3"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         0,
+         "3"
+        ]
+       ],
+       "sum": 3
+      },
+      "hl": {
+       "path": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "回退",
+      "tree": {
+       "bt": {
+        "back": 1
+       }
+      },
+      "set": {
+       "path": [
+        [
+         0,
+         ""
+        ]
+       ],
+       "sum": 0
+      }
+     },
+     {
+      "say": "6 开头：6 + 任何数都超过 7 → 无解",
+      "tree": {
+       "bt": {
+        "add": "6"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         0,
+         "6"
+        ]
+       ],
+       "sum": 6
+      },
+      "hl": {
+       "path": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "回退",
+      "tree": {
+       "bt": {
+        "back": 1
+       }
+      },
+      "set": {
+       "path": [
+        [
+         0,
+         ""
+        ]
+       ],
+       "sum": 0
+      }
+     },
+     {
+      "say": "7 → sum = 7 ✓ 收集 [7]",
+      "tree": {
+       "bt": {
+        "add": "7"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         0,
+         "7"
+        ]
+       ],
+       "sum": 7,
+       "cnt": 2
+      },
+      "hl": {
+       "path": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "答案 [[2,2,3],[7]]。两个要点：① 递归传 k 允许重复；② 排序 + remain 不够就 break，剪掉大半搜索树",
+      "tree": {
+       "bt": {
+        "back": 1
+       }
+      },
+      "set": {
+       "path": [
+        [
+         0,
+         ""
+        ]
+       ],
+       "sum": 0
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "generate-parentheses",
+   "num": 5,
+   "leet_id": 22,
+   "title_cn": "括号生成",
+   "title_en": "Generate Parentheses",
+   "difficulty": "中等",
+   "category": "backtracking",
+   "tags": [
+    "字符串",
+    "动态规划",
+    "回溯"
+   ],
+   "statement": {
+    "desc": [
+     "数字 `n` 代表生成括号的对数，请你设计一个函数，生成所有可能的**合法**括号组合。"
+    ],
+    "examples": [
+     {
+      "input": "n = 3",
+      "output": "[\"((()))\",\"(()())\",\"(())()\",\"()(())\",\"()()()\"]"
+     },
+     {
+      "input": "n = 1",
+      "output": "[\"()\"]"
+     }
+    ],
+    "constraints": [
+     "1 <= n <= 8"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "把生成过程看成逐字符填空，只有两条合法性铁律：① 左括号没用完（l < n）才能放 `(`；② 已放的右括号比左括号少（r < l）才能放 `)`。",
+     "这两条剪枝保证搜索树上**每条路径都是合法前缀**——不会走到死路再回头，效率极高。",
+     "长度到 2n 就收集。方案数是卡特兰数 Cₙ（n=3 → 5，n=8 → 1430）。"
+    ],
+    "steps": [
+     "维护计数 l（已放 `(` 数）、r（已放 `)` 数）",
+     "l < n → 可以放 `(`，递归 l+1",
+     "r < l → 可以放 `)`，递归 r+1",
+     "len(buf) == 2n → 收集一个组合"
+    ],
+    "complexity": {
+     "time": "O(4ⁿ / √n)（卡特兰数 × 每个串 O(n)）",
+     "space": "O(n)（递归栈 + buf）"
+    },
+    "code": "class Solution:\n    def generateParenthesis(self, n: int) -> List[str]:\n        res, buf = [], []\n\n        def dfs(l, r):               # 已放 l 个 ( 、r 个 )\n            if len(buf) == 2 * n:\n                res.append(\"\".join(buf))\n                return\n            if l < n:                # 铁律①：左括号还有剩余\n                buf.append(\"(\")\n                dfs(l + 1, r)\n                buf.pop()\n            if r < l:                # 铁律②：) 不能超过 (\n                buf.append(\")\")\n                dfs(l, r + 1)\n                buf.pop()\n\n        dfs(0, 0)\n        return res"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "bt",
+      "mode": "dyn",
+      "root": {
+       "val": "∅",
+       "children": [],
+       "id": 0
+      },
+      "label": "回溯树"
+     },
+     {
+      "t": "var",
+      "id": "l",
+      "v": 0,
+      "label": "已放 ("
+     },
+     {
+      "t": "var",
+      "id": "r",
+      "v": 0,
+      "label": "已放 )"
+     },
+     {
+      "t": "var",
+      "id": "cnt",
+      "v": 0,
+      "label": "方案数"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：n=3 生成所有合法括号串（共 5 个），以 n=2 演示。铁律：① l<n 才能放 (；② r<l 才能放 )"
+     },
+     {
+      "say": "放 ( （l=1 < n=2 ✓）",
+      "tree": {
+       "bt": {
+        "add": "("
+       }
+      },
+      "set": {
+       "l": 1
+      },
+      "hl": {
+       "l": [
+        [
+         "v",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "再放 ( —— 左括号用完，接下来只能放 )",
+      "tree": {
+       "bt": {
+        "add": "("
+       }
+      },
+      "set": {
+       "l": 2
+      },
+      "hl": {
+       "l": [
+        [
+         "v",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "放 ) （r=0 < l=2 ✓，r→1）",
+      "tree": {
+       "bt": {
+        "add": ")"
+       }
+      },
+      "set": {
+       "r": 1
+      },
+      "hl": {
+       "r": [
+        [
+         "v",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "再放 ) → 长度 4 = 2n 完成：「(())」 ✓",
+      "tree": {
+       "bt": {
+        "add": ")"
+       }
+      },
+      "set": {
+       "r": 2,
+       "cnt": 1
+      },
+      "hl": {
+       "r": [
+        [
+         "v",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "(( 之后到头了，回溯两个 )",
+      "tree": {
+       "bt": {
+        "back": 2
+       }
+      },
+      "set": {
+       "r": 0
+      }
+     },
+     {
+      "say": "撤销第二个 ( —— 它已经没有别的放法",
+      "tree": {
+       "bt": {
+        "back": 1
+       }
+      },
+      "set": {
+       "l": 1
+      }
+     },
+     {
+      "say": "在 ( 后改放 ) （r=0 < l=1 ✓）",
+      "tree": {
+       "bt": {
+        "add": ")"
+       }
+      },
+      "set": {
+       "r": 1
+      },
+      "hl": {
+       "r": [
+        [
+         "v",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "再放 ( （l=1 < 2 ✓）",
+      "tree": {
+       "bt": {
+        "add": "("
+       }
+      },
+      "set": {
+       "l": 2
+      },
+      "hl": {
+       "l": [
+        [
+         "v",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "放 ) → 「()()」 ✓ 两个方案集齐",
+      "tree": {
+       "bt": {
+        "add": ")"
+       }
+      },
+      "set": {
+       "r": 2,
+       "cnt": 2
+      },
+      "hl": {
+       "r": [
+        [
+         "v",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "n=2 → 2 个；n=3 → 卡特兰数 C₃ = 5 个。两条铁律让搜索树只长合法分支，从不需要「试错回退」",
+      "tree": {
+       "bt": {
+        "back": 4
+       }
+      },
+      "set": {
+       "l": 0,
+       "r": 0
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "word-search",
+   "num": 6,
+   "leet_id": 79,
+   "title_cn": "单词搜索",
+   "title_en": "Word Search",
+   "difficulty": "中等",
+   "category": "backtracking",
+   "tags": [
+    "数组",
+    "字符串",
+    "回溯",
+    "矩阵"
+   ],
+   "statement": {
+    "desc": [
+     "给定 `m x n` 网格 `board` 和字符串 `word`，判断 `word` 是否存在于网格中。单词必须按照字母顺序，通过**上下左右**相邻的单元格内的字母构成，同一个单元格内的字母**不允许被重复使用**。"
+    ],
+    "examples": [
+     {
+      "input": "board = [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], word = \"ABCCED\"",
+      "output": "true"
+     },
+     {
+      "input": "board = [[\"A\",\"B\",\"C\",\"E\"],[\"S\",\"F\",\"C\",\"S\"],[\"A\",\"D\",\"E\",\"E\"]], word = \"ABCB\"",
+      "output": "false"
+     }
+    ],
+    "constraints": [
+     "m == board.length, n == board[i].length",
+     "1 <= m, n <= 6",
+     "1 <= word.length <= 15",
+     "board 和 word 仅由大小写英文字母组成"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "网格 DFS 模板题：从每个格子尝试作为起点，一路向四邻匹配 `word[i+1]`，走不通就回溯。",
+     "**标记已访问**是关键——直接把当前格改写为 `#`（或任何非字母哨兵），递归返回时还原。原地标记省掉 visited 数组。",
+     "走到 `i == len(word)` 说明全部匹配成功。四方向递归用 `or` 短路：一条路通了就不再试其他方向。"
+    ],
+    "steps": [
+     "遍历所有格子作为起点，调用 `dfs(r, c, 0)`",
+     "`dfs`：越界或 `board[r][c] != word[i]` → False",
+     "i 是最后一个字符 → True",
+     "标记 `board[r][c] = '#'` → 四方向 `or` 递归 → 还原字符（回溯）"
+    ],
+    "complexity": {
+     "time": "O(m × n × 3^L)（L 为单词长，每步最多 3 个新方向）",
+     "space": "O(L)（递归栈）"
+    },
+    "code": "class Solution:\n    def exist(self, board: List[List[str]], word: str) -> bool:\n        m, n = len(board), len(board[0])\n\n        def dfs(r, c, i):\n            if i == len(word):           # 全部匹配\n                return True\n            if not (0 <= r < m and 0 <= c < n) or board[r][c] != word[i]:\n                return False\n            board[r][c] = \"#\"            # 标记：本条路径不许再用\n            found = (dfs(r + 1, c, i + 1) or dfs(r - 1, c, i + 1)\n                     or dfs(r, c + 1, i + 1) or dfs(r, c - 1, i + 1))\n            board[r][c] = word[i]        # 回溯：还原现场\n            return found\n\n        for r in range(m):\n            for c in range(n):\n                if dfs(r, c, 0):\n                    return True\n        return False"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "grid",
+      "id": "g",
+      "label": "board",
+      "m": [
+       [
+        "A",
+        "B",
+        "C",
+        "E"
+       ],
+       [
+        "S",
+        "F",
+        "C",
+        "S"
+       ],
+       [
+        "A",
+        "D",
+        "E",
+        "E"
+       ]
+      ],
+      "cmap": {
+       "#": "#e5e7eb"
+      }
+     },
+     {
+      "t": "var",
+      "id": "i",
+      "v": 0,
+      "label": "已匹配"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：在网格中找路径 ABCCED（上下左右相邻、格子不能重复用）。DFS + 回溯：走过就标记 #，走不通还原换向"
+     },
+     {
+      "say": "起点 (0,0)='A' 匹配 word[0] → 标记 #（防止本条路径重复进入），继续找 'B'",
+      "set": {
+       "g": [
+        [
+         0,
+         0,
+         "#"
+        ]
+       ],
+       "i": 1
+      },
+      "hl": {
+       "g": [
+        [
+         "0,0",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "找 'B'：右邻 (0,1) ✓ → 标记",
+      "set": {
+       "g": [
+        [
+         0,
+         1,
+         "#"
+        ]
+       ],
+       "i": 2
+      },
+      "hl": {
+       "g": [
+        [
+         "0,1",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "找 'C'：右邻 (0,2) ✓",
+      "set": {
+       "g": [
+        [
+         0,
+         2,
+         "#"
+        ]
+       ],
+       "i": 3
+      },
+      "hl": {
+       "g": [
+        [
+         "0,2",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "再找 'C'：下方 (1,2) ✓ —— 不同格子可以有相同字母，互不影响",
+      "set": {
+       "g": [
+        [
+         1,
+         2,
+         "#"
+        ]
+       ],
+       "i": 4
+      },
+      "hl": {
+       "g": [
+        [
+         "1,2",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "找 'E'：下方 (2,2) ✓",
+      "set": {
+       "g": [
+        [
+         2,
+         2,
+         "#"
+        ]
+       ],
+       "i": 5
+      },
+      "hl": {
+       "g": [
+        [
+         "2,2",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "找 'D'：左邻 (2,1) ✓ —— 全部匹配，返回 true！",
+      "set": {
+       "g": [
+        [
+         2,
+         1,
+         "#"
+        ]
+       ],
+       "i": 6
+      },
+      "hl": {
+       "g": [
+        [
+         "2,1",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "若某步四邻都不匹配：还原 # 换方向重试；所有起点都失败 → false（如 \"ABCB\"：B 处 (0,1) 已被本路径用过）"
+     }
+    ]
+   }
+  },
+  {
+   "id": "palindrome-partitioning",
+   "num": 7,
+   "leet_id": 131,
+   "title_cn": "分割回文串",
+   "title_en": "Palindrome Partitioning",
+   "difficulty": "中等",
+   "category": "backtracking",
+   "tags": [
+    "字符串",
+    "动态规划",
+    "回溯"
+   ],
+   "statement": {
+    "desc": [
+     "给你字符串 `s`，请将 `s` 分割成一些子串，使每个子串都是**回文串**。返回 `s` 所有可能的分割方案。"
+    ],
+    "examples": [
+     {
+      "input": "s = \"aab\"",
+      "output": "[[\"a\",\"a\",\"b\"],[\"aa\",\"b\"]]"
+     },
+     {
+      "input": "s = \"a\"",
+      "output": "[[\"a\"]]"
+     }
+    ],
+    "constraints": [
+     "1 <= s.length <= 16",
+     "s 仅由小写英文字母组成"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "「切割」型回溯：每层从剩余串的**前缀**里枚举一段，是回文才切下来，剩下部分交给下一层。",
+     "`dfs(i)` 表示处理 `s[i:]`：枚举终点 j，`s[i:j+1]` 是回文 → 加入 path → `dfs(j+1)` → 弹出。",
+     "i 到达 len(s) 说明切完了。回文判断 `seg == seg[::-1]` 已够用；串更长时可预处理 DP 表 O(1) 查询。"
+    ],
+    "steps": [
+     "`dfs(i)`：从 s[i] 开始切",
+     "i == len(s) → 收集 path",
+     "枚举终点 j：取段 `seg = s[i:j+1]`",
+     "seg 是回文 → 入 path → dfs(j+1) → 弹出（非回文直接跳过 = 剪枝）"
+    ],
+    "complexity": {
+     "time": "O(n × 2ⁿ)（最坏如 \"aaaa\"，2ⁿ⁻¹ 种切法 × 拷贝）",
+     "space": "O(n)（递归栈 + path）"
+    },
+    "code": "class Solution:\n    def partition(self, s: str) -> List[List[str]]:\n        res, path = [], []\n\n        def dfs(i):                      # 从 s[i] 开始切割\n            if i == len(s):\n                res.append(path[:])\n                return\n            for j in range(i, len(s)):   # 枚举本段终点\n                seg = s[i:j + 1]\n                if seg == seg[::-1]:     # 是回文才切（剪枝）\n                    path.append(seg)\n                    dfs(j + 1)\n                    path.pop()\n\n        dfs(0)\n        return res"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "bt",
+      "mode": "dyn",
+      "root": {
+       "val": "∅",
+       "children": [],
+       "id": 0
+      },
+      "label": "回溯树"
+     },
+     {
+      "t": "array",
+      "id": "path",
+      "vals": [],
+      "label": "path"
+     },
+     {
+      "t": "var",
+      "id": "cnt",
+      "v": 0,
+      "label": "方案数"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：把 s='aab' 切成若干回文子串，求所有切法。树 = 切割决策：每层从剩余串的回文前缀里选一段切下"
+     },
+     {
+      "say": "前缀 'a' 是回文 → 切下来（剩 'ab'）",
+      "tree": {
+       "bt": {
+        "add": "a"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         0,
+         "a"
+        ]
+       ]
+      },
+      "hl": {
+       "path": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "剩 'ab'：前缀 'a' ✓ → 切（剩 'b'）",
+      "tree": {
+       "bt": {
+        "add": "a"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         1,
+         "a"
+        ]
+       ]
+      },
+      "hl": {
+       "path": [
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "'b' ✓ → 切完！得到 [a, a, b]",
+      "tree": {
+       "bt": {
+        "add": "b"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         2,
+         "b"
+        ]
+       ],
+       "cnt": 1
+      },
+      "hl": {
+       "path": [
+        [
+         2,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "回溯",
+      "tree": {
+       "bt": {
+        "back": 1
+       }
+      },
+      "set": {
+       "path": [
+        [
+         2,
+         ""
+        ]
+       ]
+      }
+     },
+     {
+      "say": "剩 'ab' 时 'ab' 不是回文，剪枝 —— 无路可走，一路回退到根",
+      "tree": {
+       "bt": {
+        "back": 2
+       }
+      },
+      "set": {
+       "path": [
+        [
+         1,
+         ""
+        ],
+        [
+         0,
+         ""
+        ]
+       ]
+      }
+     },
+     {
+      "say": "根上换切法：前缀 'aa' 是回文 ✓ → 切（剩 'b'）",
+      "tree": {
+       "bt": {
+        "add": "aa"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         0,
+         "aa"
+        ]
+       ]
+      },
+      "hl": {
+       "path": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "'b' ✓ → 切完！[aa, b]",
+      "tree": {
+       "bt": {
+        "add": "b"
+       }
+      },
+      "set": {
+       "path": [
+        [
+         1,
+         "b"
+        ]
+       ],
+       "cnt": 2
+      },
+      "hl": {
+       "path": [
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "回溯后还剩「整段切 'aab'」——不是回文，剪枝。搜索结束",
+      "tree": {
+       "bt": {
+        "back": 2
+       }
+      },
+      "set": {
+       "path": [
+        [
+         1,
+         ""
+        ],
+        [
+         0,
+         ""
+        ]
+       ]
+      }
+     },
+     {
+      "say": "答案 [[a,a,b],[aa,b]]。「先判回文再递归」就是最有效的剪枝；长串可预处理回文 DP 表把判断降到 O(1)"
+     }
+    ]
+   }
+  },
+  {
+   "id": "n-queens",
+   "num": 8,
+   "leet_id": 51,
+   "title_cn": "N 皇后",
+   "title_en": "N-Queens",
+   "difficulty": "困难",
+   "category": "backtracking",
+   "tags": [
+    "数组",
+    "回溯"
+   ],
+   "statement": {
+    "desc": [
+     "按照国际象棋规则，皇后可以攻击与之同行、同列或同一条对角线上的棋子。**n 皇后问题**研究如何将 `n` 个皇后放置在 `n × n` 棋盘上，且彼此之间不能互相攻击。返回所有不同的解决方案，每種解法用 `Q` 和 `.` 表示棋盘布局。"
+    ],
+    "examples": [
+     {
+      "input": "n = 4",
+      "output": "[[\".Q..\",\"...Q\",\"Q...\",\"..Q.\"],[\"..Q.\",\"Q...\",\"...Q\",\".Q..\"]]"
+     },
+     {
+      "input": "n = 1",
+      "output": "[[\"Q\"]]"
+     }
+    ],
+    "constraints": [
+     "1 <= n <= 9"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "逐行放置（每行必恰好一个皇后），第 r 行只需检查与之前行的**列**和**对角线**冲突：同列 `c` 已用；主对角线 `r-c` 已用；副对角线 `r+c` 已用。",
+     "三个 `set`（cols / d1 / d2）把冲突判断降到 O(1)：`(r-c)` 相同的点在同一条主对角线上，`(r+c)` 同理。",
+     "放皇后 = 三个集合作记录 + 改棋盘；递归返回后全部撤销。n=8 共 92 解。"
+    ],
+    "steps": [
+     "`dfs(r)`：给第 r 行找一列",
+     "r == n → 整个棋盘收集进答案",
+     "枚举 c：若 `c∈cols` 或 `(r-c)∈d1` 或 `(r+c)∈d2` → 跳过",
+     "放置（更新 3 个集合 + 棋盘）→ dfs(r+1) → 撤销（回溯）"
+    ],
+    "complexity": {
+     "time": "O(n!)（首行 n 种，逐行递减，远小于暴力 nⁿ）",
+     "space": "O(n)（递归栈 + 3 个集合）"
+    },
+    "code": "class Solution:\n    def solveNQueens(self, n: int) -> List[List[str]]:\n        res = []\n        cols, d1, d2 = set(), set(), set()   # 列 / 主对角线 r-c / 副对角线 r+c\n        board = [[\".\"] * n for _ in range(n)]\n\n        def dfs(r):\n            if r == n:\n                res.append([\"\".join(row) for row in board])\n                return\n            for c in range(n):\n                if c in cols or (r - c) in d1 or (r + c) in d2:\n                    continue                 # 冲突，剪枝\n                cols.add(c); d1.add(r - c); d2.add(r + c)\n                board[r][c] = \"Q\"\n                dfs(r + 1)\n                cols.discard(c); d1.discard(r - c); d2.discard(r + c)\n                board[r][c] = \".\"            # 回溯\n\n        dfs(0)\n        return res"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "grid",
+      "id": "g",
+      "label": "棋盘",
+      "m": [
+       [
+        ".",
+        ".",
+        ".",
+        "."
+       ],
+       [
+        ".",
+        ".",
+        ".",
+        "."
+       ],
+       [
+        ".",
+        ".",
+        ".",
+        "."
+       ],
+       [
+        ".",
+        ".",
+        ".",
+        "."
+       ]
+      ],
+      "cmap": {
+       "Q": "#fde68a"
+      }
+     },
+     {
+      "t": "var",
+      "id": "cnt",
+      "v": 0,
+      "label": "解数"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：n=4 皇后 —— 每行放一个 Q，任意两个 Q 不同列、不同对角线。逐行决策：第 r 行给每个列号建一个分支"
+     },
+     {
+      "say": "冲突判断 O(1)：同列看 c；主对角线看 r-c；副对角线看 r+c —— 三个集合即可"
+     },
+     {
+      "say": "行 0 放 (0,1) → cols={1}, d1={-1}, d2={1}",
+      "tree": {
+       "bt": {
+        "add": "c1"
+       }
+      },
+      "set": {
+       "g": [
+        [
+         0,
+         1,
+         "Q"
+        ]
+       ]
+      },
+      "hl": {
+       "g": [
+        [
+         "0,1",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "行 1：c0/c1/c2 全部与 (0,1) 同对角线或同列（红格 ✗）→ 只剩 c3",
+      "hl": {
+       "g": [
+        [
+         "1,0",
+         "#fecaca"
+        ],
+        [
+         "1,1",
+         "#fecaca"
+        ],
+        [
+         "1,2",
+         "#fecaca"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "行 1 放 (1,3)",
+      "tree": {
+       "bt": {
+        "add": "c3"
+       }
+      },
+      "set": {
+       "g": [
+        [
+         1,
+         3,
+         "Q"
+        ]
+       ]
+      },
+      "hl": {
+       "g": [
+        [
+         "1,3",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "行 2：只有 c0 不与前面两子冲突",
+      "tree": {
+       "bt": {
+        "add": "c0"
+       }
+      },
+      "set": {
+       "g": [
+        [
+         2,
+         0,
+         "Q"
+        ]
+       ]
+      },
+      "hl": {
+       "g": [
+        [
+         "2,0",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "行 3 放 (3,2) → 4 行放满！解 [1,3,0,2] ✓",
+      "tree": {
+       "bt": {
+        "add": "c2"
+       }
+      },
+      "set": {
+       "g": [
+        [
+         3,
+         2,
+         "Q"
+        ]
+       ],
+       "cnt": 1
+      },
+      "hl": {
+       "g": [
+        [
+         "3,2",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "回溯继续搜：撤销到中间行换列重试……最终找到第二个解 [2,0,3,1]（它是第一个解的镜像）",
+      "set": {
+       "g": [
+        [
+         0,
+         [
+          ".",
+          ".",
+          "Q",
+          "."
+         ]
+        ],
+        [
+         1,
+         [
+          "Q",
+          ".",
+          ".",
+          "."
+         ]
+        ],
+        [
+         2,
+         [
+          ".",
+          ".",
+          ".",
+          "Q"
+         ]
+        ],
+        [
+         3,
+         [
+          ".",
+          "Q",
+          ".",
+          "."
+         ]
+        ]
+       ],
+       "cnt": 2
+      }
+     },
+     {
+      "say": "n=4 共 2 个解；n=8 有 92 个。位运算把 3 个集合压成 3 个整数可再提速"
+     }
+    ]
+   }
+  }
+ ]
+}

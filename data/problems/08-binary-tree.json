@@ -1,0 +1,2816 @@
+{
+ "problems": [
+  {
+   "id": "invert-binary-tree",
+   "num": 1,
+   "leet_id": 226,
+   "title_cn": "翻转二叉树",
+   "title_en": "Invert Binary Tree",
+   "difficulty": "简单",
+   "category": "binary-tree",
+   "tags": [
+    "树",
+    "深度优先搜索",
+    "广度优先搜索",
+    "递归"
+   ],
+   "statement": {
+    "desc": [
+     "给你一棵二叉树的根节点 `root`，翻转这棵二叉树，并返回其根节点。",
+     "翻转即把每个节点的左子树和右子树交换。"
+    ],
+    "examples": [
+     {
+      "input": "root = [4,2,7,1,3,6,9]",
+      "output": "[4,7,2,9,6,3,1]",
+      "explain": "每个节点的左右孩子互换后，整棵树呈镜像"
+     },
+     {
+      "input": "root = [2,1,3]",
+      "output": "[3,1,2]"
+     },
+     {
+      "input": "root = []",
+      "output": "[]"
+     }
+    ],
+    "constraints": [
+     "树中节点数目范围在 [0, 100] 内",
+     "-100 <= Node.val <= 100"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "这是一道经典的递归入门题。观察发现：整棵树的镜像 = 根不变 + 左子树是原右子树的镜像 + 右子树是原左子树的镜像。",
+     "于是递归定义呼之欲出：先递归翻转左右子树，再交换根的左右指针即可。递归的终点（base case）是空节点，直接返回 `None`。",
+     "也可以用 BFS/DFS 迭代实现：每弹出一个节点就交换它的两个孩子。"
+    ],
+    "steps": [
+     "递归出口：`root` 为空，返回 `None`",
+     "递归翻转左子树：`left = invertTree(root.left)`",
+     "递归翻转右子树：`right = invertTree(root.right)`",
+     "交换当前节点的左右孩子：`root.left, root.right = right, left`",
+     "返回 `root`"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(h)（递归栈，h 为树高）"
+    },
+    "code": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:\n        if not root:\n            return None\n        left = self.invertTree(root.left)\n        right = self.invertTree(root.right)\n        root.left, root.right = right, left\n        return root\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "翻转二叉树 · 后序逐层交换"
+    },
+    "views": [
+     {
+      "t": "tree",
+      "id": "t",
+      "nodes": [
+       4,
+       2,
+       7,
+       1,
+       3,
+       6,
+       9
+      ],
+      "label": "root"
+     }
+    ],
+    "frames": [
+     {
+      "say": "初始二叉树。翻转策略（后序）：先把左右子树各自翻转成镜像，最后交换根的左右两棵子树",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "递归翻转节点 2 的子树：交换它的左右孩子 1 ↔ 3",
+      "tree": {
+       "t": {
+        "set": [
+         4,
+         2,
+         7,
+         3,
+         1,
+         6,
+         9
+        ]
+       }
+      },
+      "hl": {
+       "t": [
+        1
+       ]
+      }
+     },
+     {
+      "say": "节点 2 的子树已成镜像。继续递归翻转节点 7 的子树：交换 6 ↔ 9",
+      "tree": {
+       "t": {
+        "set": [
+         4,
+         2,
+         7,
+         3,
+         1,
+         9,
+         6
+        ]
+       }
+      },
+      "hl": {
+       "t": [
+        2
+       ]
+      }
+     },
+     {
+      "say": "两棵子树都翻转完毕。最后处理根节点 4：交换左右子树（2 的整棵子树 ↔ 7 的整棵子树）",
+      "tree": {
+       "t": {
+        "set": [
+         4,
+         7,
+         2,
+         9,
+         6,
+         1,
+         3
+        ]
+       }
+      },
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "翻转完成！每个节点的左右子树都已互换，整棵树是原树的镜像",
+      "hl": {
+       "t": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+       ]
+      }
+     },
+     {
+      "say": "验证：原树层序 [4,2,7,1,3,6,9] → 翻转后 [4,7,2,9,6,3,1]，返回根节点 4",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "binary-tree-inorder-traversal",
+   "num": 2,
+   "leet_id": 94,
+   "title_cn": "二叉树的中序遍历",
+   "title_en": "Binary Tree Inorder Traversal",
+   "difficulty": "简单",
+   "category": "binary-tree",
+   "tags": [
+    "栈",
+    "树",
+    "深度优先搜索",
+    "二叉树"
+   ],
+   "statement": {
+    "desc": [
+     "给定二叉树的根节点 `root`，返回它的**中序遍历**结果。",
+     "中序遍历顺序：左子树 → 根 → 右子树。进阶：递归很简单，你能用迭代（显式栈）实现吗？"
+    ],
+    "examples": [
+     {
+      "input": "root = [1,null,2,3]",
+      "output": "[1,3,2]"
+     },
+     {
+      "input": "root = []",
+      "output": "[]"
+     },
+     {
+      "input": "root = [1]",
+      "output": "[1]"
+     }
+    ],
+    "constraints": [
+     "树中节点数目范围在 [0, 100] 内",
+     "-100 <= Node.val <= 100"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "中序遍历「左→根→右」的递归写法是三行代码，但迭代版更能体现遍历的本质：**最先被访问的节点是不断向左走到底的那个**。",
+     "迭代思路：从根开始沿左链一路入栈，走到底后弹出栈顶访问，再转向它的右子树重复此过程。栈中保存的正是「还没访问的祖先」。",
+     "这样每个节点恰好入栈、出栈各一次，时间 O(n)、空间 O(h)。"
+    ],
+    "steps": [
+     "指针 `cur` 从根出发，内层循环沿左链把沿途节点全部入栈",
+     "`cur` 为空时弹出栈顶节点，加入结果（这是当前最左未访问节点）",
+     "`cur` 转向弹出节点的右孩子，重复上述过程",
+     "`cur` 为空且栈也为空时遍历结束"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(h)（栈深 = 树高）"
+    },
+    "code": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:\n        res, stack, cur = [], [], root\n        while cur or stack:\n            while cur:            # 沿左链一路入栈\n                stack.append(cur)\n                cur = cur.left\n            cur = stack.pop()     # 弹出最左节点\n            res.append(cur.val)   # 访问\n            cur = cur.right       # 转向右子树\n        return res"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "t",
+      "nodes": [
+       4,
+       2,
+       6,
+       1,
+       3,
+       5,
+       7
+      ],
+      "label": "root"
+     },
+     {
+      "t": "stack",
+      "id": "s",
+      "items": [],
+      "label": "栈（祖先链）"
+     },
+     {
+      "t": "array",
+      "id": "out",
+      "vals": [],
+      "label": "中序输出"
+     }
+    ],
+    "frames": [
+     {
+      "say": "中序 = 左 → 根 → 右。迭代做法：指针沿左链一路入栈，走到底后弹出访问，再转向右子树",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "从根 4 沿左链走：4、2、1 依次入栈，1 无左孩子",
+      "add": {
+       "s": [
+        "4",
+        "2",
+        "1"
+       ]
+      },
+      "hl": {
+       "t": [
+        0,
+        1,
+        3
+       ]
+      }
+     },
+     {
+      "say": "弹出栈顶 1 访问 → 输出 [1]",
+      "del": {
+       "s": 1
+      },
+      "set": {
+       "out": [
+        [
+         0,
+         1
+        ]
+       ]
+      },
+      "hl": {
+       "t": [
+        3
+       ]
+      }
+     },
+     {
+      "say": "1 无右子树，弹出 2 访问 → [1,2]；2 有右孩子 3，3 入栈",
+      "del": {
+       "s": 1
+      },
+      "set": {
+       "out": [
+        [
+         1,
+         2
+        ]
+       ]
+      },
+      "add": {
+       "s": [
+        "3"
+       ]
+      },
+      "hl": {
+       "t": [
+        1,
+        4
+       ]
+      }
+     },
+     {
+      "say": "弹出 3（无左右孩子）→ [1,2,3]",
+      "del": {
+       "s": 1
+      },
+      "set": {
+       "out": [
+        [
+         2,
+         3
+        ]
+       ]
+      },
+      "hl": {
+       "t": [
+        4
+       ]
+      }
+     },
+     {
+      "say": "弹出 4 → [1,2,3,4]；转向右子树：6、5 沿左链入栈",
+      "del": {
+       "s": 1
+      },
+      "set": {
+       "out": [
+        [
+         3,
+         4
+        ]
+       ]
+      },
+      "add": {
+       "s": [
+        "6",
+        "5"
+       ]
+      },
+      "hl": {
+       "t": [
+        0,
+        2,
+        5
+       ]
+      }
+     },
+     {
+      "say": "弹出 5、6 → [1,2,3,4,5,6]；6 的右孩子 7 入栈",
+      "del": {
+       "s": 2
+      },
+      "set": {
+       "out": [
+        [
+         4,
+         5
+        ],
+        [
+         5,
+         6
+        ]
+       ]
+      },
+      "add": {
+       "s": [
+        "7"
+       ]
+      },
+      "hl": {
+       "t": [
+        5,
+        2,
+        6
+       ]
+      }
+     },
+     {
+      "say": "弹出 7 → 完整中序 [1,2,3,4,5,6,7]，恰好是升序！",
+      "del": {
+       "s": 1
+      },
+      "set": {
+       "out": [
+        [
+         6,
+         7
+        ]
+       ]
+      },
+      "hl": {
+       "t": [
+        6
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "maximum-depth-of-binary-tree",
+   "num": 3,
+   "leet_id": 104,
+   "title_cn": "二叉树的最大深度",
+   "title_en": "Maximum Depth of Binary Tree",
+   "difficulty": "简单",
+   "category": "binary-tree",
+   "tags": [
+    "树",
+    "深度优先搜索",
+    "广度优先搜索",
+    "二叉树"
+   ],
+   "statement": {
+    "desc": [
+     "给定二叉树 `root`，返回其最大深度。",
+     "二叉树的**最大深度**是指从根节点到最远叶子节点的最长路径上的节点数。"
+    ],
+    "examples": [
+     {
+      "input": "root = [3,9,20,null,null,15,7]",
+      "output": "3"
+     },
+     {
+      "input": "root = [1,null,2]",
+      "output": "2"
+     }
+    ],
+    "constraints": [
+     "树中节点数目范围在 [0, 10^4] 内",
+     "-100 <= Node.val <= 100"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "深度问题的经典递归：一棵树的最大深度 = 1（根自己）+ 左右子树深度的较大者。",
+     "递归出口是空节点（深度 0）。函数自底向上聚合：叶子先返回 1，父节点在孩子的结果上 +1，最终根拿到整棵树的最大深度。",
+     "用 BFS 层序遍历数层数也可以，层数即深度。"
+    ],
+    "steps": [
+     "`root` 为空返回 0（base case）",
+     "递归求左子树深度 `left`",
+     "递归求右子树深度 `right`",
+     "返回 `max(left, right) + 1`"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(h)（递归栈）"
+    },
+    "code": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def maxDepth(self, root: Optional[TreeNode]) -> int:\n        if not root:\n            return 0\n        left = self.maxDepth(root.left)    # 左子树最大深度\n        right = self.maxDepth(root.right)  # 右子树最大深度\n        return max(left, right) + 1        # 自底向上 +1"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "t",
+      "nodes": [
+       3,
+       9,
+       20,
+       null,
+       null,
+       15,
+       7
+      ],
+      "label": "root"
+     },
+     {
+      "t": "var",
+      "id": "ans",
+      "v": "-",
+      "label": "最大深度"
+     }
+    ],
+    "frames": [
+     {
+      "say": "最大深度 = 1 + max(左子树深度, 右子树深度)，空节点深度 0。递归自底向上聚合",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "递归到达叶子 9：左右皆空 → 它的深度是 1",
+      "hl": {
+       "t": [
+        1
+       ]
+      },
+      "mark": {
+       "t": {
+        "1": "深1"
+       }
+      }
+     },
+     {
+      "say": "叶子 15、7 同理，深度都是 1",
+      "hl": {
+       "t": [
+        5,
+        6
+       ]
+      },
+      "mark": {
+       "t": {
+        "5": "深1",
+        "6": "深1"
+       }
+      }
+     },
+     {
+      "say": "节点 20：1 + max(1, 1) = 2，向上返回",
+      "hl": {
+       "t": [
+        2
+       ]
+      },
+      "mark": {
+       "t": {
+        "2": "深2"
+       }
+      }
+     },
+     {
+      "say": "根 3：1 + max(左 1, 右 2) = 3 ← 整棵树的最大深度",
+      "hl": {
+       "t": [
+        0
+       ]
+      },
+      "mark": {
+       "t": {
+        "0": "深3"
+       }
+      },
+      "set": {
+       "ans": "3"
+      }
+     },
+     {
+      "say": "自底向上聚合完成，最大深度 = 3",
+      "hl": {
+       "t": [
+        0,
+        1,
+        2,
+        5,
+        6
+       ]
+      }
+     },
+     {
+      "say": "边界自然覆盖：空树返回 0，单节点返回 1；BFS 数层数也可",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "symmetric-tree",
+   "num": 4,
+   "leet_id": 101,
+   "title_cn": "对称二叉树",
+   "title_en": "Symmetric Tree",
+   "difficulty": "简单",
+   "category": "binary-tree",
+   "tags": [
+    "树",
+    "深度优先搜索",
+    "广度优先搜索",
+    "二叉树"
+   ],
+   "statement": {
+    "desc": [
+     "给你二叉树的根节点 `root`，检查它是否轴对称。"
+    ],
+    "examples": [
+     {
+      "input": "root = [1,2,2,3,4,4,3]",
+      "output": "true"
+     },
+     {
+      "input": "root = [1,2,2,null,3,null,3]",
+      "output": "false"
+     }
+    ],
+    "constraints": [
+     "树中节点数目范围在 [1, 1000] 内",
+     "-100 <= Node.val <= 100"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "树的对称 = 左右子树互为**镜像**。镜像不是「相等」：两个节点 a、b 对称要求 `a.val == b.val`，且 a 的左子树与 b 的**右**子树对称、a 的右子树与 b 的**左**子树对称。",
+     "递归函数 `mirror(l, r)`：双空 → 对称；单空或值不等 → 不对称；否则递归检查 `(l.left, r.right)` 与 `(l.right, r.left)` 两组镜像对。",
+     "也可以用 BFS：队列成对入队，每对出队时比较并按镜像位置放入孩子。"
+    ],
+    "steps": [
+     "比较根的左右子树：调用 `mirror(root.left, root.right)`",
+     "双双为空 → 返回 true",
+     "只有一个为空、或值不相等 → 返回 false",
+     "递归：`mirror(l.left, r.right)` 且 `mirror(l.right, r.left)`"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(h)（递归栈）"
+    },
+    "code": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def isSymmetric(self, root: Optional[TreeNode]) -> bool:\n        def mirror(l, r):\n            if not l and not r:   # 双空 → 对称\n                return True\n            if not l or not r or l.val != r.val:\n                return False\n            # 镜像递归：外侧对外侧，内侧对内侧\n            return mirror(l.left, r.right) and mirror(l.right, r.left)\n        return mirror(root.left, root.right)"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "t",
+      "nodes": [
+       1,
+       2,
+       2,
+       3,
+       4,
+       4,
+       3
+      ],
+      "label": "root"
+     },
+     {
+      "t": "var",
+      "id": "res",
+      "v": "?",
+      "label": "结果"
+     }
+    ],
+    "frames": [
+     {
+      "say": "对称 = 左右子树互为镜像：值相等，且 l.left ↔ r.right、l.right ↔ r.left（外侧对外侧、内侧对内侧）",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "第 1 对镜像节点：根的左孩子 (2) 与右孩子 (2)，值相等 ✓",
+      "hl": {
+       "t": [
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "镜像递归：左 2 的左孩子 3 ↔ 右 2 的右孩子 3 ✓",
+      "hl": {
+       "t": [
+        3,
+        6
+       ]
+      }
+     },
+     {
+      "say": "左 2 的右孩子 4 ↔ 右 2 的左孩子 4 ✓",
+      "hl": {
+       "t": [
+        4,
+        5
+       ]
+      }
+     },
+     {
+      "say": "叶子层各自 (null, null) 配对，天然对称 → 整棵树轴对称 ✓",
+      "hl": {
+       "t": [
+        3,
+        4,
+        5,
+        6
+       ]
+      },
+      "set": {
+       "res": "true"
+      }
+     },
+     {
+      "say": "反例 [1,2,2,null,3,null,3]：第二层都是 2，但左 2 的左孩子 null ↔ 右 2 的右孩子 3 → 不对称 false",
+      "hl": {
+       "t": [
+        1,
+        2
+       ]
+      },
+      "set": {
+       "res": "true"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "diameter-of-binary-tree",
+   "num": 5,
+   "leet_id": 543,
+   "title_cn": "二叉树的直径",
+   "title_en": "Diameter of Binary Tree",
+   "difficulty": "简单",
+   "category": "binary-tree",
+   "tags": [
+    "树",
+    "深度优先搜索",
+    "二叉树"
+   ],
+   "statement": {
+    "desc": [
+     "给定二叉树 `root`，返回该树的**直径**。",
+     "直径是任意两节点间最长路径的**边数**。这条路径可能经过也可能**不经过**根节点。"
+    ],
+    "examples": [
+     {
+      "input": "root = [1,2,3,4,5]",
+      "output": "3",
+      "explain": "路径 4→2→1→3 或 5→2→1→3，共 3 条边"
+     },
+     {
+      "input": "root = [1,2]",
+      "output": "1"
+     }
+    ],
+    "constraints": [
+     "树中节点数目范围在 [1, 10^4] 内",
+     "-100 <= Node.val <= 100"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "关键转化：经过拐点节点 x 的最长路径边数 = x 的左子树深度 + 右子树深度。枚举每个节点作为拐点，取最大值即为直径。",
+     "这不需要单独遍历——求深度的递归在「返回」前顺手更新答案即可：`ans = max(ans, 左深 + 右深)`，然后向父返回 `max(左,右)+1`。",
+     "注意答案是边数，深度按节点数算，相加即边数（拐点被两条边共享）。"
+    ],
+    "steps": [
+     "定义 `depth(node)` 返回以 node 为根的子树深度",
+     "空节点返回 0",
+     "取 `l`、`r` 为左右子树深度",
+     "更新答案：`ans = max(ans, l + r)`（经过 node 的最长路径）",
+     "返回 `max(l, r) + 1`；最后返回 `ans`"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(h)"
+    },
+    "code": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:\n        self.ans = 0\n        def depth(node):\n            if not node:\n                return 0\n            l = depth(node.left)             # 左子树深度\n            r = depth(node.right)            # 右子树深度\n            self.ans = max(self.ans, l + r)  # 经过 node 的路径\n            return max(l, r) + 1             # 向上只带一条边\n        depth(root)\n        return self.ans"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "t",
+      "nodes": [
+       1,
+       2,
+       3,
+       4,
+       5
+      ],
+      "label": "root"
+     },
+     {
+      "t": "var",
+      "id": "ans",
+      "v": 0,
+      "label": "ans（最长路径）"
+     }
+    ],
+    "frames": [
+     {
+      "say": "直径不一定过根！枚举每个节点作「拐点」：路径长 = 左子树深度 + 右子树深度",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "dfs(4)：叶子 → 深度 1",
+      "hl": {
+       "t": [
+        3
+       ]
+      },
+      "mark": {
+       "t": {
+        "3": "深1"
+       }
+      }
+     },
+     {
+      "say": "dfs(5)：叶子 → 深度 1",
+      "hl": {
+       "t": [
+        4
+       ]
+      },
+      "mark": {
+       "t": {
+        "4": "深1"
+       }
+      }
+     },
+     {
+      "say": "拐点 2：左深 1 + 右深 1 = 2 → ans = 2；向父返回深度 2",
+      "hl": {
+       "t": [
+        1
+       ]
+      },
+      "mark": {
+       "t": {
+        "1": "深2"
+       }
+      },
+      "set": {
+       "ans": 2
+      }
+     },
+     {
+      "say": "dfs(3)：叶子 → 深度 1",
+      "hl": {
+       "t": [
+        2
+       ]
+      },
+      "mark": {
+       "t": {
+        "2": "深1"
+       }
+      }
+     },
+     {
+      "say": "拐点根 1：左深 2 + 右深 1 = 3 → ans = 3",
+      "hl": {
+       "t": [
+        0
+       ]
+      },
+      "mark": {
+       "t": {
+        "0": "深3"
+       }
+      },
+      "set": {
+       "ans": 3
+      }
+     },
+     {
+      "say": "最长路径 4→2→1→3，共 3 条边。求深度时顺手更新答案 → 一次遍历 O(n)",
+      "hl": {
+       "t": [
+        3,
+        1,
+        0,
+        2
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "binary-tree-level-order-traversal",
+   "num": 6,
+   "leet_id": 102,
+   "title_cn": "二叉树的层序遍历",
+   "title_en": "Binary Tree Level Order Traversal",
+   "difficulty": "中等",
+   "category": "binary-tree",
+   "tags": [
+    "树",
+    "广度优先搜索",
+    "二叉树"
+   ],
+   "statement": {
+    "desc": [
+     "给你二叉树的根节点 `root`，返回其节点值的**层序遍历**（逐层从左向右访问）。"
+    ],
+    "examples": [
+     {
+      "input": "root = [3,9,20,null,null,15,7]",
+      "output": "[[3],[9,20],[15,7]]"
+     },
+     {
+      "input": "root = []",
+      "output": "[]"
+     }
+    ],
+    "constraints": [
+     "树中节点数目范围在 [0, 2000] 内",
+     "-1000 <= Node.val <= 1000"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "BFS 的模板题。普通 BFS 把所有节点平铺，本题要**分层**——技巧是每轮循环前先记录队列长度 `n = len(q)`，它恰好是当前层的节点数。",
+     "内层循环恰好出队 n 个（都是本层节点），把它们的孩子（下一层）依次入队。循环 `n` 次，`level` 数组即为本层结果。",
+     "队列用 `collections.deque`，popleft 是 O(1)。"
+    ],
+    "steps": [
+     "根入队；队列非空时循环",
+     "记录 `n = len(q)`（本层节点数）",
+     "出队 n 次：收集 val，孩子入队",
+     "每层收集到的 `level` 追加到结果"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(n)（队列最多存一层）"
+    },
+    "code": "from collections import deque\n\n# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:\n        if not root:\n            return []\n        res, q = [], deque([root])\n        while q:\n            n, level = len(q), []   # n = 本层节点数\n            for _ in range(n):\n                node = q.popleft()\n                level.append(node.val)\n                if node.left:  q.append(node.left)\n                if node.right: q.append(node.right)\n            res.append(level)\n        return res"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "t",
+      "nodes": [
+       3,
+       9,
+       20,
+       null,
+       null,
+       15,
+       7
+      ],
+      "label": "root"
+     },
+     {
+      "t": "queue",
+      "id": "q",
+      "items": [],
+      "label": "队列"
+     },
+     {
+      "t": "var",
+      "id": "out",
+      "v": "[]",
+      "label": "结果"
+     }
+    ],
+    "frames": [
+     {
+      "say": "BFS 分层技巧：每轮先记 n = len(队列)（本层节点数），出队 n 个、孩子入队",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "根 3 入队 → 队列 [3]，这是第 1 层",
+      "add": {
+       "q": [
+        "3"
+       ]
+      },
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "出队 3 记入第 1 层；孩子 9、20 入队 → 队列 [9,20]",
+      "del": {
+       "q": 1
+      },
+      "add": {
+       "q": [
+        "9",
+        "20"
+       ]
+      },
+      "set": {
+       "out": "[[3]…"
+      },
+      "hl": {
+       "t": [
+        0,
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "出队 9（第 2 层），无孩子 → 队列 [20]",
+      "del": {
+       "q": 1
+      },
+      "set": {
+       "out": "[[3],[9,…]]"
+      },
+      "hl": {
+       "t": [
+        1
+       ]
+      }
+     },
+     {
+      "say": "出队 20（第 2 层最右），孩子 15、7 入队 → 第 2 层完成 [9,20]",
+      "del": {
+       "q": 1
+      },
+      "add": {
+       "q": [
+        "15",
+        "7"
+       ]
+      },
+      "set": {
+       "out": "[[3],[9,20]]"
+      },
+      "hl": {
+       "t": [
+        2,
+        5,
+        6
+       ]
+      }
+     },
+     {
+      "say": "出队 15、7 → 第 3 层 [15,7]，均无孩子，队列清空，BFS 结束",
+      "del": {
+       "q": 2
+      },
+      "set": {
+       "out": "[[3],[9,20],[15,7]]"
+      },
+      "hl": {
+       "t": [
+        5,
+        6
+       ]
+      }
+     },
+     {
+      "say": "结果 [[3],[9,20],[15,7]] ✓ — len(q) 这一行是「分层」的全部秘密",
+      "hl": {
+       "t": [
+        0,
+        1,
+        2,
+        5,
+        6
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "convert-sorted-array-to-binary-search-tree",
+   "num": 7,
+   "leet_id": 108,
+   "title_cn": "将有序数组转换为二叉搜索树",
+   "title_en": "Convert Sorted Array to Binary Search Tree",
+   "difficulty": "简单",
+   "category": "binary-tree",
+   "tags": [
+    "树",
+    "二叉搜索树",
+    "分治",
+    "二叉树"
+   ],
+   "statement": {
+    "desc": [
+     "给定升序数组 `nums`，将它转换为**高度平衡**的二叉搜索树。",
+     "高度平衡：任一节点左右子树的高度差不超过 1。答案不唯一，返回任意合法解。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [-10,-3,0,5,9]",
+      "output": "[0,-10,5,null,-3,null,9]",
+      "explain": "另一种答案是 [0,-3,9,-10,null,5]"
+     },
+     {
+      "input": "nums = [1,3]",
+      "output": "[1,null,3] 或 [3,1]"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 10^4",
+     "-10^4 <= nums[i] <= 10^4"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "BST 的中序 = 升序数组，所以题目其实是「由中序构造平衡树」。要让树平衡，根必须把元素**尽量对半分**——取区间中点 `mid = (lo+hi)//2` 作根。",
+     "这样左半 `[lo, mid-1]` 全部小于根、右半 `[mid+1, hi]` 全部大于根，天然满足 BST；两侧元素数最多差 1，且递归持续对半，高度必然平衡。",
+     "递归出口：`lo > hi` 时区间为空，返回 `None`。"
+    ],
+    "steps": [
+     "`build(lo, hi)`：区间空返回 `None`",
+     "取 `mid = (lo + hi) // 2`，以 `nums[mid]` 建根",
+     "根的左孩子 = `build(lo, mid-1)`，右孩子 = `build(mid+1, hi)`",
+     "返回根；整体调用 `build(0, len(nums)-1)`"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(log n)（递归栈）"
+    },
+    "code": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def sortedArrayToBST(self, nums: List[int]) -> Optional[TreeNode]:\n        def build(lo, hi):\n            if lo > hi:\n                return None\n            mid = (lo + hi) // 2   # 中点作根 → 天然平衡\n            node = TreeNode(nums[mid])\n            node.left = build(lo, mid - 1)     # 左半更小\n            node.right = build(mid + 1, hi)    # 右半更大\n            return node\n        return build(0, len(nums) - 1)"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       -10,
+       -3,
+       0,
+       5,
+       9
+      ],
+      "label": "nums（升序）"
+     },
+     {
+      "t": "tree",
+      "id": "t",
+      "nodes": [
+       0
+      ],
+      "label": "构造中的树"
+     }
+    ],
+    "frames": [
+     {
+      "say": "有序数组 → 平衡 BST：每次取区间中点作根，左右对半分 → 高度差恒 ≤ 1",
+      "hl": {
+       "a": [
+        2
+       ]
+      }
+     },
+     {
+      "say": "整段 [-10,-3,0,5,9] 的中点 0（索引 2）作为根",
+      "hl": {
+       "a": [
+        2
+       ],
+       "t": [
+        0
+       ]
+      },
+      "tree": {
+       "t": {
+        "set": [
+         0
+        ]
+       }
+      }
+     },
+     {
+      "say": "左半 [-10,-3] 的中点 -10（mid=(0+1)//2=0）作为左孩子",
+      "hl": {
+       "a": [
+        0
+       ],
+       "t": [
+        0,
+        1
+       ]
+      },
+      "tree": {
+       "t": {
+        "set": [
+         0,
+         -10
+        ]
+       }
+      }
+     },
+     {
+      "say": "右半 [5,9] 的中点 5（mid=(3+4)//2=3）作为右孩子",
+      "hl": {
+       "a": [
+        3
+       ],
+       "t": [
+        0,
+        2
+       ]
+      },
+      "tree": {
+       "t": {
+        "set": [
+         0,
+         -10,
+         5
+        ]
+       }
+      }
+     },
+     {
+      "say": "-10 的右半只剩 [-3] → 单元素作右孩子",
+      "hl": {
+       "a": [
+        1
+       ],
+       "t": [
+        1,
+        4
+       ]
+      },
+      "tree": {
+       "t": {
+        "set": [
+         0,
+         -10,
+         5,
+         null,
+         -3
+        ]
+       }
+      }
+     },
+     {
+      "say": "5 的右半只剩 [9] → 单元素作右孩子",
+      "hl": {
+       "a": [
+        4
+       ],
+       "t": [
+        2,
+        6
+       ]
+      },
+      "tree": {
+       "t": {
+        "set": [
+         0,
+         -10,
+         5,
+         null,
+         -3,
+         null,
+         9
+        ]
+       }
+      }
+     },
+     {
+      "say": "构造完成 [0,-10,5,null,-3,null,9]：每个节点的左右子树高度差 ≤ 1 ✓（另一解 [0,-3,9,-10,null,5] 同样正确）",
+      "hl": {
+       "t": [
+        0,
+        1,
+        2,
+        4,
+        6
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "validate-binary-search-tree",
+   "num": 8,
+   "leet_id": 98,
+   "title_cn": "验证二叉搜索树",
+   "title_en": "Validate Binary Search Tree",
+   "difficulty": "中等",
+   "category": "binary-tree",
+   "tags": [
+    "树",
+    "深度优先搜索",
+    "二叉搜索树",
+    "二叉树"
+   ],
+   "statement": {
+    "desc": [
+     "给你二叉树的根节点 `root`，判断其是否是一个有效的**二叉搜索树**（BST）。",
+     "有效 BST：左子树所有节点 **严格小于** 根，右子树所有节点 **严格大于** 根，且左右子树也必须是 BST。"
+    ],
+    "examples": [
+     {
+      "input": "root = [2,1,3]",
+      "output": "true"
+     },
+     {
+      "input": "root = [5,4,6,null,null,3,7]",
+      "output": "false",
+      "explain": "3 在 6 的左子树里，但 3 < 根 5，违反约束"
+     }
+    ],
+    "constraints": [
+     "树中节点数目范围在 [1, 10^4] 内",
+     "-2^31 <= Node.val <= 2^31 - 1"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "**只比较父子会漏判**：反例里 3 和根 5 隔了两层。正确做法是递归时携带**上下界** `(lo, hi)`：节点值必须落在开区间内。",
+     "进入左子树时把上界收紧为当前值（左子树所有节点都要小于它）；进入右子树时把下界收紧为当前值。祖先的约束沿路径一路传递。",
+     "另一种经典解法：BST 的中序遍历必须严格递增，边遍历边比较前驱。"
+    ],
+    "steps": [
+     "`check(node, lo, hi)`：空节点返回 true",
+     "若 `node.val` 不在开区间 `(lo, hi)` 内 → 返回 false",
+     "递归左子树：`check(node.left, lo, node.val)`（收紧上界）",
+     "递归右子树：`check(node.right, node.val, hi)`（收紧下界）"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(h)"
+    },
+    "code": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def isValidBST(self, root: Optional[TreeNode]) -> bool:\n        def check(node, lo, hi):\n            if not node:\n                return True\n            if not (lo < node.val < hi):  # 必须落在开区间内\n                return False\n            return (check(node.left, lo, node.val) and   # 收紧上界\n                    check(node.right, node.val, hi))     # 收紧下界\n        return check(root, float(\"-inf\"), float(\"inf\"))"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "t",
+      "nodes": [
+       5,
+       4,
+       6,
+       null,
+       null,
+       3,
+       7
+      ],
+      "label": "root"
+     },
+     {
+      "t": "var",
+      "id": "bound",
+      "v": "-",
+      "label": "当前节点的界 (lo, hi)"
+     },
+     {
+      "t": "var",
+      "id": "res",
+      "v": "?",
+      "label": "结果"
+     }
+    ],
+    "frames": [
+     {
+      "say": "只比父子会漏判（隔层违规发现不了）！递归携带上下界 (lo, hi)：节点值必须严格落在开区间内",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "根 5：初始界 (-∞, +∞) ✓",
+      "hl": {
+       "t": [
+        0
+       ]
+      },
+      "set": {
+       "bound": "5 ∈ (-∞, +∞) ✓"
+      }
+     },
+     {
+      "say": "左孩子 4 继承上界 5：4 ∈ (-∞, 5) ✓",
+      "hl": {
+       "t": [
+        1
+       ]
+      },
+      "set": {
+       "bound": "4 ∈ (-∞, 5) ✓"
+      }
+     },
+     {
+      "say": "右孩子 6 继承下界 5：6 ∈ (5, +∞) ✓",
+      "hl": {
+       "t": [
+        2
+       ]
+      },
+      "set": {
+       "bound": "6 ∈ (5, +∞) ✓"
+      }
+     },
+     {
+      "say": "6 的左孩子 3：界 (5, 6) — 但 3 < 5，违反！",
+      "hl": {
+       "t": [
+        5
+       ]
+      },
+      "set": {
+       "bound": "3 ∈ (5, 6) ✗",
+       "res": "false"
+      }
+     },
+     {
+      "say": "返回 false：[5,4,6,null,null,3,7] 不是 BST",
+      "hl": {
+       "t": [
+        5,
+        2,
+        0
+       ]
+      },
+      "set": {
+       "res": "false"
+      }
+     },
+     {
+      "say": "关键：右子树所有节点都要 > 5 —— 界沿递归向下收紧，把祖先的约束带到每一层",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "kth-smallest-element-in-a-bst",
+   "num": 9,
+   "leet_id": 230,
+   "title_cn": "二叉搜索树中第K小的元素",
+   "title_en": "Kth Smallest Element in a BST",
+   "difficulty": "中等",
+   "category": "binary-tree",
+   "tags": [
+    "树",
+    "深度优先搜索",
+    "二叉搜索树",
+    "二叉树"
+   ],
+   "statement": {
+    "desc": [
+     "给定 BST 的根节点 `root` 和整数 `k`，返回树中**第 k 小**的元素（从 1 开始计数）。",
+     "进阶：如果树经常被修改/查询，你该如何优化？"
+    ],
+    "examples": [
+     {
+      "input": "root = [3,1,4,null,2], k = 1",
+      "output": "1"
+     },
+     {
+      "input": "root = [5,3,6,2,4,null,null,1], k = 3",
+      "output": "3"
+     }
+    ],
+    "constraints": [
+     "树中节点数目为 n",
+     "1 <= k <= n <= 10^4",
+     "0 <= Node.val <= 10^4"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "BST 的核心性质：**中序遍历得到升序序列**。所以「第 k 小」= 中序遍历访问到的第 k 个节点。",
+     "用迭代版中序（显式栈），维护计数器：每弹出一个节点计数 +1，等于 k 时立即返回——不需要遍历完整棵树，找到即停，时间 O(H + k)。",
+     "进阶（频繁查询）：每个节点记录其子树节点数，即可按权重在树上二分，单次查询 O(H)，修改 O(H)。"
+    ],
+    "steps": [
+     "初始化空栈，`cur = root`",
+     "沿左链入栈（迭代中序模板）",
+     "弹出栈顶，计数 +1",
+     "计数 == k 时返回该节点值（提前终止）",
+     "否则 `cur` 转向右孩子，继续循环"
+    ],
+    "complexity": {
+     "time": "O(H + k)",
+     "space": "O(H)"
+    },
+    "code": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:\n        stack, cur = [], root\n        while cur or stack:\n            while cur:              # 沿左链入栈\n                stack.append(cur)\n                cur = cur.left\n            cur = stack.pop()\n            k -= 1\n            if k == 0:              # 第 k 个出栈的即答案\n                return cur.val\n            cur = cur.right\n        return -1"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "t",
+      "nodes": [
+       5,
+       3,
+       6,
+       2,
+       4,
+       null,
+       null,
+       1
+      ],
+      "label": "root"
+     },
+     {
+      "t": "stack",
+      "id": "s",
+      "items": [],
+      "label": "栈"
+     },
+     {
+      "t": "array",
+      "id": "out",
+      "vals": [],
+      "label": "中序输出（计数）"
+     }
+    ],
+    "frames": [
+     {
+      "say": "k = 3。BST 中序遍历 = 升序序列 → 第 3 个被访问的节点就是答案，找到即停",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "沿左链入栈：5、3、2、1 依次进栈，1 无左孩子",
+      "add": {
+       "s": [
+        "5",
+        "3",
+        "2",
+        "1"
+       ]
+      },
+      "hl": {
+       "t": [
+        0,
+        1,
+        3,
+        7
+       ]
+      }
+     },
+     {
+      "say": "弹出 1 访问 → 中序 [1]（第 1 小）；1 无右子树",
+      "del": {
+       "s": 1
+      },
+      "set": {
+       "out": [
+        [
+         0,
+         1
+        ]
+       ]
+      },
+      "hl": {
+       "t": [
+        7
+       ]
+      }
+     },
+     {
+      "say": "弹出 2 → 中序 [1,2]（第 2 小）；2 无右子树",
+      "del": {
+       "s": 1
+      },
+      "set": {
+       "out": [
+        [
+         1,
+         2
+        ]
+       ]
+      },
+      "hl": {
+       "t": [
+        3
+       ]
+      }
+     },
+     {
+      "say": "弹出 3 → 中序 [1,2,3]，计数到达 k=3 → 答案就是 3！（后面继续演示验证升序）",
+      "del": {
+       "s": 1
+      },
+      "set": {
+       "out": [
+        [
+         2,
+         3
+        ]
+       ]
+      },
+      "add": {
+       "s": [
+        "4"
+       ]
+      },
+      "hl": {
+       "t": [
+        1,
+        4
+       ]
+      }
+     },
+     {
+      "say": "弹出 4 → 中序 [1,2,3,4]",
+      "del": {
+       "s": 1
+      },
+      "set": {
+       "out": [
+        [
+         3,
+         4
+        ]
+       ]
+      },
+      "hl": {
+       "t": [
+        4
+       ]
+      }
+     },
+     {
+      "say": "弹出 5 → [1,2,3,4,5]；5 的右孩子 6 入栈",
+      "del": {
+       "s": 1
+      },
+      "set": {
+       "out": [
+        [
+         4,
+         5
+        ]
+       ]
+      },
+      "add": {
+       "s": [
+        "6"
+       ]
+      },
+      "hl": {
+       "t": [
+        0,
+        2
+       ]
+      }
+     },
+     {
+      "say": "弹出 6 → 完整中序 [1,2,3,4,5,6] 严格升序 ✓（k=3 时已提前返回，O(H+k)）",
+      "del": {
+       "s": 1
+      },
+      "set": {
+       "out": [
+        [
+         5,
+         6
+        ]
+       ]
+      },
+      "hl": {
+       "t": [
+        2
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "binary-tree-right-side-view",
+   "num": 10,
+   "leet_id": 199,
+   "title_cn": "二叉树的右视图",
+   "title_en": "Binary Tree Right Side View",
+   "difficulty": "中等",
+   "category": "binary-tree",
+   "tags": [
+    "树",
+    "深度优先搜索",
+    "广度优先搜索",
+    "二叉树"
+   ],
+   "statement": {
+    "desc": [
+     "给定二叉树根节点 `root`，想象自己站在树的右侧，返回从顶部到底部能看到的节点值。"
+    ],
+    "examples": [
+     {
+      "input": "root = [1,2,3,null,5,null,4]",
+      "output": "[1,3,4]"
+     },
+     {
+      "input": "root = [1,null,3]",
+      "output": "[1,3]"
+     },
+     {
+      "input": "root = []",
+      "output": "[]"
+     }
+    ],
+    "constraints": [
+     "树中节点数目范围在 [0, 100] 内",
+     "-100 <= Node.val <= 100"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "站在右侧能看到什么？**每一层最右边**的那个节点。于是问题化为分层遍历 + 取每层末尾元素。",
+     "BFS 做法最直观：每轮记录 `n = len(q)`，出队 n 个，只把**最后一个**加入答案。",
+     "DFS 也可以：按「根 → 右 → 左」顺序遍历，每个深度第一次到达的节点必是该层最右——用 `depth` 与结果数组长度比较即可。"
+    ],
+    "steps": [
+     "根入队；队列非空时循环",
+     "记录本层节点数 `n = len(q)`",
+     "出队 n 个，把最后一个出队节点的值加入结果",
+     "孩子按左→右入队，进入下一层"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(n)"
+    },
+    "code": "from collections import deque\n\n# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:\n        if not root:\n            return []\n        res, q = [], deque([root])\n        while q:\n            n = len(q)\n            for i in range(n):\n                node = q.popleft()\n                if i == n - 1:      # 本层最后一个 = 最右\n                    res.append(node.val)\n                if node.left:  q.append(node.left)\n                if node.right: q.append(node.right)\n        return res"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "t",
+      "nodes": [
+       1,
+       2,
+       3,
+       null,
+       5,
+       null,
+       4
+      ],
+      "label": "root",
+      "marks": {
+       "0": "第1层",
+       "2": "第2层",
+       "6": "第3层"
+      }
+     },
+     {
+      "t": "queue",
+      "id": "q",
+      "items": [],
+      "label": "队列"
+     },
+     {
+      "t": "array",
+      "id": "out",
+      "vals": [],
+      "label": "右视图"
+     }
+    ],
+    "frames": [
+     {
+      "say": "右视图 = 每一层最右边的节点。BFS 分层，只取每层最后一个出队的节点",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "根节点 1 入队，BFS 从它出发",
+      "add": {
+       "q": [
+        "1"
+       ]
+      },
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "第 1 层：出队 1，本层唯一节点 → 记入 [1]；孩子 2、3 入队",
+      "add": {
+       "q": [
+        "1",
+        "2",
+        "3"
+       ]
+      },
+      "del": {
+       "q": 1
+      },
+      "set": {
+       "out": [
+        [
+         0,
+         1
+        ]
+       ]
+      },
+      "hl": {
+       "t": [
+        0,
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "第 2 层 [2,3]：出队 2 —— 不是本层最后一个，跳过；2 的右孩子 5 入队",
+      "del": {
+       "q": 1
+      },
+      "add": {
+       "q": [
+        "5"
+       ]
+      },
+      "hl": {
+       "t": [
+        1,
+        4
+       ]
+      }
+     },
+     {
+      "say": "出队 3 —— 本层最右 → 记入 [1,3]；3 的右孩子 4 入队（第 3 层 = [5,4]）",
+      "del": {
+       "q": 1
+      },
+      "add": {
+       "q": [
+        "4"
+       ]
+      },
+      "set": {
+       "out": [
+        [
+         1,
+         3
+        ]
+       ]
+      },
+      "hl": {
+       "t": [
+        2,
+        6
+       ]
+      }
+     },
+     {
+      "say": "第 3 层：出队 5 —— 不是最后一个，跳过",
+      "del": {
+       "q": 1
+      },
+      "hl": {
+       "t": [
+        4,
+        6
+       ]
+      }
+     },
+     {
+      "say": "出队 4 —— 本层最右 → 记入 [1,3,4]；队列空，BFS 结束",
+      "del": {
+       "q": 1
+      },
+      "set": {
+       "out": [
+        [
+         2,
+         4
+        ]
+       ]
+      },
+      "hl": {
+       "t": [
+        6
+       ]
+      }
+     },
+     {
+      "say": "右视图 [1,3,4] ✓ —「右视图」看的是每层末尾，不是右孩子链",
+      "hl": {
+       "t": [
+        0,
+        2,
+        6
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "flatten-binary-tree-to-linked-list",
+   "num": 11,
+   "leet_id": 114,
+   "title_cn": "二叉树展开为链表",
+   "title_en": "Flatten Binary Tree to Linked List",
+   "difficulty": "中等",
+   "category": "binary-tree",
+   "tags": [
+    "栈",
+    "树",
+    "深度优先搜索",
+    "链表",
+    "二叉树"
+   ],
+   "statement": {
+    "desc": [
+     "给你二叉树根节点 `root`，把它展开为**单链表**：",
+     "展开后的「链表」用 `TreeNode` 的 `right` 指针串联，`left` 全部为 null；节点顺序 = **前序遍历**顺序。要求原地展开（O(1) 额外空间）。"
+    ],
+    "examples": [
+     {
+      "input": "root = [1,2,5,3,4,null,6]",
+      "output": "[1,null,2,null,3,null,4,null,5,null,6]"
+     },
+     {
+      "input": "root = []",
+      "output": "[]"
+     }
+    ],
+    "constraints": [
+     "树中节点数目范围在 [0, 2000] 内",
+     "-100 <= Node.val <= 100"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "前序 = 根 → 左 → 右，展开后左子树整体插在根与右子树之间。对每个有左孩子的节点：找到左子树的**最右节点**（根的右子树在前序中的前驱），把它接到右子树头上。",
+     "三步：① `pred.right = cur.right`（前驱接管右子树）② `cur.right = cur.left; cur.left = null`（左子树搬右侧）③ `cur` 右移，处理下一个。",
+     "每个节点最多被「找前驱」路过一次，整体 O(n)、O(1) 空间——比「前序存数组重连」更优雅。"
+    ],
+    "steps": [
+     "`cur = root`，循环直到 cur 为空",
+     "若 cur 无左孩子 → 直接 `cur = cur.right`",
+     "否则找左子树最右节点 `pred`（不断走 `pred.right`）",
+     "`pred.right = cur.right`；`cur.right = cur.left`；`cur.left = null`",
+     "`cur = cur.right` 继续"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def flatten(self, root: Optional[TreeNode]) -> None:\n        cur = root\n        while cur:\n            if cur.left:\n                pred = cur.left              # 左子树的最右节点\n                while pred.right:\n                    pred = pred.right\n                pred.right = cur.right       # 前驱接管右子树\n                cur.right = cur.left         # 左子树搬到右边\n                cur.left = None\n            cur = cur.right                  # 前序顺序右移"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "t",
+      "nodes": [
+       1,
+       2,
+       5,
+       3,
+       4,
+       null,
+       6
+      ],
+      "label": "root"
+     }
+    ],
+    "frames": [
+     {
+      "say": "展开后 = 前序 1→2→3→4→5→6。逐节点处理：左子树搬到右边，左子树的最右节点（前驱）接管原右子树",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "cur=1：先找左子树 {2,3,4} 的最右节点——一路向右走到 4，它就是 5 的「前驱」（前序中 5 的前一位）",
+      "hl": {
+       "t": [
+        4
+       ]
+      }
+     },
+     {
+      "say": "1.right = 2、1.left = null：左子树整体搬到右侧，原右子树 5 已挂在 4 下面",
+      "hl": {
+       "t": [
+        0,
+        1
+       ]
+      },
+      "tree": {
+       "t": {
+        "set": [
+         1,
+         null,
+         2,
+         3,
+         4,
+         null,
+         null,
+         null,
+         5,
+         null,
+         6
+        ]
+       }
+      }
+     },
+     {
+      "say": "cur=2：左子树 {3} 的最右是 3 → 3.right = 4；2.right = 3、2.left = null",
+      "hl": {
+       "t": [
+        1,
+        3,
+        4
+       ]
+      },
+      "tree": {
+       "t": {
+        "set": [
+         1,
+         null,
+         2,
+         null,
+         3,
+         null,
+         4,
+         null,
+         5,
+         null,
+         6
+        ]
+       }
+      }
+     },
+     {
+      "say": "cur=3：无左孩子 → 直接右移；cur=4、5 同理（4.right 已指向 5，5.right 已指向 6）",
+      "hl": {
+       "t": [
+        4,
+        6,
+        8
+       ]
+      }
+     },
+     {
+      "say": "展开完成：1→2→3→4→5→6，全右斜单链 ✓",
+      "hl": {
+       "t": [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10
+       ]
+      }
+     },
+     {
+      "say": "对比：也可以前序遍历存数组再重连（O(n) 空间）；前驱法原地完成，O(1) 额外空间",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "construct-binary-tree-from-preorder-and-inorder-traversal",
+   "num": 12,
+   "leet_id": 105,
+   "title_cn": "从前序与中序遍历序列构造二叉树",
+   "title_en": "Construct Binary Tree from Preorder and Inorder Traversal",
+   "difficulty": "中等",
+   "category": "binary-tree",
+   "tags": [
+    "树",
+    "数组",
+    "分治",
+    "二叉树"
+   ],
+   "statement": {
+    "desc": [
+     "给定两个整数数组 `preorder` 和 `inorder`（不含重复值），分别表示二叉树的**前序**和**中序**遍历，重构二叉树。"
+    ],
+    "examples": [
+     {
+      "input": "preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]",
+      "output": "[3,9,20,null,null,15,7]"
+     },
+     {
+      "input": "preorder = [-1], inorder = [-1]",
+      "output": "[-1]"
+     }
+    ],
+    "constraints": [
+     "1 <= preorder.length <= 3000",
+     "所有值互不相同"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "前序的第一位永远是**根**；在中序里找到这个根，其左侧是左子树的中序、右侧是右子树的中序；由长度可切出对应的前序段。递归即可。",
+     "直接 `inorder.index(root)` 每层 O(n) 会退化到 O(n²)；用哈希表 `val → inorder 下标` 一次建好，每层 O(1) 定位，总 O(n)。",
+     "实现时传前序的 `preL, preR` 与中序的 `inL, inR` 四个边界（或前序下标+区间长度），避免切片复制。"
+    ],
+    "steps": [
+     "建哈希表：中序值 → 下标（O(1) 定位根）",
+     "`build(preL, preR, inL, inR)`：区间空返回 None",
+     "根 = `preorder[preL]`；在中序找到 `idx`",
+     "左子树大小 `sz = idx - inL`",
+     "递归：左 = `build(preL+1, preL+sz, inL, idx-1)`；右 = `build(preL+sz+1, preR, idx+1, inR)`"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(n)（哈希 + 递归栈）"
+    },
+    "code": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:\n        idx_of = {v: i for i, v in enumerate(inorder)}  # 值→中序下标\n        def build(preL, preR, inL, inR):\n            if preL > preR:\n                return None\n            root = TreeNode(preorder[preL])   # 前序首位 = 根\n            idx = idx_of[root.val]            # 中序定位\n            sz = idx - inL                    # 左子树节点数\n            root.left = build(preL + 1, preL + sz, inL, idx - 1)\n            root.right = build(preL + sz + 1, preR, idx + 1, inR)\n            return root\n        return build(0, len(preorder) - 1, 0, len(inorder) - 1)"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "pre",
+      "vals": [
+       3,
+       9,
+       20,
+       15,
+       7
+      ],
+      "label": "preorder（前序）"
+     },
+     {
+      "t": "array",
+      "id": "ino",
+      "vals": [
+       9,
+       3,
+       15,
+       20,
+       7
+      ],
+      "label": "inorder（中序）"
+     },
+     {
+      "t": "tree",
+      "id": "t",
+      "nodes": [
+       3
+      ],
+      "label": "构造中的树"
+     }
+    ],
+    "frames": [
+     {
+      "say": "前序 = [根, 左..., 右...]；中序 = [左..., 根, 右...]。前序首位定根，中序定位切分左右",
+      "hl": {
+       "pre": [
+        0
+       ],
+       "ino": [
+        1
+       ]
+      }
+     },
+     {
+      "say": "前序首 3 = 根 → 中序里 3 的位置：左边 [9] 是左子树，右边 [15,20,7] 是右子树",
+      "hl": {
+       "pre": [
+        0
+       ],
+       "ino": [
+        1
+       ]
+      },
+      "tree": {
+       "t": {
+        "set": [
+         3
+        ]
+       }
+      }
+     },
+     {
+      "say": "左子树前序 [9]：首元素 9 = 左子树的根",
+      "hl": {
+       "pre": [
+        1
+       ],
+       "ino": [
+        0
+       ]
+      },
+      "tree": {
+       "t": {
+        "set": [
+         3,
+         9
+        ]
+       }
+      }
+     },
+     {
+      "say": "中序 [9] 左右皆空 → 9 是叶子",
+      "hl": {
+       "ino": [
+        0
+       ]
+      },
+      "tree": {
+       "t": {
+        "set": [
+         3,
+         9
+        ]
+       }
+      }
+     },
+     {
+      "say": "右子树前序 [20,15,7]：首元素 20 = 右子树的根",
+      "hl": {
+       "pre": [
+        2
+       ],
+       "ino": [
+        3
+       ]
+      },
+      "tree": {
+       "t": {
+        "set": [
+         3,
+         9,
+         20
+        ]
+       }
+      }
+     },
+     {
+      "say": "中序 20：左 [15] 右 [7] → 15、7 分别是 20 的左右孩子",
+      "hl": {
+       "pre": [
+        3,
+        4
+       ],
+       "ino": [
+        2,
+        4
+       ]
+      },
+      "tree": {
+       "t": {
+        "set": [
+         3,
+         9,
+         20,
+         null,
+         null,
+         15,
+         7
+        ]
+       }
+      }
+     },
+     {
+      "say": "构造完成 [3,9,20,null,null,15,7] ✓ — 每层用哈希表 O(1) 定位根，总 O(n)",
+      "hl": {
+       "t": [
+        0,
+        1,
+        2,
+        5,
+        6
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "path-sum-iii",
+   "num": 13,
+   "leet_id": 437,
+   "title_cn": "路径总和 III",
+   "title_en": "Path Sum III",
+   "difficulty": "中等",
+   "category": "binary-tree",
+   "tags": [
+    "树",
+    "深度优先搜索",
+    "二叉树",
+    "前缀和"
+   ],
+   "statement": {
+    "desc": [
+     "给定二叉树根节点 `root` 和整数 `targetSum`，求**路径数目**：路径只能**从上向下**（父到子），不需要从根开始，也不需要到叶子，只要节点值之和等于 `targetSum`。"
+    ],
+    "examples": [
+     {
+      "input": "root = [10,5,-3,3,2,null,11,3,-2,null,1], targetSum = 8",
+      "output": "3",
+      "explain": "5→3、5→2→1、-3→11"
+     },
+     {
+      "input": "root = [5,4,8,11,null,13,4,7,2,null,null,5,1], targetSum = 22",
+      "output": "3"
+     }
+    ],
+    "constraints": [
+     "节点数 [0, 1000]",
+     "-10^9 <= Node.val <= 10^9",
+     "-1000 <= targetSum <= 1000"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "暴力：以每个节点为起点向下 DFS 找路径，O(n²)。优化：**前缀和 + 哈希表**，一次自顶向下 DFS 解决。",
+     "从根到当前节点的路径前缀和为 `cur`。若某祖先的前缀和为 `cur - targetSum`，则「那个祖先的下一层 → 当前节点」这段恰好和为 targetSum。",
+     "哈希表 `cnt[prefix]` 记录每个前缀和出现次数；**回溯时把当前前缀的计数 -1**（离开子树后该前缀不可再配对），保证路径必须是向下的。"
+    ],
+    "steps": [
+     "`cnt = {0: 1}`：空前缀（路径从根开始）",
+     "`dfs(node, cur)`：`cur += node.val`",
+     "答案累加 `cnt[cur - targetSum]`（以当前节点结尾的合法路径数）",
+     "`cnt[cur] += 1`，递归左右孩子",
+     "回溯：`cnt[cur] -= 1`（关键！撤销本分支前缀）"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(n)"
+    },
+    "code": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nfrom collections import defaultdict\n\nclass Solution:\n    def pathSum(self, root: Optional[TreeNode], targetSum: int) -> int:\n        cnt = defaultdict(int)\n        cnt[0] = 1                    # 空前缀\n        def dfs(node, cur):\n            if not node:\n                return 0\n            cur += node.val\n            hits = cnt[cur - targetSum]   # 前缀配对\n            cnt[cur] += 1\n            hits += dfs(node.left, cur) + dfs(node.right, cur)\n            cnt[cur] -= 1                 # 回溯撤销\n            return hits\n        return dfs(root, 0)"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "t",
+      "nodes": [
+       10,
+       5,
+       -3,
+       3,
+       2,
+       null,
+       11,
+       3,
+       -2,
+       null,
+       1
+      ],
+      "label": "root",
+      "marks": {
+       "1": "起点?",
+       "2": "起点?"
+      }
+     },
+     {
+      "t": "var",
+      "id": "found",
+      "v": "0 条",
+      "label": "已找到路径"
+     }
+    ],
+    "frames": [
+     {
+      "say": "targetSum = 8。路径只能从上向下，可从任意节点开始/结束。以每个节点为起点向下枚举",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "起点根 10：10+5=15、10-3=7、10+5+3=18、10-3+11=18…没有任何一段 = 8 → 无",
+      "hl": {
+       "t": [
+        0,
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "起点 5：5 → 3 = 8 ✓ 第 1 条路径！",
+      "hl": {
+       "t": [
+        1,
+        3
+       ]
+      },
+      "set": {
+       "found": "1 条"
+      }
+     },
+     {
+      "say": "继续以 5 为起点：5 → 2 → 1 = 8 ✓ 第 2 条！",
+      "hl": {
+       "t": [
+        1,
+        4,
+        10
+       ]
+      },
+      "set": {
+       "found": "2 条"
+      }
+     },
+     {
+      "say": "起点 -3：-3 → 11 = 8 ✓ 第 3 条！",
+      "hl": {
+       "t": [
+        2,
+        6
+       ]
+      },
+      "set": {
+       "found": "3 条"
+      }
+     },
+     {
+      "say": "其余起点（3、2、11、叶子…）都凑不出 8。全树共 3 条 ✓",
+      "hl": {
+       "t": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        10
+       ]
+      },
+      "set": {
+       "found": "3 条 ✓"
+      }
+     },
+     {
+      "say": "暴力起点枚举 O(n²)；前缀和+哈希可到 O(n)：祖先前缀 = 当前前缀 - target 即命中",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "lowest-common-ancestor-of-a-binary-tree",
+   "num": 14,
+   "leet_id": 236,
+   "title_cn": "二叉树的最近公共祖先",
+   "title_en": "Lowest Common Ancestor of a Binary Tree",
+   "difficulty": "中等",
+   "category": "binary-tree",
+   "tags": [
+    "树",
+    "深度优先搜索",
+    "二叉树"
+   ],
+   "statement": {
+    "desc": [
+     "给定二叉树和树中两个节点 `p`、`q`，找它们的**最近公共祖先**（LCA）：同时是 p 和 q 的祖先、且深度最大（节点可以是自己的祖先）。"
+    ],
+    "examples": [
+     {
+      "input": "root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1",
+      "output": "3"
+     },
+     {
+      "input": "root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4",
+      "output": "5",
+      "explain": "5 自身是 4 的祖先"
+     }
+    ],
+    "constraints": [
+     "树中节点数目范围在 [2, 10^5] 内",
+     "所有节点值互不相同",
+     "p、q 均存在"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "递归后序遍历，函数含义：`dfs(node)` 返回「node 子树中 p 或 q 的命中情况」——命中一个返回该节点，都没有返回 null，**两个都命中返回 node 本身**（即 LCA）。",
+     "左右子树各递归一次：若左右**都非空** → p、q 分居两侧，当前 node 就是 LCA；若只有一侧非空 → 把那一侧的结果向上传递。",
+     "「节点可以是自己的祖先」天然被覆盖：p 是 q 的祖先时，q 一侧返回 null，p 一路向上传递成为答案。"
+    ],
+    "steps": [
+     "`dfs(node)`：空节点返回 null",
+     "node == p 或 node == q → 返回 node",
+     "`left`、`right` = 左右子树的递归结果",
+     "left 与 right 都非空 → 返回 node（LCA 找到）",
+     "否则返回非空的那个（把命中信息向上传）"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(h)"
+    },
+    "code": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':\n        if not root or root is p or root is q:\n            return root                 # 命中或走空\n        left = self.lowestCommonAncestor(root.left, p, q)\n        right = self.lowestCommonAncestor(root.right, p, q)\n        if left and right:              # 两侧各命中一个 → 我是 LCA\n            return root\n        return left or right            # 单侧命中向上传"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "t",
+      "nodes": [
+       3,
+       5,
+       1,
+       6,
+       2,
+       0,
+       8,
+       null,
+       null,
+       7,
+       4
+      ],
+      "label": "root",
+      "marks": {
+       "1": "p",
+       "10": "q"
+      }
+     },
+     {
+      "t": "var",
+      "id": "res",
+      "v": "?",
+      "label": "LCA"
+     }
+    ],
+    "frames": [
+     {
+      "say": "找 p=5 与 q=4 的最近公共祖先。dfs 返回：子树内命中的节点（双命中 = 当前节点）",
+      "hl": {
+       "t": [
+        1,
+        10
+       ]
+      }
+     },
+     {
+      "say": "dfs(6)：不是 p/q，左右皆空 → 返回 null",
+      "hl": {
+       "t": [
+        3
+       ]
+      }
+     },
+     {
+      "say": "dfs(7)：null；dfs(4)：命中 q！向上返回 4",
+      "hl": {
+       "t": [
+        9,
+        10
+       ]
+      }
+     },
+     {
+      "say": "dfs(2)：左 null、右 4 → 把 4 继续向上传",
+      "hl": {
+       "t": [
+        4
+       ]
+      }
+     },
+     {
+      "say": "dfs(5)：自己就是 p=5；右子树又带回 4 → 两侧（含自身）同时命中 → 5 就是 LCA！",
+      "hl": {
+       "t": [
+        1,
+        10
+       ]
+      },
+      "set": {
+       "res": "5"
+      }
+     },
+     {
+      "say": "结论：5 与 4 的 LCA = 5（节点可以是自己的祖先，此例 p 在 q 的祖先链上）",
+      "hl": {
+       "t": [
+        1,
+        4,
+        10
+       ]
+      }
+     },
+     {
+      "say": "对比 p=5、q=1：根 3 的左右子树各命中一个 → LCA = 3。一个递归函数覆盖所有情形",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "binary-tree-maximum-path-sum",
+   "num": 15,
+   "leet_id": 124,
+   "title_cn": "二叉树中的最大路径和",
+   "title_en": "Binary Tree Maximum Path Sum",
+   "difficulty": "困难",
+   "category": "binary-tree",
+   "tags": [
+    "树",
+    "深度优先搜索",
+    "动态规划",
+    "二叉树"
+   ],
+   "statement": {
+    "desc": [
+     "路径：树中任意节点序列，相邻节点有边相连，同一节点在路径中至多出现一次。**不必经过根**。",
+     "求所有路径中**节点值之和的最大值**。节点值可能为负。"
+    ],
+    "examples": [
+     {
+      "input": "root = [1,2,3]",
+      "output": "6",
+      "explain": "2→1→3"
+     },
+     {
+      "input": "root = [-10,9,20,null,null,15,7]",
+      "output": "42",
+      "explain": "15→20→7"
+     }
+    ],
+    "constraints": [
+     "节点数 [1, 3*10^4]",
+     "-1000 <= Node.val <= 1000"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "任意路径有一个「**拐点**」（最高节点）——它可能同时连接左右两条腿。以 x 为拐点的路径和 = `x.val + 左腿 + 右腿`。",
+     "腿的定义：从 x 的孩子向下延伸的单链最大和 = `child.val + max(左腿, 右腿)`，若为负则取 0（宁可不要这条腿）。递归向上**只能带一条腿**。",
+     "于是 dfs 返回「以 node 为端点向下的最大腿长」，在返回前用 `node.val + 左腿 + 右腿` 更新全局答案。负值拦截是关键细节。"
+    ],
+    "steps": [
+     "`dfs(node)`：空节点返回 0",
+     "`l = max(dfs(左), 0)`、`r = max(dfs(右), 0)`（负腿直接剪掉）",
+     "更新答案：`ans = max(ans, node.val + l + r)`（拐点路径）",
+     "返回 `node.val + max(l, r)`（向上只能带一条腿）"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(h)"
+    },
+    "code": "# Definition for a binary tree node.\n# class TreeNode:\n#     def __init__(self, val=0, left=None, right=None):\n#         self.val = val\n#         self.left = left\n#         self.right = right\nclass Solution:\n    def maxPathSum(self, root: Optional[TreeNode]) -> int:\n        self.ans = float(\"-inf\")\n        def dfs(node):\n            if not node:\n                return 0\n            l = max(dfs(node.left), 0)    # 负腿剪掉\n            r = max(dfs(node.right), 0)\n            self.ans = max(self.ans,      # 拐点路径\n                           node.val + l + r)\n            return node.val + max(l, r)   # 向上只带一条腿\n        dfs(root)\n        return self.ans"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "tree",
+      "id": "t",
+      "nodes": [
+       -10,
+       9,
+       20,
+       null,
+       null,
+       15,
+       7
+      ],
+      "label": "root"
+     },
+     {
+      "t": "var",
+      "id": "ans",
+      "v": "-∞",
+      "label": "ans（最大路径和）"
+     }
+    ],
+    "frames": [
+     {
+      "say": "路径有「拐点」：以 x 为拐点 = x.val + 左腿 + 右腿；向上递归只能带一条腿 max(左, 右)",
+      "hl": {
+       "t": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "叶子 9：左腿右腿都是 0 → 返回 9，拐点值 9 不更新 ans（-∞ → 9）",
+      "hl": {
+       "t": [
+        1
+       ]
+      },
+      "mark": {
+       "t": {
+        "1": "腿9"
+       }
+      },
+      "set": {
+       "ans": 9
+      }
+     },
+     {
+      "say": "叶子 15：返回 15",
+      "hl": {
+       "t": [
+        5
+       ]
+      },
+      "mark": {
+       "t": {
+        "5": "腿15"
+       }
+      },
+      "set": {
+       "ans": 15
+      }
+     },
+     {
+      "say": "叶子 7：返回 7",
+      "hl": {
+       "t": [
+        6
+       ]
+      },
+      "mark": {
+       "t": {
+        "6": "腿7"
+       }
+      },
+      "set": {
+       "ans": 15
+      }
+     },
+     {
+      "say": "拐点 20：20 + 15 + 7 = 42 → ans = 42！向上只带一条腿：20 + max(15,7) = 35",
+      "hl": {
+       "t": [
+        2
+       ]
+      },
+      "mark": {
+       "t": {
+        "2": "腿35"
+       }
+      },
+      "set": {
+       "ans": 42
+      }
+     },
+     {
+      "say": "根 -10：拐点 -10 + 9 + 35 = 34 < 42 不更新；向上带 -10 + 35 = 25",
+      "hl": {
+       "t": [
+        0
+       ]
+      },
+      "mark": {
+       "t": {
+        "0": "腿25"
+       }
+      },
+      "set": {
+       "ans": 42
+      }
+     },
+     {
+      "say": "负值拦截：若某腿为负，max(腿, 0) 直接舍弃——路径不必经过每个节点。答案 42 = 15→20→7",
+      "hl": {
+       "t": [
+        5,
+        2,
+        6
+       ]
+      }
+     }
+    ]
+   }
+  }
+ ]
+}

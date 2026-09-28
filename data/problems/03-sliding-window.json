@@ -1,0 +1,576 @@
+{
+ "problems": [
+  {
+   "id": "longest-substring-without-repeating-characters",
+   "num": 1,
+   "leet_id": 3,
+   "title_cn": "无重复字符的最长子串",
+   "title_en": "Longest Substring Without Repeating Characters",
+   "difficulty": "中等",
+   "category": "sliding-window",
+   "tags": [
+    "哈希表",
+    "字符串",
+    "滑动窗口"
+   ],
+   "statement": {
+    "desc": [
+     "给定一个字符串 `s`，请你找出其中不含有重复字符的**最长子串**的长度。"
+    ],
+    "examples": [
+     {
+      "input": "s = \"abcabcbb\"",
+      "output": "3",
+      "explain": "无重复字符的最长子串是 \"abc\""
+     },
+     {
+      "input": "s = \"bbbbb\"",
+      "output": "1",
+      "explain": "最长子串是 \"b\""
+     },
+     {
+      "input": "s = \"pwwkew\"",
+      "output": "3",
+      "explain": "最长子串是 \"wke\"，注意答案必须是子串而非子序列"
+     }
+    ],
+    "constraints": [
+     "0 <= s.length <= 5 * 10^4",
+     "s 由英文字母、数字、符号和空格组成"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "枚举所有子串是 O(n²) 起步。滑动窗口把问题变成一次遍历：窗口 `[l, r]` 内**永远不含重复字符**。",
+     "`r` 每右移一格，把新字符加入窗口计数；若该字符计数超过 1，说明重复了——不断右移 `l` 并移除左端字符，直到重复消除。",
+     "由于 `l`、`r` 都只前进不后退，总时间 O(n)。每一步用 `r - l + 1` 更新答案。"
+    ],
+    "steps": [
+     "初始化哈希表 `win`（窗口内字符计数）、`l = 0`、`best = 0`",
+     "`r` 从 0 到 n-1 遍历：`win[s[r]] += 1`",
+     "若 `win[s[r]] > 1`：右移 `l` 并把 `s[l]` 的计数减 1，直到 `s[r]` 不再重复",
+     "每轮末尾用 `r - l + 1` 更新 `best`",
+     "返回 `best`"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(|Σ|)（字符集大小）"
+    },
+    "code": "class Solution:\n    def lengthOfLongestSubstring(self, s: str) -> int:\n        win = {}  # 窗口内字符 -> 出现次数\n        best = l = 0\n        for r, ch in enumerate(s):\n            win[ch] = win.get(ch, 0) + 1\n            while win[ch] > 1:          # ch 重复，收缩左端\n                win[s[l]] -= 1\n                l += 1\n            best = max(best, r - l + 1)\n        return best\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "无重复最长子串 · 滑动窗口"
+    },
+    "views": [
+     {
+      "t": "array",
+      "id": "s",
+      "vals": [
+       "a",
+       "b",
+       "c",
+       "a",
+       "b",
+       "c",
+       "b",
+       "b"
+      ],
+      "label": "s"
+     },
+     {
+      "t": "ptr",
+      "id": "l",
+      "on": "s",
+      "name": "l",
+      "i": 0,
+      "dy": -1,
+      "color": "#1d4ed8"
+     },
+     {
+      "t": "ptr",
+      "id": "r",
+      "on": "s",
+      "name": "r",
+      "i": 0,
+      "dy": 1,
+      "color": "#e5484d"
+     },
+     {
+      "t": "map",
+      "id": "win",
+      "label": "win(窗口计数)"
+     },
+     {
+      "t": "var",
+      "id": "best",
+      "v": 0,
+      "label": "best"
+     }
+    ],
+    "frames": [
+     {
+      "say": "滑动窗口 [l,r] 内始终无重复。r 右移扩窗，一旦重复就右移 l 收缩",
+      "hl": {
+       "s": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "r=0 加入 'a'：win={a:1}，无重复，best=1",
+      "add": {
+       "win": [
+        [
+         "a",
+         1
+        ]
+       ]
+      },
+      "set": {
+       "best": 1
+      },
+      "hl": {
+       "s": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "r=1 加入 'b'：win={a:1,b:1}，best=2",
+      "ptr": {
+       "r": 1
+      },
+      "add": {
+       "win": [
+        [
+         "b",
+         1
+        ]
+       ]
+      },
+      "set": {
+       "best": 2
+      },
+      "hl": {
+       "s": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "r=2 加入 'c'：win={a:1,b:1,c:1}，窗口 \"abc\"，best=3",
+      "ptr": {
+       "r": 2
+      },
+      "add": {
+       "win": [
+        [
+         "c",
+         1
+        ]
+       ]
+      },
+      "set": {
+       "best": 3
+      },
+      "hl": {
+       "s": [
+        0,
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "r=3 加入 'a' → win[a]=2 重复！收缩：移除 s[l=0]='a'，l→1，窗口恢复无重复 \"bca\"",
+      "ptr": {
+       "r": 3,
+       "l": 1
+      },
+      "hl": {
+       "s": [
+        0,
+        1,
+        2,
+        3
+       ]
+      },
+      "add": {
+       "win": [
+        [
+         "a",
+         1
+        ]
+       ]
+      }
+     },
+     {
+      "say": "r=4 'b' 重复 → 移除 s[1]='b'，l→2；r=5 'c' 重复 → 移除 s[2]='c'，l→3。窗口始终 [a,b,c]",
+      "ptr": {
+       "r": 5,
+       "l": 3
+      },
+      "hl": {
+       "s": [
+        3,
+        4,
+        5
+       ]
+      }
+     },
+     {
+      "say": "r=6 'b' 重复 → 移除 'a'(l→4) 后仍重复 → 再移除 'b'(l→5)，窗口 \"cb\"",
+      "ptr": {
+       "r": 6,
+       "l": 5
+      },
+      "hl": {
+       "s": [
+        4,
+        5,
+        6
+       ]
+      },
+      "add": {
+       "win": [
+        [
+         "a",
+         0
+        ],
+        [
+         "c",
+         1
+        ],
+        [
+         "b",
+         1
+        ]
+       ]
+      }
+     },
+     {
+      "say": "r=7 'b' 重复 → 连续收缩 l→6、l→7。r 到头，best 始终是 3",
+      "ptr": {
+       "r": 7,
+       "l": 7
+      },
+      "hl": {
+       "s": [
+        6,
+        7
+       ]
+      }
+     },
+     {
+      "say": "答案 best=3（\"abc\" / \"bca\" / \"cab\" 均为 3）。l、r 各走一遍 → O(n)",
+      "hl": {
+       "best": [
+        "v"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "find-all-anagrams-in-a-string",
+   "num": 2,
+   "leet_id": 438,
+   "title_cn": "找到字符串中所有字母异位词",
+   "title_en": "Find All Anagrams in a String",
+   "difficulty": "中等",
+   "category": "sliding-window",
+   "tags": [
+    "哈希表",
+    "字符串",
+    "滑动窗口"
+   ],
+   "statement": {
+    "desc": [
+     "给定两个字符串 `s` 和 `p`，找到 `s` 中所有 `p` 的**异位词**子串，返回这些子串的起始索引。不考虑答案输出的顺序。",
+     "异位词指由相同字母重排列形成的字符串（包括相同的字符串）。"
+    ],
+    "examples": [
+     {
+      "input": "s = \"cbaebabacd\", p = \"abc\"",
+      "output": "[0,6]",
+      "explain": "起始索引 0 的子串 \"cba\" 与 6 的 \"bac\" 都是 \"abc\" 的异位词"
+     },
+     {
+      "input": "s = \"abab\", p = \"ab\"",
+      "output": "[0,1,2]"
+     }
+    ],
+    "constraints": [
+     "1 <= s.length, p.length <= 3 * 10^4",
+     "s 和 p 仅包含小写字母"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "定长滑动窗口：窗口长度固定为 `len(p)`，判断「窗口内字符计数是否与 p 的计数完全一致」。",
+     "用**差值计数**避免每次全量比较：`cnt` 初始为 p 的需求，`need = len(p)` 表示还缺多少个目标字符。右端进字符时若该字符是「正需要的」则 `need--`，左端出字符时若「出掉了仍需要的」则 `need++`。",
+     "`need == 0` 即窗口恰为 p 的异位词。进出的字符最多各走一遍，O(n)。"
+    ],
+    "steps": [
+     "`cnt = Counter(p)`，`need = len(p)`，`ans = []`",
+     "`r` 遍历 `s`：若 `cnt[s[r]] > 0` 则 `need -= 1`；然后 `cnt[s[r]] -= 1`",
+     "当窗口长度达到 `len(p)`（`l = r - n + 1 >= 0`）时：`need == 0` 则把 `l` 加入答案",
+     "移除左端字符 `s[l]`：`cnt[s[l]] += 1`，若加回后 `cnt[s[l]] > 0` 说明移掉了一个仍需要的字符，`need += 1`",
+     "遍历结束返回 `ans`"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(|Σ|)"
+    },
+    "code": "from collections import Counter\n\nclass Solution:\n    def findAnagrams(self, s: str, p: str) -> List[int]:\n        n = len(p)\n        cnt = Counter(p)   # 需求计数\n        need = n           # 还缺多少个目标字符\n        ans = []\n        for r, ch in enumerate(s):\n            if cnt[ch] > 0:\n                need -= 1              # 正好补上一个缺口\n            cnt[ch] -= 1\n            l = r - n + 1\n            if l >= 0:                 # 窗口凑满 n 个字符\n                if need == 0:\n                    ans.append(l)      # 全部需求满足 → 异位词\n                out = s[l]\n                cnt[out] += 1\n                if cnt[out] > 0:       # 出掉的是仍需要的字符\n                    need += 1\n        return ans\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "找所有异位词 · 定长窗口 + 差值计数"
+    },
+    "views": [
+     {
+      "t": "array",
+      "id": "s",
+      "vals": [
+       "c",
+       "b",
+       "a",
+       "e",
+       "b",
+       "a",
+       "b",
+       "a",
+       "c",
+       "d"
+      ],
+      "label": "s"
+     },
+     {
+      "t": "ptr",
+      "id": "l",
+      "on": "s",
+      "name": "l",
+      "i": 0,
+      "dy": -1,
+      "color": "#1d4ed8"
+     },
+     {
+      "t": "ptr",
+      "id": "r",
+      "on": "s",
+      "name": "r",
+      "i": 0,
+      "dy": 1,
+      "color": "#e5484d"
+     },
+     {
+      "t": "map",
+      "id": "cnt",
+      "label": "cnt(差值,0=刚好)"
+     },
+     {
+      "t": "var",
+      "id": "need",
+      "v": 3,
+      "label": "need"
+     },
+     {
+      "t": "var",
+      "id": "ans",
+      "v": "[]",
+      "label": "ans"
+     }
+    ],
+    "frames": [
+     {
+      "say": "p=\"abc\"，cnt 初始为需求 {a:1,b:1,c:1}，need=3。窗口定长 3，need=0 即命中",
+      "hl": {
+       "cnt": [
+        0,
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "r=0 'c'：cnt[c]→0，need=2；r=1 'b'：cnt[b]→0，need=1",
+      "ptr": {
+       "r": 1
+      },
+      "set": {
+       "need": 1
+      },
+      "hl": {
+       "s": [
+        0,
+        1
+       ]
+      },
+      "add": {
+       "cnt": [
+        [
+         "c",
+         0
+        ],
+        [
+         "b",
+         0
+        ]
+       ]
+      }
+     },
+     {
+      "say": "r=2 'a'：cnt[a]→0，need=0，窗口 \"cba\" 长度恰为 3 → 命中！ans=[0]",
+      "ptr": {
+       "r": 2
+      },
+      "set": {
+       "need": 0,
+       "ans": "[0]"
+      },
+      "hl": {
+       "s": [
+        0,
+        1,
+        2
+       ]
+      },
+      "add": {
+       "cnt": [
+        [
+         "a",
+         0
+        ]
+       ]
+      }
+     },
+     {
+      "say": "r=3 'e'：多余的字符 cnt[e]=-1，窗口超长 → 移除 s[0]='c'：cnt[c]→1，need=1，不再命中",
+      "ptr": {
+       "r": 3,
+       "l": 1
+      },
+      "set": {
+       "need": 1
+      },
+      "hl": {
+       "s": [
+        0,
+        3
+       ]
+      },
+      "add": {
+       "cnt": [
+        [
+         "e",
+         -1
+        ],
+        [
+         "c",
+         1
+        ]
+       ]
+      }
+     },
+     {
+      "say": "r=4 'b'：cnt[b]=-1 多了；移除 s[1]='b' 恢复 0。窗口 \"aeb\" 不是异位词（缺 c）",
+      "ptr": {
+       "r": 4,
+       "l": 2
+      },
+      "hl": {
+       "s": [
+        1,
+        4
+       ]
+      },
+      "add": {
+       "cnt": [
+        [
+         "b",
+         0
+        ]
+       ]
+      }
+     },
+     {
+      "say": "r=5 'a' 多余、移除左端 'a'；r=6 'b' 多余、移除 'e'——cnt 里 c 仍是 1，一直缺 c",
+      "ptr": {
+       "r": 6,
+       "l": 4
+      },
+      "hl": {
+       "s": [
+        2,
+        5
+       ]
+      },
+      "add": {
+       "cnt": [
+        [
+         "a",
+         0
+        ],
+        [
+         "e",
+         0
+        ]
+       ]
+      }
+     },
+     {
+      "say": "r=7 'a' 多余、移除 'b'；此时窗口 \"ab?\" 仍缺 c。r=8 'c'：cnt[c]→0，need=0 → 命中！ans=[0,6]",
+      "ptr": {
+       "r": 8,
+       "l": 6
+      },
+      "set": {
+       "need": 0,
+       "ans": "[0, 6]"
+      },
+      "hl": {
+       "s": [
+        6,
+        7,
+        8
+       ]
+      },
+      "add": {
+       "cnt": [
+        [
+         "c",
+         0
+        ],
+        [
+         "b",
+         0
+        ],
+        [
+         "a",
+         -1
+        ]
+       ]
+      }
+     },
+     {
+      "say": "r=9 'd' 多余，移除 s[6]='b' 后遍历结束。最终 ans=[0,6]，s 与 p 各字符进出一次 → O(n)",
+      "ptr": {
+       "r": 9
+      },
+      "hl": {
+       "ans": [
+        "v"
+       ]
+      }
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,1554 @@
+{
+ "categories": [
+  {
+   "id": "hash",
+   "name": "哈希",
+   "order": 0,
+   "count": 3,
+   "problems": [
+    {
+     "id": "two-sum",
+     "num": 1,
+     "leet_id": 1,
+     "title_cn": "两数之和",
+     "title_en": "Two Sum",
+     "difficulty": "简单",
+     "category": "hash",
+     "tags": [
+      "数组",
+      "哈希表"
+     ]
+    },
+    {
+     "id": "group-anagrams",
+     "num": 2,
+     "leet_id": 49,
+     "title_cn": "字母异位词分组",
+     "title_en": "Group Anagrams",
+     "difficulty": "中等",
+     "category": "hash",
+     "tags": [
+      "数组",
+      "哈希表",
+      "字符串",
+      "排序"
+     ]
+    },
+    {
+     "id": "longest-consecutive-sequence",
+     "num": 3,
+     "leet_id": 128,
+     "title_cn": "最长连续序列",
+     "title_en": "Longest Consecutive Sequence",
+     "difficulty": "中等",
+     "category": "hash",
+     "tags": [
+      "并查集",
+      "数组",
+      "哈希表"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "two-pointers",
+   "name": "双指针",
+   "order": 1,
+   "count": 4,
+   "problems": [
+    {
+     "id": "move-zeroes",
+     "num": 1,
+     "leet_id": 283,
+     "title_cn": "移动零",
+     "title_en": "Move Zeroes",
+     "difficulty": "简单",
+     "category": "two-pointers",
+     "tags": [
+      "数组",
+      "双指针"
+     ]
+    },
+    {
+     "id": "container-with-most-water",
+     "num": 2,
+     "leet_id": 11,
+     "title_cn": "盛最多水的容器",
+     "title_en": "Container With Most Water",
+     "difficulty": "中等",
+     "category": "two-pointers",
+     "tags": [
+      "贪心",
+      "数组",
+      "双指针"
+     ]
+    },
+    {
+     "id": "3sum",
+     "num": 3,
+     "leet_id": 15,
+     "title_cn": "三数之和",
+     "title_en": "3Sum",
+     "difficulty": "中等",
+     "category": "two-pointers",
+     "tags": [
+      "数组",
+      "双指针",
+      "排序"
+     ]
+    },
+    {
+     "id": "trapping-rain-water",
+     "num": 4,
+     "leet_id": 42,
+     "title_cn": "接雨水",
+     "title_en": "Trapping Rain Water",
+     "difficulty": "困难",
+     "category": "two-pointers",
+     "tags": [
+      "栈",
+      "数组",
+      "双指针",
+      "动态规划",
+      "单调栈"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sliding-window",
+   "name": "滑动窗口",
+   "order": 2,
+   "count": 2,
+   "problems": [
+    {
+     "id": "longest-substring-without-repeating-characters",
+     "num": 1,
+     "leet_id": 3,
+     "title_cn": "无重复字符的最长子串",
+     "title_en": "Longest Substring Without Repeating Characters",
+     "difficulty": "中等",
+     "category": "sliding-window",
+     "tags": [
+      "哈希表",
+      "字符串",
+      "滑动窗口"
+     ]
+    },
+    {
+     "id": "find-all-anagrams-in-a-string",
+     "num": 2,
+     "leet_id": 438,
+     "title_cn": "找到字符串中所有字母异位词",
+     "title_en": "Find All Anagrams in a String",
+     "difficulty": "中等",
+     "category": "sliding-window",
+     "tags": [
+      "哈希表",
+      "字符串",
+      "滑动窗口"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "substring",
+   "name": "子串",
+   "order": 3,
+   "count": 3,
+   "problems": [
+    {
+     "id": "subarray-sum-equals-k",
+     "num": 1,
+     "leet_id": 560,
+     "title_cn": "和为 K 的子数组",
+     "title_en": "Subarray Sum Equals K",
+     "difficulty": "中等",
+     "category": "substring",
+     "tags": [
+      "数组",
+      "哈希表",
+      "前缀和"
+     ]
+    },
+    {
+     "id": "sliding-window-maximum",
+     "num": 2,
+     "leet_id": 239,
+     "title_cn": "滑动窗口最大值",
+     "title_en": "Sliding Window Maximum",
+     "difficulty": "困难",
+     "category": "substring",
+     "tags": [
+      "队列",
+      "数组",
+      "滑动窗口",
+      "单调队列",
+      "堆"
+     ]
+    },
+    {
+     "id": "minimum-window-substring",
+     "num": 3,
+     "leet_id": 76,
+     "title_cn": "最小覆盖子串",
+     "title_en": "Minimum Window Substring",
+     "difficulty": "困难",
+     "category": "substring",
+     "tags": [
+      "哈希表",
+      "字符串",
+      "滑动窗口"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "array",
+   "name": "普通数组",
+   "order": 4,
+   "count": 5,
+   "problems": [
+    {
+     "id": "maximum-subarray",
+     "num": 1,
+     "leet_id": 53,
+     "title_cn": "最大子数组和",
+     "title_en": "Maximum Subarray",
+     "difficulty": "中等",
+     "category": "array",
+     "tags": [
+      "数组",
+      "分治",
+      "动态规划"
+     ]
+    },
+    {
+     "id": "merge-intervals",
+     "num": 2,
+     "leet_id": 56,
+     "title_cn": "合并区间",
+     "title_en": "Merge Intervals",
+     "difficulty": "中等",
+     "category": "array",
+     "tags": [
+      "数组",
+      "排序"
+     ]
+    },
+    {
+     "id": "rotate-array",
+     "num": 3,
+     "leet_id": 189,
+     "title_cn": "轮转数组",
+     "title_en": "Rotate Array",
+     "difficulty": "中等",
+     "category": "array",
+     "tags": [
+      "数组",
+      "数学",
+      "双指针"
+     ]
+    },
+    {
+     "id": "product-of-array-except-self",
+     "num": 4,
+     "leet_id": 238,
+     "title_cn": "除自身以外数组的乘积",
+     "title_en": "Product of Array Except Self",
+     "difficulty": "中等",
+     "category": "array",
+     "tags": [
+      "数组",
+      "前缀和"
+     ]
+    },
+    {
+     "id": "first-missing-positive",
+     "num": 5,
+     "leet_id": 41,
+     "title_cn": "缺失的第一个正数",
+     "title_en": "First Missing Positive",
+     "difficulty": "困难",
+     "category": "array",
+     "tags": [
+      "数组",
+      "哈希表"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "matrix",
+   "name": "矩阵",
+   "order": 5,
+   "count": 4,
+   "problems": [
+    {
+     "id": "set-matrix-zeroes",
+     "num": 1,
+     "leet_id": 73,
+     "title_cn": "矩阵置零",
+     "title_en": "Set Matrix Zeroes",
+     "difficulty": "中等",
+     "category": "matrix",
+     "tags": [
+      "数组",
+      "哈希表",
+      "矩阵"
+     ]
+    },
+    {
+     "id": "spiral-matrix",
+     "num": 2,
+     "leet_id": 54,
+     "title_cn": "螺旋矩阵",
+     "title_en": "Spiral Matrix",
+     "difficulty": "中等",
+     "category": "matrix",
+     "tags": [
+      "数组",
+      "矩阵",
+      "模拟"
+     ]
+    },
+    {
+     "id": "rotate-image",
+     "num": 3,
+     "leet_id": 48,
+     "title_cn": "旋转图像",
+     "title_en": "Rotate Image",
+     "difficulty": "中等",
+     "category": "matrix",
+     "tags": [
+      "数组",
+      "数学",
+      "矩阵"
+     ]
+    },
+    {
+     "id": "search-a-2d-matrix-ii",
+     "num": 4,
+     "leet_id": 240,
+     "title_cn": "搜索二维矩阵 II",
+     "title_en": "Search a 2D Matrix II",
+     "difficulty": "中等",
+     "category": "matrix",
+     "tags": [
+      "数组",
+      "二分查找",
+      "分治",
+      "矩阵"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "linked-list",
+   "name": "链表",
+   "order": 6,
+   "count": 14,
+   "problems": [
+    {
+     "id": "intersection-of-two-linked-lists",
+     "num": 1,
+     "leet_id": 160,
+     "title_cn": "相交链表",
+     "title_en": "Intersection of Two Linked Lists",
+     "difficulty": "简单",
+     "category": "linked-list",
+     "tags": [
+      "哈希表",
+      "链表",
+      "双指针"
+     ]
+    },
+    {
+     "id": "reverse-linked-list",
+     "num": 2,
+     "leet_id": 206,
+     "title_cn": "反转链表",
+     "title_en": "Reverse Linked List",
+     "difficulty": "简单",
+     "category": "linked-list",
+     "tags": [
+      "递归",
+      "链表"
+     ]
+    },
+    {
+     "id": "palindrome-linked-list",
+     "num": 3,
+     "leet_id": 234,
+     "title_cn": "回文链表",
+     "title_en": "Palindrome Linked List",
+     "difficulty": "简单",
+     "category": "linked-list",
+     "tags": [
+      "栈",
+      "递归",
+      "链表",
+      "双指针"
+     ]
+    },
+    {
+     "id": "linked-list-cycle",
+     "num": 4,
+     "leet_id": 141,
+     "title_cn": "环形链表",
+     "title_en": "Linked List Cycle",
+     "difficulty": "简单",
+     "category": "linked-list",
+     "tags": [
+      "哈希表",
+      "链表",
+      "双指针"
+     ]
+    },
+    {
+     "id": "linked-list-cycle-ii",
+     "num": 5,
+     "leet_id": 142,
+     "title_cn": "环形链表 II",
+     "title_en": "Linked List Cycle II",
+     "difficulty": "中等",
+     "category": "linked-list",
+     "tags": [
+      "哈希表",
+      "链表",
+      "双指针"
+     ]
+    },
+    {
+     "id": "merge-two-sorted-lists",
+     "num": 6,
+     "leet_id": 21,
+     "title_cn": "合并两个有序链表",
+     "title_en": "Merge Two Sorted Lists",
+     "difficulty": "简单",
+     "category": "linked-list",
+     "tags": [
+      "递归",
+      "链表"
+     ]
+    },
+    {
+     "id": "add-two-numbers",
+     "num": 7,
+     "leet_id": 2,
+     "title_cn": "两数相加",
+     "title_en": "Add Two Numbers",
+     "difficulty": "中等",
+     "category": "linked-list",
+     "tags": [
+      "递归",
+      "链表",
+      "数学"
+     ]
+    },
+    {
+     "id": "remove-nth-node-from-end-of-list",
+     "num": 8,
+     "leet_id": 19,
+     "title_cn": "删除链表的倒数第 N 个结点",
+     "title_en": "Remove Nth Node From End of List",
+     "difficulty": "中等",
+     "category": "linked-list",
+     "tags": [
+      "链表",
+      "双指针"
+     ]
+    },
+    {
+     "id": "swap-nodes-in-pairs",
+     "num": 9,
+     "leet_id": 24,
+     "title_cn": "两两交换链表中的节点",
+     "title_en": "Swap Nodes in Pairs",
+     "difficulty": "中等",
+     "category": "linked-list",
+     "tags": [
+      "递归",
+      "链表"
+     ]
+    },
+    {
+     "id": "reverse-nodes-in-k-group",
+     "num": 10,
+     "leet_id": 25,
+     "title_cn": "K 个一组翻转链表",
+     "title_en": "Reverse Nodes in k-Group",
+     "difficulty": "困难",
+     "category": "linked-list",
+     "tags": [
+      "递归",
+      "链表"
+     ]
+    },
+    {
+     "id": "copy-list-with-random-pointer",
+     "num": 11,
+     "leet_id": 138,
+     "title_cn": "随机链表的复制",
+     "title_en": "Copy List with Random Pointer",
+     "difficulty": "中等",
+     "category": "linked-list",
+     "tags": [
+      "哈希表",
+      "链表"
+     ]
+    },
+    {
+     "id": "sort-list",
+     "num": 12,
+     "leet_id": 148,
+     "title_cn": "排序链表",
+     "title_en": "Sort List",
+     "difficulty": "中等",
+     "category": "linked-list",
+     "tags": [
+      "链表",
+      "双指针",
+      "分治",
+      "排序",
+      "归并排序"
+     ]
+    },
+    {
+     "id": "merge-k-sorted-lists",
+     "num": 13,
+     "leet_id": 23,
+     "title_cn": "合并 K 个升序链表",
+     "title_en": "Merge k Sorted Lists",
+     "difficulty": "困难",
+     "category": "linked-list",
+     "tags": [
+      "链表",
+      "分治",
+      "堆",
+      "归并排序"
+     ]
+    },
+    {
+     "id": "lru-cache",
+     "num": 14,
+     "leet_id": 146,
+     "title_cn": "LRU 缓存",
+     "title_en": "LRU Cache",
+     "difficulty": "中等",
+     "category": "linked-list",
+     "tags": [
+      "设计",
+      "哈希表",
+      "链表",
+      "双向链表"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "binary-tree",
+   "name": "二叉树",
+   "order": 7,
+   "count": 15,
+   "problems": [
+    {
+     "id": "invert-binary-tree",
+     "num": 1,
+     "leet_id": 226,
+     "title_cn": "翻转二叉树",
+     "title_en": "Invert Binary Tree",
+     "difficulty": "简单",
+     "category": "binary-tree",
+     "tags": [
+      "树",
+      "深度优先搜索",
+      "广度优先搜索",
+      "递归"
+     ]
+    },
+    {
+     "id": "binary-tree-inorder-traversal",
+     "num": 2,
+     "leet_id": 94,
+     "title_cn": "二叉树的中序遍历",
+     "title_en": "Binary Tree Inorder Traversal",
+     "difficulty": "简单",
+     "category": "binary-tree",
+     "tags": [
+      "栈",
+      "树",
+      "深度优先搜索",
+      "二叉树"
+     ]
+    },
+    {
+     "id": "maximum-depth-of-binary-tree",
+     "num": 3,
+     "leet_id": 104,
+     "title_cn": "二叉树的最大深度",
+     "title_en": "Maximum Depth of Binary Tree",
+     "difficulty": "简单",
+     "category": "binary-tree",
+     "tags": [
+      "树",
+      "深度优先搜索",
+      "广度优先搜索",
+      "二叉树"
+     ]
+    },
+    {
+     "id": "symmetric-tree",
+     "num": 4,
+     "leet_id": 101,
+     "title_cn": "对称二叉树",
+     "title_en": "Symmetric Tree",
+     "difficulty": "简单",
+     "category": "binary-tree",
+     "tags": [
+      "树",
+      "深度优先搜索",
+      "广度优先搜索",
+      "二叉树"
+     ]
+    },
+    {
+     "id": "diameter-of-binary-tree",
+     "num": 5,
+     "leet_id": 543,
+     "title_cn": "二叉树的直径",
+     "title_en": "Diameter of Binary Tree",
+     "difficulty": "简单",
+     "category": "binary-tree",
+     "tags": [
+      "树",
+      "深度优先搜索",
+      "二叉树"
+     ]
+    },
+    {
+     "id": "binary-tree-level-order-traversal",
+     "num": 6,
+     "leet_id": 102,
+     "title_cn": "二叉树的层序遍历",
+     "title_en": "Binary Tree Level Order Traversal",
+     "difficulty": "中等",
+     "category": "binary-tree",
+     "tags": [
+      "树",
+      "广度优先搜索",
+      "二叉树"
+     ]
+    },
+    {
+     "id": "convert-sorted-array-to-binary-search-tree",
+     "num": 7,
+     "leet_id": 108,
+     "title_cn": "将有序数组转换为二叉搜索树",
+     "title_en": "Convert Sorted Array to Binary Search Tree",
+     "difficulty": "简单",
+     "category": "binary-tree",
+     "tags": [
+      "树",
+      "二叉搜索树",
+      "分治",
+      "二叉树"
+     ]
+    },
+    {
+     "id": "validate-binary-search-tree",
+     "num": 8,
+     "leet_id": 98,
+     "title_cn": "验证二叉搜索树",
+     "title_en": "Validate Binary Search Tree",
+     "difficulty": "中等",
+     "category": "binary-tree",
+     "tags": [
+      "树",
+      "深度优先搜索",
+      "二叉搜索树",
+      "二叉树"
+     ]
+    },
+    {
+     "id": "kth-smallest-element-in-a-bst",
+     "num": 9,
+     "leet_id": 230,
+     "title_cn": "二叉搜索树中第K小的元素",
+     "title_en": "Kth Smallest Element in a BST",
+     "difficulty": "中等",
+     "category": "binary-tree",
+     "tags": [
+      "树",
+      "深度优先搜索",
+      "二叉搜索树",
+      "二叉树"
+     ]
+    },
+    {
+     "id": "binary-tree-right-side-view",
+     "num": 10,
+     "leet_id": 199,
+     "title_cn": "二叉树的右视图",
+     "title_en": "Binary Tree Right Side View",
+     "difficulty": "中等",
+     "category": "binary-tree",
+     "tags": [
+      "树",
+      "深度优先搜索",
+      "广度优先搜索",
+      "二叉树"
+     ]
+    },
+    {
+     "id": "flatten-binary-tree-to-linked-list",
+     "num": 11,
+     "leet_id": 114,
+     "title_cn": "二叉树展开为链表",
+     "title_en": "Flatten Binary Tree to Linked List",
+     "difficulty": "中等",
+     "category": "binary-tree",
+     "tags": [
+      "栈",
+      "树",
+      "深度优先搜索",
+      "链表",
+      "二叉树"
+     ]
+    },
+    {
+     "id": "construct-binary-tree-from-preorder-and-inorder-traversal",
+     "num": 12,
+     "leet_id": 105,
+     "title_cn": "从前序与中序遍历序列构造二叉树",
+     "title_en": "Construct Binary Tree from Preorder and Inorder Traversal",
+     "difficulty": "中等",
+     "category": "binary-tree",
+     "tags": [
+      "树",
+      "数组",
+      "分治",
+      "二叉树"
+     ]
+    },
+    {
+     "id": "path-sum-iii",
+     "num": 13,
+     "leet_id": 437,
+     "title_cn": "路径总和 III",
+     "title_en": "Path Sum III",
+     "difficulty": "中等",
+     "category": "binary-tree",
+     "tags": [
+      "树",
+      "深度优先搜索",
+      "二叉树",
+      "前缀和"
+     ]
+    },
+    {
+     "id": "lowest-common-ancestor-of-a-binary-tree",
+     "num": 14,
+     "leet_id": 236,
+     "title_cn": "二叉树的最近公共祖先",
+     "title_en": "Lowest Common Ancestor of a Binary Tree",
+     "difficulty": "中等",
+     "category": "binary-tree",
+     "tags": [
+      "树",
+      "深度优先搜索",
+      "二叉树"
+     ]
+    },
+    {
+     "id": "binary-tree-maximum-path-sum",
+     "num": 15,
+     "leet_id": 124,
+     "title_cn": "二叉树中的最大路径和",
+     "title_en": "Binary Tree Maximum Path Sum",
+     "difficulty": "困难",
+     "category": "binary-tree",
+     "tags": [
+      "树",
+      "深度优先搜索",
+      "动态规划",
+      "二叉树"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "graph",
+   "name": "图论",
+   "order": 8,
+   "count": 4,
+   "problems": [
+    {
+     "id": "number-of-islands",
+     "num": 1,
+     "leet_id": 200,
+     "title_cn": "岛屿数量",
+     "title_en": "Number of Islands",
+     "difficulty": "中等",
+     "category": "graph",
+     "tags": [
+      "深度优先搜索",
+      "广度优先搜索",
+      "并查集",
+      "矩阵"
+     ]
+    },
+    {
+     "id": "rotting-oranges",
+     "num": 2,
+     "leet_id": 994,
+     "title_cn": "腐烂的橘子",
+     "title_en": "Rotting Oranges",
+     "difficulty": "中等",
+     "category": "graph",
+     "tags": [
+      "广度优先搜索",
+      "矩阵"
+     ]
+    },
+    {
+     "id": "course-schedule",
+     "num": 3,
+     "leet_id": 207,
+     "title_cn": "课程表",
+     "title_en": "Course Schedule",
+     "difficulty": "中等",
+     "category": "graph",
+     "tags": [
+      "深度优先搜索",
+      "广度优先搜索",
+      "图",
+      "拓扑排序"
+     ]
+    },
+    {
+     "id": "implement-trie-prefix-tree",
+     "num": 4,
+     "leet_id": 208,
+     "title_cn": "实现 Trie (前缀树)",
+     "title_en": "Implement Trie (Prefix Tree)",
+     "difficulty": "中等",
+     "category": "graph",
+     "tags": [
+      "设计",
+      "字典树",
+      "哈希表",
+      "字符串"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "backtracking",
+   "name": "回溯",
+   "order": 9,
+   "count": 8,
+   "problems": [
+    {
+     "id": "permutations",
+     "num": 1,
+     "leet_id": 46,
+     "title_cn": "全排列",
+     "title_en": "Permutations",
+     "difficulty": "中等",
+     "category": "backtracking",
+     "tags": [
+      "数组",
+      "回溯"
+     ]
+    },
+    {
+     "id": "subsets",
+     "num": 2,
+     "leet_id": 78,
+     "title_cn": "子集",
+     "title_en": "Subsets",
+     "difficulty": "中等",
+     "category": "backtracking",
+     "tags": [
+      "位运算",
+      "数组",
+      "回溯"
+     ]
+    },
+    {
+     "id": "letter-combinations",
+     "num": 3,
+     "leet_id": 17,
+     "title_cn": "电话号码的字母组合",
+     "title_en": "Letter Combinations of a Phone Number",
+     "difficulty": "中等",
+     "category": "backtracking",
+     "tags": [
+      "哈希表",
+      "字符串",
+      "回溯"
+     ]
+    },
+    {
+     "id": "combination-sum",
+     "num": 4,
+     "leet_id": 39,
+     "title_cn": "组合总和",
+     "title_en": "Combination Sum",
+     "difficulty": "中等",
+     "category": "backtracking",
+     "tags": [
+      "数组",
+      "回溯",
+      "剪枝"
+     ]
+    },
+    {
+     "id": "generate-parentheses",
+     "num": 5,
+     "leet_id": 22,
+     "title_cn": "括号生成",
+     "title_en": "Generate Parentheses",
+     "difficulty": "中等",
+     "category": "backtracking",
+     "tags": [
+      "字符串",
+      "动态规划",
+      "回溯"
+     ]
+    },
+    {
+     "id": "word-search",
+     "num": 6,
+     "leet_id": 79,
+     "title_cn": "单词搜索",
+     "title_en": "Word Search",
+     "difficulty": "中等",
+     "category": "backtracking",
+     "tags": [
+      "数组",
+      "字符串",
+      "回溯",
+      "矩阵"
+     ]
+    },
+    {
+     "id": "palindrome-partitioning",
+     "num": 7,
+     "leet_id": 131,
+     "title_cn": "分割回文串",
+     "title_en": "Palindrome Partitioning",
+     "difficulty": "中等",
+     "category": "backtracking",
+     "tags": [
+      "字符串",
+      "动态规划",
+      "回溯"
+     ]
+    },
+    {
+     "id": "n-queens",
+     "num": 8,
+     "leet_id": 51,
+     "title_cn": "N 皇后",
+     "title_en": "N-Queens",
+     "difficulty": "困难",
+     "category": "backtracking",
+     "tags": [
+      "数组",
+      "回溯"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "binary-search",
+   "name": "二分查找",
+   "order": 10,
+   "count": 6,
+   "problems": [
+    {
+     "id": "search-insert-position",
+     "num": 1,
+     "leet_id": 35,
+     "title_cn": "搜索插入位置",
+     "title_en": "Search Insert Position",
+     "difficulty": "简单",
+     "category": "binary-search",
+     "tags": [
+      "数组",
+      "二分查找"
+     ]
+    },
+    {
+     "id": "search-a-2d-matrix",
+     "num": 2,
+     "leet_id": 74,
+     "title_cn": "搜索二维矩阵",
+     "title_en": "Search a 2D Matrix",
+     "difficulty": "中等",
+     "category": "binary-search",
+     "tags": [
+      "数组",
+      "二分查找",
+      "矩阵"
+     ]
+    },
+    {
+     "id": "find-first-and-last-position",
+     "num": 3,
+     "leet_id": 34,
+     "title_cn": "在排序数组中查找元素的第一个和最后一个位置",
+     "title_en": "Find First and Last Position of Element in Sorted Array",
+     "difficulty": "中等",
+     "category": "binary-search",
+     "tags": [
+      "数组",
+      "二分查找"
+     ]
+    },
+    {
+     "id": "search-in-rotated-sorted-array",
+     "num": 4,
+     "leet_id": 33,
+     "title_cn": "搜索旋转排序数组",
+     "title_en": "Search in Rotated Sorted Array",
+     "difficulty": "中等",
+     "category": "binary-search",
+     "tags": [
+      "数组",
+      "二分查找"
+     ]
+    },
+    {
+     "id": "find-minimum-in-rotated-sorted-array",
+     "num": 5,
+     "leet_id": 153,
+     "title_cn": "寻找旋转排序数组中的最小值",
+     "title_en": "Find Minimum in Rotated Sorted Array",
+     "difficulty": "中等",
+     "category": "binary-search",
+     "tags": [
+      "数组",
+      "二分查找"
+     ]
+    },
+    {
+     "id": "median-of-two-sorted-arrays",
+     "num": 6,
+     "leet_id": 4,
+     "title_cn": "寻找两个正序数组的中位数",
+     "title_en": "Median of Two Sorted Arrays",
+     "difficulty": "困难",
+     "category": "binary-search",
+     "tags": [
+      "数组",
+      "二分查找",
+      "分治"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "stack",
+   "name": "栈",
+   "order": 11,
+   "count": 5,
+   "problems": [
+    {
+     "id": "valid-parentheses",
+     "num": 1,
+     "leet_id": 20,
+     "title_cn": "有效的括号",
+     "title_en": "Valid Parentheses",
+     "difficulty": "简单",
+     "category": "stack",
+     "tags": [
+      "栈",
+      "字符串"
+     ]
+    },
+    {
+     "id": "min-stack",
+     "num": 2,
+     "leet_id": 155,
+     "title_cn": "最小栈",
+     "title_en": "Min Stack",
+     "difficulty": "中等",
+     "category": "stack",
+     "tags": [
+      "栈",
+      "设计"
+     ]
+    },
+    {
+     "id": "decode-string",
+     "num": 3,
+     "leet_id": 394,
+     "title_cn": "字符串解码",
+     "title_en": "Decode String",
+     "difficulty": "中等",
+     "category": "stack",
+     "tags": [
+      "栈",
+      "递归",
+      "字符串"
+     ]
+    },
+    {
+     "id": "daily-temperatures",
+     "num": 4,
+     "leet_id": 739,
+     "title_cn": "每日温度",
+     "title_en": "Daily Temperatures",
+     "difficulty": "中等",
+     "category": "stack",
+     "tags": [
+      "栈",
+      "数组",
+      "单调栈"
+     ]
+    },
+    {
+     "id": "largest-rectangle-in-histogram",
+     "num": 5,
+     "leet_id": 84,
+     "title_cn": "柱状图中最大的矩形",
+     "title_en": "Largest Rectangle in Histogram",
+     "difficulty": "困难",
+     "category": "stack",
+     "tags": [
+      "栈",
+      "数组",
+      "单调栈"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "heap",
+   "name": "堆",
+   "order": 12,
+   "count": 3,
+   "problems": [
+    {
+     "id": "kth-largest-element",
+     "num": 1,
+     "leet_id": 215,
+     "title_cn": "数组中的第K个最大元素",
+     "title_en": "Kth Largest Element in an Array",
+     "difficulty": "中等",
+     "category": "heap",
+     "tags": [
+      "数组",
+      "分治",
+      "快速选择",
+      "排序",
+      "堆（优先队列）"
+     ]
+    },
+    {
+     "id": "top-k-frequent-elements",
+     "num": 2,
+     "leet_id": 347,
+     "title_cn": "前 K 个高频元素",
+     "title_en": "Top K Frequent Elements",
+     "difficulty": "中等",
+     "category": "heap",
+     "tags": [
+      "数组",
+      "哈希表",
+      "分治",
+      "桶排序",
+      "计数",
+      "堆（优先队列）"
+     ]
+    },
+    {
+     "id": "find-median-from-data-stream",
+     "num": 3,
+     "leet_id": 295,
+     "title_cn": "数据流的中位数",
+     "title_en": "Find Median from Data Stream",
+     "difficulty": "困难",
+     "category": "heap",
+     "tags": [
+      "设计",
+      "双指针",
+      "数据流",
+      "排序",
+      "堆（优先队列）"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "greedy",
+   "name": "贪心算法",
+   "order": 13,
+   "count": 4,
+   "problems": [
+    {
+     "id": "best-time-to-buy-and-sell-stock",
+     "num": 1,
+     "leet_id": 121,
+     "title_cn": "买卖股票的最佳时机",
+     "title_en": "Best Time to Buy and Sell Stock",
+     "difficulty": "简单",
+     "category": "greedy",
+     "tags": [
+      "数组",
+      "动态规划",
+      "贪心"
+     ]
+    },
+    {
+     "id": "jump-game",
+     "num": 2,
+     "leet_id": 55,
+     "title_cn": "跳跃游戏",
+     "title_en": "Jump Game",
+     "difficulty": "中等",
+     "category": "greedy",
+     "tags": [
+      "贪心",
+      "数组",
+      "动态规划"
+     ]
+    },
+    {
+     "id": "jump-game-ii",
+     "num": 3,
+     "leet_id": 45,
+     "title_cn": "跳跃游戏 II",
+     "title_en": "Jump Game II",
+     "difficulty": "中等",
+     "category": "greedy",
+     "tags": [
+      "贪心",
+      "数组",
+      "动态规划"
+     ]
+    },
+    {
+     "id": "partition-labels",
+     "num": 4,
+     "leet_id": 763,
+     "title_cn": "划分字母区间",
+     "title_en": "Partition Labels",
+     "difficulty": "中等",
+     "category": "greedy",
+     "tags": [
+      "贪心",
+      "哈希表",
+      "双指针",
+      "字符串"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "dp",
+   "name": "动态规划",
+   "order": 14,
+   "count": 10,
+   "problems": [
+    {
+     "id": "climbing-stairs",
+     "num": 1,
+     "leet_id": 70,
+     "title_cn": "爬楼梯",
+     "title_en": "Climbing Stairs",
+     "difficulty": "简单",
+     "category": "dp",
+     "tags": [
+      "记忆化搜索",
+      "数学",
+      "动态规划"
+     ]
+    },
+    {
+     "id": "pascals-triangle",
+     "num": 2,
+     "leet_id": 118,
+     "title_cn": "杨辉三角",
+     "title_en": "Pascal's Triangle",
+     "difficulty": "简单",
+     "category": "dp",
+     "tags": [
+      "数组",
+      "动态规划"
+     ]
+    },
+    {
+     "id": "house-robber",
+     "num": 3,
+     "leet_id": 198,
+     "title_cn": "打家劫舍",
+     "title_en": "House Robber",
+     "difficulty": "中等",
+     "category": "dp",
+     "tags": [
+      "数组",
+      "动态规划"
+     ]
+    },
+    {
+     "id": "perfect-squares",
+     "num": 4,
+     "leet_id": 279,
+     "title_cn": "完全平方数",
+     "title_en": "Perfect Squares",
+     "difficulty": "中等",
+     "category": "dp",
+     "tags": [
+      "广度优先搜索",
+      "数学",
+      "动态规划"
+     ]
+    },
+    {
+     "id": "coin-change",
+     "num": 5,
+     "leet_id": 322,
+     "title_cn": "零钱兑换",
+     "title_en": "Coin Change",
+     "difficulty": "中等",
+     "category": "dp",
+     "tags": [
+      "广度优先搜索",
+      "数组",
+      "动态规划"
+     ]
+    },
+    {
+     "id": "word-break",
+     "num": 6,
+     "leet_id": 139,
+     "title_cn": "单词拆分",
+     "title_en": "Word Break",
+     "difficulty": "中等",
+     "category": "dp",
+     "tags": [
+      "字典树",
+      "记忆化搜索",
+      "哈希表",
+      "字符串",
+      "动态规划"
+     ]
+    },
+    {
+     "id": "longest-increasing-subsequence",
+     "num": 7,
+     "leet_id": 300,
+     "title_cn": "最长递增子序列",
+     "title_en": "Longest Increasing Subsequence",
+     "difficulty": "中等",
+     "category": "dp",
+     "tags": [
+      "树状数组",
+      "数组",
+      "二分查找",
+      "动态规划"
+     ]
+    },
+    {
+     "id": "maximum-product-subarray",
+     "num": 8,
+     "leet_id": 152,
+     "title_cn": "乘积最大子数组",
+     "title_en": "Maximum Product Subarray",
+     "difficulty": "中等",
+     "category": "dp",
+     "tags": [
+      "数组",
+      "动态规划"
+     ]
+    },
+    {
+     "id": "partition-equal-subset-sum",
+     "num": 9,
+     "leet_id": 416,
+     "title_cn": "分割等和子集",
+     "title_en": "Partition Equal Subset Sum",
+     "difficulty": "中等",
+     "category": "dp",
+     "tags": [
+      "数组",
+      "动态规划"
+     ]
+    },
+    {
+     "id": "longest-valid-parentheses",
+     "num": 10,
+     "leet_id": 32,
+     "title_cn": "最长有效括号",
+     "title_en": "Longest Valid Parentheses",
+     "difficulty": "困难",
+     "category": "dp",
+     "tags": [
+      "栈",
+      "字符串",
+      "动态规划"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "multi-dp",
+   "name": "多维动态规划",
+   "order": 15,
+   "count": 5,
+   "problems": [
+    {
+     "id": "unique-paths",
+     "num": 1,
+     "leet_id": 62,
+     "title_cn": "不同路径",
+     "title_en": "Unique Paths",
+     "difficulty": "中等",
+     "category": "multi-dp",
+     "tags": [
+      "数学",
+      "动态规划",
+      "组合数学"
+     ]
+    },
+    {
+     "id": "minimum-path-sum",
+     "num": 2,
+     "leet_id": 64,
+     "title_cn": "最小路径和",
+     "title_en": "Minimum Path Sum",
+     "difficulty": "中等",
+     "category": "multi-dp",
+     "tags": [
+      "数组",
+      "动态规划",
+      "矩阵"
+     ]
+    },
+    {
+     "id": "longest-palindromic-substring",
+     "num": 3,
+     "leet_id": 5,
+     "title_cn": "最长回文子串",
+     "title_en": "Longest Palindromic Substring",
+     "difficulty": "中等",
+     "category": "multi-dp",
+     "tags": [
+      "字符串",
+      "动态规划"
+     ]
+    },
+    {
+     "id": "longest-common-subsequence",
+     "num": 4,
+     "leet_id": 1143,
+     "title_cn": "最长公共子序列",
+     "title_en": "Longest Common Subsequence",
+     "difficulty": "中等",
+     "category": "multi-dp",
+     "tags": [
+      "字符串",
+      "动态规划"
+     ]
+    },
+    {
+     "id": "edit-distance",
+     "num": 5,
+     "leet_id": 72,
+     "title_cn": "编辑距离",
+     "title_en": "Edit Distance",
+     "difficulty": "中等",
+     "category": "multi-dp",
+     "tags": [
+      "字符串",
+      "动态规划"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "techniques",
+   "name": "技巧",
+   "order": 16,
+   "count": 5,
+   "problems": [
+    {
+     "id": "single-number",
+     "num": 1,
+     "leet_id": 136,
+     "title_cn": "只出现一次的数字",
+     "title_en": "Single Number",
+     "difficulty": "简单",
+     "category": "techniques",
+     "tags": [
+      "位运算",
+      "数组"
+     ]
+    },
+    {
+     "id": "majority-element",
+     "num": 2,
+     "leet_id": 169,
+     "title_cn": "多数元素",
+     "title_en": "Majority Element",
+     "difficulty": "简单",
+     "category": "techniques",
+     "tags": [
+      "数组",
+      "哈希表",
+      "分治",
+      "计数",
+      "排序"
+     ]
+    },
+    {
+     "id": "sort-colors",
+     "num": 3,
+     "leet_id": 75,
+     "title_cn": "颜色分类",
+     "title_en": "Sort Colors",
+     "difficulty": "中等",
+     "category": "techniques",
+     "tags": [
+      "数组",
+      "双指针",
+      "排序"
+     ]
+    },
+    {
+     "id": "next-permutation",
+     "num": 4,
+     "leet_id": 31,
+     "title_cn": "下一个排列",
+     "title_en": "Next Permutation",
+     "difficulty": "中等",
+     "category": "techniques",
+     "tags": [
+      "数组",
+      "双指针"
+     ]
+    },
+    {
+     "id": "find-the-duplicate-number",
+     "num": 5,
+     "leet_id": 287,
+     "title_cn": "寻找重复数",
+     "title_en": "Find the Duplicate Number",
+     "difficulty": "中等",
+     "category": "techniques",
+     "tags": [
+      "位运算",
+      "数组",
+      "双指针",
+      "二分查找"
+     ]
+    }
+   ]
+  }
+ ],
+ "total": 100
+}

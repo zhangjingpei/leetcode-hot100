@@ -1,0 +1,88 @@
+/* 详情页 */
+.detail-head { margin-top: 26px; }
+.detail-cat { font-size: 13px; color: var(--brand-deep); font-weight: 600; margin-bottom: 4px; }
+.detail-title { font-size: 26px; line-height: 1.3; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.detail-title .badge { vertical-align: 4px; }
+.detail-meta { color: var(--muted); font-size: 13px; margin-top: 6px; }
+.detail-meta .tag { display: inline-block; background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 0 8px; margin-right: 6px; font-size: 12px; }
+
+section.block { margin-top: 30px; }
+.block > h2 {
+  font-size: 18px; padding-left: 12px; margin-bottom: 14px; position: relative;
+}
+.block > h2::before {
+  content: ""; position: absolute; left: 0; top: 5px; bottom: 5px; width: 4px;
+  border-radius: 2px; background: linear-gradient(180deg, var(--brand), var(--brand-deep));
+}
+.statement p { margin: 8px 0; color: #333c4d; }
+.example {
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  padding: 12px 16px; margin: 10px 0; font-size: 14px;
+}
+.example .ex-label { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+.example code, .constraints code, .idea code, .steps code {
+  font-family: "SF Mono", ui-monospace, Consolas, "Courier New", monospace;
+  background: #eef2f7; border-radius: 4px; padding: 1px 6px; font-size: 13px; color: #b3541e;
+}
+.example pre { font-family: inherit; white-space: pre-wrap; }
+.constraints { margin-top: 10px; }
+.constraints li { margin: 4px 0 4px 20px; color: #4b5563; font-size: 13.5px; }
+
+.idea p { margin: 8px 0; color: #333c4d; }
+.steps { counter-reset: st; margin: 12px 0 4px; }
+.steps li {
+  list-style: none; counter-increment: st; position: relative;
+  padding: 8px 14px 8px 44px; margin: 8px 0;
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px; font-size: 14.5px;
+}
+.steps li::before {
+  content: counter(st); position: absolute; left: 13px; top: 11px;
+  width: 21px; height: 21px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand), var(--brand-deep));
+  color: #fff; font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.complexity { display: flex; gap: 12px; }
+.cx {
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 18px; font-size: 14px; display: flex; gap: 10px; align-items: center;
+}
+.cx b { color: var(--accent); font-family: ui-monospace, Consolas, monospace; }
+
+.code-wrap { position: relative; }
+.code-wrap pre {
+  background: #0f172a; color: #dbe4f3; border-radius: 12px;
+  padding: 18px 20px; overflow-x: auto; font-size: 13.5px; line-height: 1.6;
+  font-family: "SF Mono", ui-monospace, Consolas, "Courier New", monospace;
+}
+.copy-btn {
+  position: absolute; top: 10px; right: 12px;
+  background: #1e293b; color: #94a3b8; border: 1px solid #334155;
+  border-radius: 7px; padding: 4px 12px; font-size: 12px; cursor: pointer; transition: all .15s;
+}
+.copy-btn:hover { color: #fff; }
+/* Python 高亮配色（深底） */
+.tok-kw { color: #c792ea; }
+.tok-str { color: #a5d68a; }
+.tok-com { color: #5d6b8a; font-style: italic; }
+.tok-num { color: #f2a97e; }
+.tok-fn { color: #7cb7f0; }
+.tok-bi { color: #f0c674; }
+.tok-dec { color: #e5c07b; }
+
+.anim-block .hint { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+.pager { max-width: 1080px; margin: 0 auto 40px; padding: 0 20px; display: flex; justify-content: space-between; gap: 12px; }
+.pager a {
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 16px; font-size: 13.5px; max-width: 46%;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: border .15s;
+}
+.pager a:hover { border-color: var(--brand); }
+.pager a.prev { color: var(--muted); }
+.pager a.next { color: var(--muted); text-align: right; }
+
+.done-toggle { display: flex; align-items: center; gap: 7px; cursor: pointer; font-size: 13.5px; color: var(--muted); user-select: none; }
+.done-toggle .done-dot { width: 18px; height: 18px; border-radius: 50%; border: 1.6px solid #cbd2dc; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff; }
+.done-toggle.on { color: var(--easy); }
+.done-toggle.on .done-dot { background: var(--easy); border-color: var(--easy); }
+.done-toggle.on .done-dot::after { content: "✓"; }

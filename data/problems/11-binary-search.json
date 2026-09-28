@@ -1,0 +1,986 @@
+{
+ "problems": [
+  {
+   "id": "search-insert-position",
+   "num": 1,
+   "leet_id": 35,
+   "title_cn": "搜索插入位置",
+   "title_en": "Search Insert Position",
+   "difficulty": "简单",
+   "category": "binary-search",
+   "tags": [
+    "数组",
+    "二分查找"
+   ],
+   "statement": {
+    "desc": [
+     "给定一个排序数组和一个目标值，在数组中找到目标值，并返回其索引。如果目标值不存在于数组中，返回它将会被按顺序插入的位置。请必须使用时间复杂度为 `O(log n)` 的算法。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [1,3,5,6], target = 5",
+      "output": "2"
+     },
+     {
+      "input": "nums = [1,3,5,6], target = 2",
+      "output": "1"
+     },
+     {
+      "input": "nums = [1,3,5,6], target = 7",
+      "output": "4"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 10⁴",
+     "-10⁴ <= nums[i] <= 10⁴",
+     "nums 为无重复元素的升序数组",
+     "-10⁴ <= target <= 10⁴"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "标准二分模板题。闭区间 `[lo, hi]`：`nums[mid] == target` 直接返回；偏小则收缩左边界 `lo = mid+1`；偏大则 `hi = mid-1`。",
+     "精髓在退出条件 `lo > hi`：此时 `lo` 恰好停在「第一个 ≥ target」的下标——插入任何位置都会被它重新挤开，所以返回 `lo`。",
+     "target 比所有元素大时 lo 最终 = n（追加到末尾），比所有都小时 lo = 0（插到开头），边界自动正确。"
+    ],
+    "steps": [
+     "闭区间 `lo=0, hi=n-1`，循环条件 `lo <= hi`",
+     "`mid = (lo+hi)//2`，比较 `nums[mid]` 与 target",
+     "相等返回 mid；偏小 `lo=mid+1`；偏大 `hi=mid-1`",
+     "退出循环返回 `lo`（插入位置）"
+    ],
+    "complexity": {
+     "time": "O(log n)",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def searchInsert(self, nums: List[int], target: int) -> int:\n        lo, hi = 0, len(nums) - 1\n        while lo <= hi:\n            mid = (lo + hi) // 2\n            if nums[mid] == target:\n                return mid\n            elif nums[mid] < target:\n                lo = mid + 1          # 目标在右半\n            else:\n                hi = mid - 1          # 目标在左半\n        return lo                     # lo = 第一个 >= target 的下标"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       1,
+       3,
+       5,
+       6
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "ptr",
+      "id": "lo",
+      "on": "a",
+      "i": 0,
+      "name": "lo"
+     },
+     {
+      "t": "ptr",
+      "id": "hi",
+      "on": "a",
+      "i": 3,
+      "name": "hi"
+     },
+     {
+      "t": "ptr",
+      "id": "mid",
+      "on": "a",
+      "i": -1,
+      "name": "mid",
+      "dy": 1
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：升序数组 [1,3,5,6] 找 target=2，不存在则返回插入位置。闭区间二分：lo=0, hi=3"
+     },
+     {
+      "say": "mid=(0+3)//2=1：nums[1]=3 > 2 → 目标在左半，hi = mid-1 = 0",
+      "ptr": {
+       "mid": 1,
+       "hi": 0
+      },
+      "hl": {
+       "a": [
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "mid=(0+0)//2=0：nums[0]=1 < 2 → 目标在右半，lo = mid+1 = 1",
+      "ptr": {
+       "mid": 0,
+       "lo": 1
+      },
+      "hl": {
+       "a": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "lo(1) > hi(0)，循环结束 —— lo 恰好指向第一个 ≥ 2 的位置 → 插入下标 1",
+      "ptr": {
+       "mid": 1
+      },
+      "hl": {
+       "a": [
+        [
+         1,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "边界自检：target=7 → lo 一路右移到 4（插入末尾）；target=0 → lo=0（插入开头），两种极端都自动正确"
+     },
+     {
+      "say": "总结：闭区间模板 while lo<=hi，退出即得插入点。O(log n)"
+     }
+    ]
+   }
+  },
+  {
+   "id": "search-a-2d-matrix",
+   "num": 2,
+   "leet_id": 74,
+   "title_cn": "搜索二维矩阵",
+   "title_en": "Search a 2D Matrix",
+   "difficulty": "中等",
+   "category": "binary-search",
+   "tags": [
+    "数组",
+    "二分查找",
+    "矩阵"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个满足下述两条属性的 `m x n` 整数矩阵：每行整数从左到右非递减排列；每行第一个整数大于前一行最后一个整数。判断 `target` 是否在矩阵中。"
+    ],
+    "examples": [
+     {
+      "input": "matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3",
+      "output": "true"
+     },
+     {
+      "input": "matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 13",
+      "output": "false"
+     }
+    ],
+    "constraints": [
+     "m == matrix.length, n == matrix[i].length",
+     "1 <= m, n <= 100",
+     "-10⁴ <= matrix[i][j], target <= 10⁴"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "两条性质合起来：把矩阵按行拼接就是一条**全局递增**的一维数组，共 m×n 个元素。",
+     "于是直接做一维二分，唯一技巧是下标换算：一维位置 `z` 对应 `row = z // n`、`col = z % n`。",
+     "一次二分 O(log(mn))，比「先二分行再二分列」更简洁。"
+    ],
+    "steps": [
+     "视矩阵为长度 m×n 的一维有序数组",
+     "闭区间二分 `lo=0, hi=m*n-1`",
+     "`mid` 还原为 `(mid//n, mid%n)` 取值比较",
+     "相等返回 true；偏小 lo=mid+1；偏大 hi=mid-1"
+    ],
+    "complexity": {
+     "time": "O(log(mn))",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:\n        m, n = len(matrix), len(matrix[0])\n        lo, hi = 0, m * n - 1\n        while lo <= hi:\n            mid = (lo + hi) // 2\n            val = matrix[mid // n][mid % n]   # 一维下标 → 行列\n            if val == target:\n                return True\n            elif val < target:\n                lo = mid + 1\n            else:\n                hi = mid - 1\n        return False"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "grid",
+      "id": "g",
+      "label": "matrix",
+      "m": [
+       [
+        1,
+        3,
+        5,
+        7
+       ],
+       [
+        10,
+        11,
+        16,
+        20
+       ],
+       [
+        23,
+        30,
+        34,
+        60
+       ]
+      ]
+     },
+     {
+      "t": "var",
+      "id": "lo",
+      "v": 0,
+      "label": "lo"
+     },
+     {
+      "t": "var",
+      "id": "hi",
+      "v": 11,
+      "label": "hi"
+     },
+     {
+      "t": "var",
+      "id": "mid",
+      "v": 0,
+      "label": "mid"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：行内递增、行首大于上行行尾 → 按行展平是全局有序数组！target=3。二分区间 [0, 11]"
+     },
+     {
+      "say": "mid=5 → 展平位置 5 = 第 1 行第 1 列：matrix[1][1]=11 > 3 → hi = 4",
+      "set": {
+       "mid": 5,
+       "hi": 4
+      },
+      "hl": {
+       "g": [
+        [
+         "1,1",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "mid=(0+4)//2=2 → (0,2)=5 > 3 → hi = 1",
+      "set": {
+       "mid": 2,
+       "hi": 1
+      },
+      "hl": {
+       "g": [
+        [
+         "0,2",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "mid=(0+1)//2=0 → (0,0)=1 < 3 → lo = 1",
+      "set": {
+       "mid": 0,
+       "lo": 1
+      },
+      "hl": {
+       "g": [
+        [
+         "0,0",
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "mid=(1+1)//2=1 → (0,1)=3 == target ✓ 找到，返回 true",
+      "set": {
+       "mid": 1
+      },
+      "hl": {
+       "g": [
+        [
+         "0,1",
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "总结：核心就是「z = r*n + c」的下标换算。O(log(mn))，一次二分搞定二维"
+     }
+    ]
+   }
+  },
+  {
+   "id": "find-first-and-last-position",
+   "num": 3,
+   "leet_id": 34,
+   "title_cn": "在排序数组中查找元素的第一个和最后一个位置",
+   "title_en": "Find First and Last Position of Element in Sorted Array",
+   "difficulty": "中等",
+   "category": "binary-search",
+   "tags": [
+    "数组",
+    "二分查找"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个按照**非递减顺序**排列的整数数组 `nums` 和一个目标值 `target`。请找出目标值在数组中的开始位置和结束位置。如果不存在返回 `[-1, -1]`。必须设计并实现时间复杂度 `O(log n)` 的算法。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [5,7,7,8,8,10], target = 8",
+      "output": "[3,4]"
+     },
+     {
+      "input": "nums = [5,7,7,8,8,10], target = 6",
+      "output": "[-1,-1]"
+     },
+     {
+      "input": "nums = [], target = 0",
+      "output": "[-1,-1]"
+     }
+    ],
+    "constraints": [
+     "0 <= nums.length <= 10⁵",
+     "-10⁹ <= nums[i] <= 10⁹",
+     "nums 是非递减数组",
+     "-10⁹ <= target <= 10⁹"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "直接二分「等于」会撞上重复元素，左右乱跳。改成求 **lower_bound**：第一个 ≥ x 的下标，它对重复元素有确定答案。",
+     "左边界 = lower_bound(target)；右边界 = lower_bound(target+1) - 1——「第一个 ≥ 9」的前一位正好是最后一个 8，一步到位。",
+     "lower_bound 用左闭右开 `[lo, hi)`：`nums[mid] ≥ t` 时 mid 可能就是答案，只能 `hi = mid` 保留；否则 `lo = mid+1`。循环结束 lo==hi 即答案。"
+    ],
+    "steps": [
+     "写 `lower_bound(t)`：开区间 [lo, hi)，`nums[mid] >= t → hi=mid` 否则 `lo=mid+1`",
+     "left = lower_bound(target)；越界或 `nums[left] != target` → [-1,-1]",
+     "right = lower_bound(target + 1) - 1",
+     "返回 [left, right]"
+    ],
+    "complexity": {
+     "time": "O(log n)（两次二分）",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def searchRange(self, nums: List[int], target: int) -> List[int]:\n        def lower_bound(t):            # 第一个 >= t 的下标\n            lo, hi = 0, len(nums)\n            while lo < hi:\n                mid = (lo + hi) // 2\n                if nums[mid] >= t:\n                    hi = mid           # mid 可能是答案，保留\n                else:\n                    lo = mid + 1\n            return lo\n\n        left = lower_bound(target)\n        if left == len(nums) or nums[left] != target:\n            return [-1, -1]\n        return [left, lower_bound(target + 1) - 1]"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       5,
+       7,
+       7,
+       8,
+       8,
+       10
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "ptr",
+      "id": "lo",
+      "on": "a",
+      "i": 0,
+      "name": "lo"
+     },
+     {
+      "t": "ptr",
+      "id": "hi",
+      "on": "a",
+      "i": 6,
+      "name": "hi",
+      "dy": 1
+     },
+     {
+      "t": "ptr",
+      "id": "mid",
+      "on": "a",
+      "i": -1,
+      "name": "mid"
+     },
+     {
+      "t": "var",
+      "id": "lb",
+      "v": "?",
+      "label": "左边界"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：[5,7,7,8,8,10] 中 target=8 的首尾位置 → [3,4]。套路：求 lower_bound（第一个 ≥ target 的下标），开区间 [lo, hi)"
+     },
+     {
+      "say": "mid=(0+6)//2=3：nums[3]=8 ≥ 8 → mid 可能是答案，hi = mid = 3（不丢答案！）",
+      "ptr": {
+       "mid": 3,
+       "hi": 3
+      },
+      "hl": {
+       "a": [
+        [
+         3,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "mid=(0+3)//2=1：nums[1]=7 < 8 → lo = 2",
+      "ptr": {
+       "mid": 1,
+       "lo": 2
+      },
+      "hl": {
+       "a": [
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "mid=2：nums[2]=7 < 8 → lo = 3",
+      "ptr": {
+       "mid": 2,
+       "lo": 3
+      },
+      "hl": {
+       "a": [
+        [
+         2,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "lo == hi = 3 → 左边界 = 3。再求 lower_bound(9) - 1 = 5 - 1 = 4 = 右边界",
+      "set": {
+       "lb": 3
+      },
+      "hl": {
+       "a": [
+        [
+         3,
+         "#2ea44f"
+        ],
+        [
+         4,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "target=6 时：lower_bound(6)=1 但 nums[1]=7 ≠ 6 → [-1,-1]；空数组同理"
+     },
+     {
+      "say": "总结：一次写对 lower_bound，首尾位置两问全解。O(log n)"
+     }
+    ]
+   }
+  },
+  {
+   "id": "search-in-rotated-sorted-array",
+   "num": 4,
+   "leet_id": 33,
+   "title_cn": "搜索旋转排序数组",
+   "title_en": "Search in Rotated Sorted Array",
+   "difficulty": "中等",
+   "category": "binary-search",
+   "tags": [
+    "数组",
+    "二分查找"
+   ],
+   "statement": {
+    "desc": [
+     "整数数组 `nums` 按升序排列后被在某个下标处**旋转**（如 [0,1,2,4,5,6,7] → [4,5,6,7,0,1,2]）。在数组中搜索 `target`，返回其下标，不存在返回 -1。必须写 `O(log n)` 算法。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [4,5,6,7,0,1,2], target = 0",
+      "output": "4"
+     },
+     {
+      "input": "nums = [4,5,6,7,0,1,2], target = 3",
+      "output": "-1"
+     },
+     {
+      "input": "nums = [1], target = 0",
+      "output": "-1"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 5000",
+     "-10⁴ <= nums[i] <= 10⁴",
+     "nums 中每个值唯一",
+     "nums 必定在某个点旋转过"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "旋转数组的关键性质：**mid 无论切在哪，两半中必有一半是完全有序的**（看 `nums[lo] <= nums[mid]` 即知左半是否有序）。",
+     "确定有序的一半后，target 是否落在它的值域内一目了然——在就进有序半，不在就进另一半。每轮排除一半，保持 O(log n)。",
+     "注意 `<=`：lo==mid 时（剩 1~2 个元素）也要正确判为「左半有序」。"
+    ],
+    "steps": [
+     "闭区间二分 `lo, hi`，`nums[mid] == target` 直接返回",
+     "若 `nums[lo] <= nums[mid]`：左半有序 → 看 target 是否在 `[nums[lo], nums[mid])` 内决定收缩方向",
+     "否则右半有序 → 看 target 是否在 `(nums[mid], nums[hi]]` 内",
+     "循环结束返回 -1"
+    ],
+    "complexity": {
+     "time": "O(log n)",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def search(self, nums: List[int], target: int) -> int:\n        lo, hi = 0, len(nums) - 1\n        while lo <= hi:\n            mid = (lo + hi) // 2\n            if nums[mid] == target:\n                return mid\n            if nums[lo] <= nums[mid]:            # 左半 [lo..mid] 有序\n                if nums[lo] <= target < nums[mid]:\n                    hi = mid - 1                 # target 落在有序左半\n                else:\n                    lo = mid + 1\n            else:                                # 右半 [mid..hi] 有序\n                if nums[mid] < target <= nums[hi]:\n                    lo = mid + 1\n                else:\n                    hi = mid - 1\n        return -1"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       4,
+       5,
+       6,
+       7,
+       0,
+       1,
+       2
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "ptr",
+      "id": "lo",
+      "on": "a",
+      "i": 0,
+      "name": "lo"
+     },
+     {
+      "t": "ptr",
+      "id": "hi",
+      "on": "a",
+      "i": 6,
+      "name": "hi"
+     },
+     {
+      "t": "ptr",
+      "id": "mid",
+      "on": "a",
+      "i": -1,
+      "name": "mid",
+      "dy": 1
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：[4,5,6,7,0,1,2]（[0..6] 在 7 后旋转）找 target=0，要求 O(log n)。二分仍可用，靠一条性质：mid 两侧必有一半有序"
+     },
+     {
+      "say": "mid=3：nums[0]=4 ≤ nums[3]=7 → 左半 [4,5,6,7] 有序。target=0 不在 [4,7) → 去右半，lo=4",
+      "ptr": {
+       "mid": 3,
+       "lo": 4
+      },
+      "hl": {
+       "a": [
+        [
+         0,
+         null
+        ],
+        [
+         1,
+         null
+        ],
+        [
+         2,
+         null
+        ],
+        [
+         3,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "mid=5：nums[4]=0 ≤ nums[5]=1 → 左半 [0,1] 有序。0 在 [0,1) → 进左半，hi=4",
+      "ptr": {
+       "mid": 5,
+       "hi": 4
+      },
+      "hl": {
+       "a": [
+        [
+         4,
+         null
+        ],
+        [
+         5,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "mid=4：nums[4]=0 == target ✓ 返回下标 4",
+      "ptr": {
+       "mid": 4
+      },
+      "hl": {
+       "a": [
+        [
+         4,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "反例 target=3：第 1 轮就不在 [4,7)，进右半；右半 [0,1,2] 有序也不含 3 → hi 收缩到头 → -1"
+     },
+     {
+      "say": "总结：判断哪半有序（nums[lo] <= nums[mid]）→ 判断 target 在不在有序半 → 排除一半。O(log n)"
+     }
+    ]
+   }
+  },
+  {
+   "id": "find-minimum-in-rotated-sorted-array",
+   "num": 5,
+   "leet_id": 153,
+   "title_cn": "寻找旋转排序数组中的最小值",
+   "title_en": "Find Minimum in Rotated Sorted Array",
+   "difficulty": "中等",
+   "category": "binary-search",
+   "tags": [
+    "数组",
+    "二分查找"
+   ],
+   "statement": {
+    "desc": [
+     "已知一个长度为 `n` 的数组，预先按升序排列，经由 `1` 到 `n` 次旋转后得到输入数组。找出数组中的最小元素。必须写 `O(log n)` 算法。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [3,4,5,1,2]",
+      "output": "1"
+     },
+     {
+      "input": "nums = [4,5,6,7,0,1,2]",
+      "output": "0"
+     },
+     {
+      "input": "nums = [11,13,15,17]",
+      "output": "11"
+     }
+    ],
+    "constraints": [
+     "n == nums.length",
+     "1 <= n <= 5000",
+     "-5000 <= nums[i] <= 5000",
+     "nums 中所有整数互不相同"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "不用找 target，只要**定位断崖**。比较对象选 `nums[hi]`：`nums[mid] > nums[hi]` 说明最小值在 mid 右侧（断崖在右）；否则最小值在 mid 及其左侧。",
+     "与 33 题不同，这里用右闭收缩 `hi = mid`（mid 本身可能就是最小值，不能丢）。",
+     "循环条件 `lo < hi`：结束时 lo==hi 收敛到最小值。若数组未旋转（整体有序），同样收敛到 nums[0]。"
+    ],
+    "steps": [
+     "开区间收敛写法：`lo=0, hi=n-1`，循环 `while lo < hi`",
+     "`nums[mid] > nums[hi]` → 断崖在右，`lo = mid+1`",
+     "否则 `hi = mid`（mid 可能就是最小值）",
+     "退出时 `nums[lo]` 即最小值"
+    ],
+    "complexity": {
+     "time": "O(log n)",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def findMin(self, nums: List[int]) -> int:\n        lo, hi = 0, len(nums) - 1\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if nums[mid] > nums[hi]:   # 断崖在 mid 右侧\n                lo = mid + 1\n            else:                      # 最小值在 mid 及左侧\n                hi = mid\n        return nums[lo]"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       4,
+       5,
+       6,
+       7,
+       0,
+       1,
+       2
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "ptr",
+      "id": "lo",
+      "on": "a",
+      "i": 0,
+      "name": "lo"
+     },
+     {
+      "t": "ptr",
+      "id": "hi",
+      "on": "a",
+      "i": 6,
+      "name": "hi"
+     },
+     {
+      "t": "ptr",
+      "id": "mid",
+      "on": "a",
+      "i": -1,
+      "name": "mid",
+      "dy": 1
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：[4,5,6,7,0,1,2] 找最小值。思路：拿 mid 和**右端点**比 —— nums[mid] > nums[hi] 说明断崖（最小值）在 mid 右边"
+     },
+     {
+      "say": "mid=3：nums[3]=7 > nums[6]=2 → 断崖在右半，lo = 4",
+      "ptr": {
+       "mid": 3,
+       "lo": 4
+      },
+      "hl": {
+       "a": [
+        [
+         3,
+         null
+        ],
+        [
+         6,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "mid=5：nums[5]=1 ≤ nums[6]=2 → 最小值在 mid 及左侧，hi = 5",
+      "ptr": {
+       "mid": 5,
+       "hi": 5
+      },
+      "hl": {
+       "a": [
+        [
+         5,
+         null
+        ],
+        [
+         6,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "mid=4：nums[4]=0 ≤ nums[5]=1 → hi = 4",
+      "ptr": {
+       "mid": 4,
+       "hi": 4
+      },
+      "hl": {
+       "a": [
+        [
+         4,
+         null
+        ],
+        [
+         5,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "lo == hi = 4 → 最小值 nums[4] = 0 ✓",
+      "hl": {
+       "a": [
+        [
+         4,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "为什么比 nums[hi] 而不是 nums[lo]？比 lo 无法区分「未旋转」和「断崖在右」两种情况；比 hi 语义唯一"
+     },
+     {
+      "say": "总结：hi = mid 保留候选，lo = mid+1 扔掉必非答案的一半。O(log n)"
+     }
+    ]
+   }
+  },
+  {
+   "id": "median-of-two-sorted-arrays",
+   "num": 6,
+   "leet_id": 4,
+   "title_cn": "寻找两个正序数组的中位数",
+   "title_en": "Median of Two Sorted Arrays",
+   "difficulty": "困难",
+   "category": "binary-search",
+   "tags": [
+    "数组",
+    "二分查找",
+    "分治"
+   ],
+   "statement": {
+    "desc": [
+     "给定两个大小分别为 `m` 和 `n` 的正序（从小到大）数组 `nums1` 和 `nums2`。找出并返回这两个正序数组的**中位数**。算法的时间复杂度应该为 `O(log (m+n))`。"
+    ],
+    "examples": [
+     {
+      "input": "nums1 = [1,3], nums2 = [2]",
+      "output": "2.00000（合并后 [1,2,3]，中位数 2）"
+     },
+     {
+      "input": "nums1 = [1,2], nums2 = [3,4]",
+      "output": "2.50000（合并后 [1,2,3,4]，(2+3)/2）"
+     }
+    ],
+    "constraints": [
+     "0 <= m, n <= 1000",
+     "1 <= m + n <= 2000",
+     "-10⁶ <= nums1[i], nums2[i] <= 10⁶"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "中位数 = 第 ⌊(m+n+1)/2⌋ 小（奇数）或第 k 小与第 k+1 小的均值（偶数）。先理解「归并数第 k 个」：双指针每次推进较小者，O(m+n)。",
+     "最优解：**第 k 小二分**。比较两数组各自的第 ⌊k/2⌋ 个元素，较小的一侧前 ⌊k/2⌋ 个绝不可能是第 k 小（前面至少压着 k/2+k/2 个更小的），整体丢弃 → k 规模减半，O(log(m+n))。",
+     "面试常考的「分割线」法与第 k 小等价：在短数组上二分分割位置，让左半部分恰好取 ⌊(m+n+1)/2⌋ 个且分割线两侧交叉有序。"
+    ],
+    "steps": [
+     "中位数 ⇔ 求第 k 小（k = ⌊(m+n+1)/2⌋，偶数再补一次 k+1）",
+     "第 k 小：比较 nums1[k/2-1] 与 nums2[k/2-1]，较小侧丢弃 k/2 个，k 减半",
+     "一侧耗尽则直接在另一侧取第 k 小",
+     "也可在短数组上二分分割线：左半总数固定，检查 `L1≤R2 且 L2≤R1`"
+    ],
+    "complexity": {
+     "time": "O(log(m+n))",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:\n        if len(nums1) > len(nums2):          # 保证在较短的数组上二分\n            nums1, nums2 = nums2, nums1\n        m, n = len(nums1), len(nums2)\n        half = (m + n + 1) // 2              # 左半部分应取的元素个数\n        lo, hi = 0, m\n        while lo <= hi:\n            i = (lo + hi) // 2               # nums1 左部取 i 个\n            j = half - i                     # nums2 左部取 j 个\n            L1 = nums1[i - 1] if i else float(\"-inf\")\n            R1 = nums1[i] if i < m else float(\"inf\")\n            L2 = nums2[j - 1] if j else float(\"-inf\")\n            R2 = nums2[j] if j < n else float(\"inf\")\n            if L1 <= R2 and L2 <= R1:        # 分割线合法\n                if (m + n) % 2:\n                    return float(max(L1, L2))\n                return (max(L1, L2) + min(R1, R2)) / 2\n            elif L1 > R2:\n                hi = i - 1                   # nums1 左部太多\n            else:\n                lo = i + 1\n        raise ValueError(\"unreachable\")"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       1,
+       3
+      ],
+      "label": "nums1"
+     },
+     {
+      "t": "array",
+      "id": "b",
+      "vals": [
+       2
+      ],
+      "label": "nums2"
+     },
+     {
+      "t": "ptr",
+      "id": "p1",
+      "on": "a",
+      "i": 0,
+      "name": "p1"
+     },
+     {
+      "t": "ptr",
+      "id": "p2",
+      "on": "b",
+      "i": 0,
+      "name": "p2"
+     },
+     {
+      "t": "var",
+      "id": "k",
+      "v": 2,
+      "label": "找第 k 小"
+     },
+     {
+      "t": "var",
+      "id": "mid",
+      "v": "?",
+      "label": "中位数"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：nums1=[1,3]、nums2=[2]，合并 [1,2,3] 共 3 个 → 中位数 = 第 2 小。先用双指针归并直观数第 k 小"
+     },
+     {
+      "say": "比较两指针：a[0]=1 < b[0]=2 → 第 1 小 = 1，p1 右移，k: 2→1",
+      "ptr": {
+       "p1": 1
+      },
+      "set": {
+       "k": 1
+      },
+      "hl": {
+       "a": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "再比：b[0]=2 < a[1]=3 → 第 2 小 = 2 ✓ 中位数 = 2.0",
+      "ptr": {
+       "p2": 1
+      },
+      "set": {
+       "k": 0,
+       "mid": "2.0"
+      },
+      "hl": {
+       "b": [
+        [
+         0,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "偶数长度（如 [1,2] & [3,4]）：继续数到第 3、4 小取平均 → 2.5。整体 O(m+n)"
+     },
+     {
+      "say": "O(log(m+n)) 的正解：「第 k 小二分」—— 比较两数组各自第 ⌊k/2⌋ 个，较小侧的前 ⌊k/2⌋ 个不可能包含第 k 小（前面至少有 ⌊k/2⌋+⌊k/2⌋ 个更小的数），一次弃掉近半，k 每轮减半"
+     },
+     {
+      "say": "等价表述「分割线」：在短数组上二分分割位置 i，令左半共取 half=(m+n+1)//2 个，检验 L1≤R2 且 L2≤R1 —— 两侧交叉有序即找到中位数分界"
+     },
+     {
+      "say": "总结：把「中位数」翻译成「第 k 小」，把「第 k 小」翻译成「可二分的丢弃问题」，是本题唯一的思维台阶"
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,1066 @@
+{
+ "problems": [
+  {
+   "id": "single-number",
+   "num": 1,
+   "leet_id": 136,
+   "title_cn": "只出现一次的数字",
+   "title_en": "Single Number",
+   "difficulty": "简单",
+   "category": "techniques",
+   "tags": [
+    "位运算",
+    "数组"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个**非空**整数数组 `nums`，除某个元素只出现**一次**外，其余每个元素均出现**两次**。找出那个只出现一次的元素。要求线性时间、常数额外空间。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [4,1,2,1,2]",
+      "output": "4"
+     },
+     {
+      "input": "nums = [2,2,1]",
+      "output": "1"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 3 × 10⁴",
+     "-3 × 10⁴ <= nums[i] <= 3 × 10⁴"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "异或三定律：`a⊕a=0`、`a⊕0=a`、交换结合律。把全部数异或在一起，成对的互相抵消成 0，只剩单独的那个。",
+     "哈希计数是 O(n)/O(n)，排序是 O(n log n)/O(1)；异或才是 O(n)/O(1) 双优。"
+    ],
+    "steps": [
+     "`acc = 0`",
+     "逐个 `acc ^= nums[i]`",
+     "成对元素归零抵消",
+     "返回 acc"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def singleNumber(self, nums: List[int]) -> int:\n        acc = 0\n        for x in nums:\n            acc ^= x          # 成对的抵消成 0\n        return acc"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       4,
+       1,
+       2,
+       1,
+       2
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "var",
+      "id": "acc",
+      "v": 0,
+      "label": "异或累计"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：[4,1,2,1,2] 中除 4 外都出现两次。异或：a⊕a=0、a⊕0=a，成对元素全部抵消"
+     },
+     {
+      "say": "acc = 0 ⊕ 4 = 4",
+      "set": {
+       "acc": 4
+      },
+      "hl": {
+       "a": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "acc = 4 ⊕ 1 = 5",
+      "set": {
+       "acc": 5
+      },
+      "hl": {
+       "a": [
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "acc = 5 ⊕ 2 = 7",
+      "set": {
+       "acc": 7
+      },
+      "hl": {
+       "a": [
+        [
+         2,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "acc = 7 ⊕ 1 = 6 —— 第一个 1 的贡献被抵消",
+      "set": {
+       "acc": 6
+      },
+      "hl": {
+       "a": [
+        [
+         3,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "acc = 6 ⊕ 2 = 4 ✓ —— 2 也抵消，只剩单只的 4",
+      "set": {
+       "acc": 4
+      },
+      "hl": {
+       "a": [
+        [
+         4,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "答案 4。位运算解题的招牌：不改变原数组、不开额外空间，一遍扫平"
+     }
+    ]
+   }
+  },
+  {
+   "id": "majority-element",
+   "num": 2,
+   "leet_id": 169,
+   "title_cn": "多数元素",
+   "title_en": "Majority Element",
+   "difficulty": "简单",
+   "category": "techniques",
+   "tags": [
+    "数组",
+    "哈希表",
+    "分治",
+    "计数",
+    "排序"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个大小为 `n` 的数组 `nums`，返回其中的**多数元素**——出现次数大于 `⌊n/2⌋` 的元素（题目保证存在）。进阶：线性时间 + O(1) 空间。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [2,2,1,1,1,2,2]",
+      "output": "2"
+     },
+     {
+      "input": "nums = [3,2,3]",
+      "output": "3"
+     }
+    ],
+    "constraints": [
+     "n == nums.length",
+     "1 <= n <= 5 × 10⁴",
+     "-10⁹ <= nums[i] <= 10⁹"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "**摩尔投票**：候选人 `cand` 与票数 `cnt`。遇到相同元素 cnt+1，不同 cnt-1；cnt 归零就换当前元素当候选人。",
+     "为什么可行：多数元素票数 > 其余所有元素之和，两两对消后它一定存活。",
+     "哈希计数 O(n)/O(n)，排序取中位数 O(n log n)，摩尔投票 O(n)/O(1)。"
+    ],
+    "steps": [
+     "`cand = None, cnt = 0`",
+     "cnt==0 → 换 cand = 当前元素",
+     "相同 cnt+1，不同 cnt-1",
+     "最终 cand 即多数元素"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def majorityElement(self, nums: List[int]) -> int:\n        cand, cnt = 0, 0\n        for x in nums:\n            if cnt == 0:\n                cand = x          # 旧的抵消完了，换人\n            cnt += 1 if x == cand else -1\n        return cand"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       2,
+       2,
+       1,
+       1,
+       1,
+       2,
+       2
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "ptr",
+      "id": "i",
+      "on": "a",
+      "i": -1,
+      "name": "i"
+     },
+     {
+      "t": "var",
+      "id": "cand",
+      "v": "—",
+      "label": "候选人"
+     },
+     {
+      "t": "var",
+      "id": "cnt",
+      "v": 0,
+      "label": "票数"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：[2,2,1,1,1,2,2] 中 2 出现 4 次 > 7/2 → 多数元素。摩尔投票：相同 +1 票、不同 -1 票、归零换人"
+     },
+     {
+      "say": "i=0：cnt=0 → 候选人 = 2，cnt=1",
+      "ptr": {
+       "i": 0
+      },
+      "set": {
+       "cand": 2,
+       "cnt": 1
+      },
+      "hl": {
+       "a": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=1：仍是 2 → cnt=2",
+      "ptr": {
+       "i": 1
+      },
+      "set": {
+       "cnt": 2
+      },
+      "hl": {
+       "a": [
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=2：1 ≠ 2 → cnt=1（被抵消一票）",
+      "ptr": {
+       "i": 2
+      },
+      "set": {
+       "cnt": 1
+      },
+      "hl": {
+       "a": [
+        [
+         2,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=3：1 ≠ 2 → cnt=0（两票 2 被两张 1 抵平）",
+      "ptr": {
+       "i": 3
+      },
+      "set": {
+       "cnt": 0
+      },
+      "hl": {
+       "a": [
+        [
+         3,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=4：cnt=0 → 换候选人 = 1，cnt=1",
+      "ptr": {
+       "i": 4
+      },
+      "set": {
+       "cand": 1,
+       "cnt": 1
+      },
+      "hl": {
+       "a": [
+        [
+         4,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=5：2 ≠ 1 → cnt=0；i=6：归零换人 = 2，cnt=1",
+      "ptr": {
+       "i": 5
+      },
+      "set": {
+       "cnt": 0
+      },
+      "hl": {
+       "a": [
+        [
+         5,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=6：候选人 = 2，cnt=1",
+      "ptr": {
+       "i": 6
+      },
+      "set": {
+       "cand": 2,
+       "cnt": 1
+      },
+      "hl": {
+       "a": [
+        [
+         6,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "存活者 2 ✓。多数元素占「半数以上」，其余元素两两对消都消耗不完它"
+     }
+    ]
+   }
+  },
+  {
+   "id": "sort-colors",
+   "num": 3,
+   "leet_id": 75,
+   "title_cn": "颜色分类",
+   "title_en": "Sort Colors",
+   "difficulty": "中等",
+   "category": "techniques",
+   "tags": [
+    "数组",
+    "双指针",
+    "排序"
+   ],
+   "statement": {
+    "desc": [
+     "给定含红色(0)、白色(1)、蓝色(2) 共 `n` 个元素的数组，**原地**对它们排序，使相同颜色相邻、按 0→1→2 顺序。不能调用排序库，进阶要求一遍扫描。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [2,0,2,1,1,0]",
+      "output": "[0,0,1,1,2,2]"
+     },
+     {
+      "input": "nums = [2,0,1]",
+      "output": "[0,1,2]"
+     }
+    ],
+    "constraints": [
+     "n == nums.length",
+     "1 <= n <= 300",
+     "nums[i] 为 0、1 或 2"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "荷兰国旗三路分区：维护 `low`（0 区右界+1）、`mid`（当前考察）、`high`（2 区左界-1）。",
+     "a[mid]==0 → 与 low 换（换来的是 1，mid++）；a[mid]==2 → 与 high 换（换来的未知，mid 不动）；a[mid]==1 → mid++。",
+     "关键是「2 换回来的数没看过，mid 原地踏步；0 换回来的数必然是 1，可以放心 mid++」。"
+    ],
+    "steps": [
+     "low=0, mid=0, high=n-1",
+     "a[mid]==0 → swap(mid, low)，low++/mid++",
+     "a[mid]==2 → swap(mid, high)，high--",
+     "a[mid]==1 → mid++；mid > high 结束"
+    ],
+    "complexity": {
+     "time": "O(n) 一遍",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def sortColors(self, nums: List[int]) -> None:\n        low, mid, high = 0, 0, len(nums) - 1\n        while mid <= high:\n            if nums[mid] == 0:\n                nums[low], nums[mid] = nums[mid], nums[low]\n                low += 1\n                mid += 1                 # 换来的是 1，可安全前进\n            elif nums[mid] == 2:\n                nums[mid], nums[high] = nums[high], nums[mid]\n                high -= 1                # 换来的未知，原地重查\n            else:\n                mid += 1"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       2,
+       0,
+       2,
+       1,
+       1,
+       0
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "ptr",
+      "id": "low",
+      "on": "a",
+      "i": 0,
+      "name": "low"
+     },
+     {
+      "t": "ptr",
+      "id": "mid",
+      "on": "a",
+      "i": 0,
+      "name": "mid",
+      "dy": 1
+     },
+     {
+      "t": "ptr",
+      "id": "high",
+      "on": "a",
+      "i": 5,
+      "name": "high"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：[2,0,2,1,1,0] 原地排成 0..1..2。三指针：low 区分 0、high 区分 2、mid 扫描"
+     },
+     {
+      "say": "a[mid]=2 → 与 high 换到尾部，high--（换回来的还没看过，mid 不动）→ [0,0,2,1,1,2]",
+      "swap": {
+       "a": [
+        0,
+        5
+       ]
+      },
+      "ptr": {
+       "high": 4
+      },
+      "hl": {
+       "a": [
+        [
+         0,
+         null
+        ],
+        [
+         5,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "a[mid]=0 → 与 low 换（换来的必然是 1，mid 放心前进），low++/mid++",
+      "swap": {
+       "a": [
+        0,
+        0
+       ]
+      },
+      "ptr": {
+       "low": 1,
+       "mid": 1
+      },
+      "hl": {
+       "a": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "a[mid]=0 → 同样处理（自己换自己），low=2 mid=2",
+      "swap": {
+       "a": [
+        1,
+        1
+       ]
+      },
+      "ptr": {
+       "low": 2,
+       "mid": 2
+      },
+      "hl": {
+       "a": [
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "a[mid]=2 → 与 high 换，high-- → [0,0,1,1,2,2]",
+      "swap": {
+       "a": [
+        2,
+        4
+       ]
+      },
+      "ptr": {
+       "high": 3
+      },
+      "hl": {
+       "a": [
+        [
+         2,
+         null
+        ],
+        [
+         4,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "a[mid]=1 → 中区元素，mid++",
+      "ptr": {
+       "mid": 3
+      },
+      "hl": {
+       "a": [
+        [
+         2,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "a[mid]=1 → mid++",
+      "ptr": {
+       "mid": 4
+      },
+      "hl": {
+       "a": [
+        [
+         3,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "mid(4) > high(3) → 结束 ✓ [0,0,1,1,2,2]",
+      "hl": {
+       "a": [
+        [
+         0,
+         "#2ea44f"
+        ],
+        [
+         1,
+         "#2ea44f"
+        ],
+        [
+         2,
+         "#2ea44f"
+        ],
+        [
+         3,
+         "#2ea44f"
+        ],
+        [
+         4,
+         "#2ea44f"
+        ],
+        [
+         5,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "一遍扫描 O(n)。记忆点：0 换来的已知是 1 可前进；2 换来的未知要重查"
+     }
+    ]
+   }
+  },
+  {
+   "id": "next-permutation",
+   "num": 4,
+   "leet_id": 31,
+   "title_cn": "下一个排列",
+   "title_en": "Next Permutation",
+   "difficulty": "中等",
+   "category": "techniques",
+   "tags": [
+    "数组",
+    "双指针"
+   ],
+   "statement": {
+    "desc": [
+     "整数数组的**下一个排列**指其整数的下一个字典序更大的排列。要求原地修改，只使用常数额外空间。若已是最大排列则改成最小排列。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [1,3,5,4,2]",
+      "output": "[1,4,2,3,5]"
+     },
+     {
+      "input": "nums = [3,2,1]",
+      "output": "[1,2,3]"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 100",
+     "0 <= nums[i] <= 100"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "三步走：① 从右往左找第一个升序对 `a[i] < a[i+1]`（i 是要「变大」的位）；② 从右找第一个 `a[j] > a[i]` 交换（只变大一点）；③ 交换后 i 右侧仍是降序 → 反转成升序（变得最小的后缀）。",
+     "整体降序（如 3,2,1）没有升序对 → 直接反转全串变最小。"
+    ],
+    "steps": [
+     "从右找第一个 `a[i] < a[i+1]` 的 i",
+     "再从右找第一个 `a[j] > a[i]` 的 j，交换",
+     "反转 a[i+1:]",
+     "找不到 i → 反转全串"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def nextPermutation(self, nums: List[int]) -> None:\n        n = len(nums)\n        i = n - 2\n        while i >= 0 and nums[i] >= nums[i + 1]:   # ① 第一个升序对\n            i -= 1\n        if i >= 0:\n            j = n - 1\n            while nums[j] <= nums[i]:              # ② 第一个更大的\n                j -= 1\n            nums[i], nums[j] = nums[j], nums[i]\n        l, r = i + 1, n - 1                        # ③ 反转后缀\n        while l < r:\n            nums[l], nums[r] = nums[r], nums[l]\n            l += 1\n            r -= 1"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       1,
+       3,
+       5,
+       4,
+       2
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "var",
+      "id": "next",
+      "v": "[1,3,5,4,2]",
+      "label": "下一个排列"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：[1,3,5,4,2] 的下一个字典序排列。直觉：让后缀尽量长地保持大，只把「最小必要的位」变大"
+     },
+     {
+      "say": "① 从右找第一个升序对：a[3]=4>a[4]=2 ✗、a[2]=5>a[3]=4 ✗、a[1]=3<a[2]=5 ✓ → i=1",
+      "hl": {
+       "a": [
+        [
+         1,
+         null
+        ],
+        [
+         2,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "② 从右找第一个 a[j]>3：a[4]=2 ✗、a[3]=4 ✓ → j=3（4 是比 3 大的最小者）",
+      "hl": {
+       "a": [
+        [
+         3,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "③ swap(1,3) → [1,4,5,3,2]（第 1 位升到 4，只大一点）",
+      "swap": {
+       "a": [
+        1,
+        3
+       ]
+      },
+      "hl": {
+       "a": [
+        [
+         1,
+         "#2ea44f"
+        ],
+        [
+         3,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "④ 反转后缀 [5,3,2] → [2,3,5]（升序 = 后缀能变的最小）→ [1,4,2,3,5]",
+      "swap": {
+       "a": [
+        2,
+        4
+       ]
+      },
+      "hl": {
+       "a": [
+        [
+         2,
+         null
+        ],
+        [
+         4,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "结果 [1,4,2,3,5] ✓ —— 恰好比原排列大且不存在中间排列",
+      "set": {
+       "next": "[1,4,2,3,5]"
+      }
+     },
+     {
+      "say": "全降序特例（[5,4,3,2,1]）：① 从右找不到任何升序对 → i 不存在 → 跳过交换直接反转",
+      "set": {
+       "a": [
+        [
+         0,
+         5
+        ],
+        [
+         1,
+         4
+        ],
+        [
+         2,
+         3
+        ],
+        [
+         3,
+         2
+        ],
+        [
+         4,
+         1
+        ]
+       ]
+      }
+     },
+     {
+      "say": "② 反转 = 首尾对称换位：swap(0,4)",
+      "swap": {
+       "a": [
+        0,
+        4
+       ]
+      },
+      "hl": {
+       "a": [
+        [
+         0,
+         "#2ea44f"
+        ],
+        [
+         4,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "③ swap(1,3) → [1,2,3,4,5] ✓ 回到最小排列，算法自然覆盖该边界",
+      "swap": {
+       "a": [
+        1,
+        3
+       ]
+      },
+      "hl": {
+       "a": [
+        [
+         1,
+         "#2ea44f"
+        ],
+        [
+         3,
+         "#2ea44f"
+        ]
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "find-the-duplicate-number",
+   "num": 5,
+   "leet_id": 287,
+   "title_cn": "寻找重复数",
+   "title_en": "Find the Duplicate Number",
+   "difficulty": "中等",
+   "category": "techniques",
+   "tags": [
+    "位运算",
+    "数组",
+    "双指针",
+    "二分查找"
+   ],
+   "statement": {
+    "desc": [
+     "给定 `n+1` 个整数都在 `[1, n]` 范围内，至少存在一个重复数。找出这个重复数（可能重复多次）。要求不修改数组、常数空间。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [1,3,4,2,1]",
+      "output": "1"
+     },
+     {
+      "input": "nums = [3,1,3,4,2]",
+      "output": "3"
+     }
+    ],
+    "constraints": [
+     "1 <= n <= 10⁵",
+     "nums.length == n + 1",
+     "1 <= nums[i] <= n",
+     "只有一个重复的整数，但可能重复多次"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "神来之笔：把下标 i 看成节点、`nums[i]` 看成它的 next 指针 —— 数组就是一个链表。值域 [1,n] 保证每个节点都有出边，而**重复值意味着两个下标指向同一节点 → 有环**，且入环口就是重复数。",
+     "Floyd 判圈两阶段：① 快慢指针必在环内相遇；② 慢指针重置到起点，两指针同速前进，再次相遇处 = 入环口 = 重复数。",
+     "备选：二分值域（计数 ≥ mid 的个数）O(n log n)，或原地标记（会改数组）。"
+    ],
+    "steps": [
+     "把 (下标 i → nums[i]) 视为链表 next",
+     "阶段①：slow 走 1 步、fast 走 2 步，直至相遇",
+     "阶段②：slow 回起点，双指针同速，再相遇 = 入环点",
+     "入环点 = 重复数"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def findDuplicate(self, nums: List[int]) -> int:\n        slow = fast = 0\n        while True:                       # 阶段①：环内相遇\n            slow = nums[slow]\n            fast = nums[nums[fast]]\n            if slow == fast:\n                break\n        slow = 0                          # 阶段②：找入环口\n        while slow != fast:\n            slow = nums[slow]\n            fast = nums[fast]\n        return slow"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       1,
+       3,
+       4,
+       2,
+       1
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "ptr",
+      "id": "slow",
+      "on": "a",
+      "i": 0,
+      "name": "slow"
+     },
+     {
+      "t": "ptr",
+      "id": "fast",
+      "on": "a",
+      "i": 0,
+      "name": "fast",
+      "dy": 1
+     },
+     {
+      "t": "var",
+      "id": "dup",
+      "v": "?",
+      "label": "重复数"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：[1,3,4,2,1] 找重复。把 i → nums[i] 看成链表 next：0→1→3→2→4→1→3… 有环！入环口 = 重复值"
+     },
+     {
+      "say": "slow=nums[0]=1；fast=nums[nums[0]]=nums[1]=3（快指针每轮跳两下，中间落点直接画出）",
+      "ptr": {
+       "slow": 1,
+       "fast": 3
+      },
+      "hl": {
+       "a": [
+        [
+         1,
+         null
+        ],
+        [
+         3,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "slow=nums[1]=3；fast=nums[3]=2",
+      "ptr": {
+       "slow": 3,
+       "fast": 2
+      },
+      "hl": {
+       "a": [
+        [
+         3,
+         null
+        ],
+        [
+         2,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "slow=nums[3]=2；fast=nums[2]=4",
+      "ptr": {
+       "slow": 2,
+       "fast": 4
+      },
+      "hl": {
+       "a": [
+        [
+         2,
+         null
+        ],
+        [
+         4,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "slow=nums[2]=4；fast=nums[4]=1 → 相遇于下标 1！（环内必有交点）",
+      "ptr": {
+       "slow": 4,
+       "fast": 1
+      },
+      "hl": {
+       "a": [
+        [
+         4,
+         null
+        ],
+        [
+         1,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "阶段②：slow 重置到 0，两指针同速各走一步 —— 再次相遇处即入环口（数学结论：起点到入口 = 相遇点到入口）",
+      "ptr": {
+       "slow": 0,
+       "fast": 1
+      }
+     },
+     {
+      "say": "slow=1；fast=nums[1]=3",
+      "ptr": {
+       "slow": 1,
+       "fast": 3
+      }
+     },
+     {
+      "say": "slow=3；fast=nums[3]=2",
+      "ptr": {
+       "slow": 3,
+       "fast": 2
+      }
+     },
+     {
+      "say": "slow=2；fast=nums[2]=4",
+      "ptr": {
+       "slow": 2,
+       "fast": 4
+      }
+     },
+     {
+      "say": "slow=4；fast=nums[4]=1 → 同一点！入环口 = 1 = 重复数 ✓",
+      "ptr": {
+       "slow": 4,
+       "fast": 1
+      },
+      "set": {
+       "dup": 1
+      },
+      "hl": {
+       "a": [
+        [
+         4,
+         "#2ea44f"
+        ],
+        [
+         1,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "两个下标（0 和 4）都指向 1 —— 这就是「两个指针同速走进同一个入口」。Floyd 判圈的完美应用"
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,3023 @@
+{
+ "problems": [
+  {
+   "id": "intersection-of-two-linked-lists",
+   "num": 1,
+   "leet_id": 160,
+   "title_cn": "相交链表",
+   "title_en": "Intersection of Two Linked Lists",
+   "difficulty": "简单",
+   "category": "linked-list",
+   "tags": [
+    "哈希表",
+    "链表",
+    "双指针"
+   ],
+   "statement": {
+    "desc": [
+     "给你两个单链表的头节点 `headA` 和 `headB` ，请你找出并返回两个单链表相交的起始节点。如果两个链表不存在相交节点，返回 `null`。",
+     "整个链式结构中不存在环。函数返回结果后，链表必须保持其原始结构。"
+    ],
+    "examples": [
+     {
+      "input": "intersectVal = 8, listA = [4,1,8,4,5], listB = [5,6,1,8,4,5]",
+      "output": "相交节点的值为 8"
+     },
+     {
+      "input": "intersectVal = 2, listA = [1,9,1,2,4], listB = [3,2,4]",
+      "output": "相交节点的值为 2"
+     },
+     {
+      "input": "intersectVal = 0, listA = [2,6,4], listB = [1,5]",
+      "output": "null"
+     }
+    ],
+    "constraints": [
+     "两链表节点数范围为 [0, 3 * 10^4]",
+     "进阶：能否设计一个时间复杂度 O(m + n) 、仅用 O(1) 内存的解决方案？"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "浪漫的双指针解法：指针 pA 从 A 出发，走到底后**转到 B 的头**；pB 从 B 出发，走到底后转到 A 的头。",
+     "若两链表长 a+b 相同，会在相交点相遇；长度不同也能消除差值——`pA` 走过的路 = a + c + b，`pB` = b + c + a，两者相等，所以一定在相交点同步相遇。",
+     "不相交时双方会同时走到 null（各走 a+b 步），同样成立。时间 O(m+n)、空间 O(1)。"
+    ],
+    "steps": [
+     "`pA = headA, pB = headB`",
+     "循环：若 `pA == pB`（含都为 null），返回当前节点",
+     "否则 `pA = pA.next if pA else headB`；`pB = pB.next if pB else headA`",
+     "两指针走过的总长度相同，必然在相交点或 null 处同步相遇"
+    ],
+    "complexity": {
+     "time": "O(m + n)",
+     "space": "O(1)"
+    },
+    "code": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, x):\n#         self.val = x\n#         self.next = None\nclass Solution:\n    def getIntersectionNode(self, headA, headB):\n        pA, pB = headA, headB\n        while pA is not pB:\n            pA = pA.next if pA else headB\n            pB = pB.next if pB else headA\n        return pA   # 相交点，或 None\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "相交链表 · 双指针换道"
+    },
+    "views": [
+     {
+      "t": "list",
+      "id": "a",
+      "nodes": [
+       4,
+       1
+      ],
+      "label": "A",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ]
+      ]
+     },
+     {
+      "t": "list",
+      "id": "b",
+      "nodes": [
+       5,
+       6,
+       1
+      ],
+      "label": "B",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        2
+       ]
+      ]
+     },
+     {
+      "t": "list",
+      "id": "c",
+      "nodes": [
+       8,
+       4,
+       5
+      ],
+      "label": "公共段",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        "tail"
+       ]
+      ]
+     },
+     {
+      "t": "ptr",
+      "id": "pA",
+      "on": "a",
+      "name": "pA",
+      "i": 0,
+      "dy": 1,
+      "color": "#1d4ed8"
+     },
+     {
+      "t": "ptr",
+      "id": "pB",
+      "on": "b",
+      "name": "pB",
+      "i": 0,
+      "dy": 1,
+      "color": "#e5484d"
+     }
+    ],
+    "frames": [
+     {
+      "say": "两链表可能在某节点汇合后共享同一段。若嵌套比对每个节点是 O(mn)；双指针「换道」法只需 O(m+n)"
+     },
+     {
+      "say": "A: 4→1→公共段，B: 5→6→1→公共段。pA 从 A 出发、pB 从 B 出发",
+      "hl": {
+       "a": [
+        0
+       ],
+       "b": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "pA 走完 A 的私有段后不回头，改从 B 的头继续走；pB 同理走完 B 后换到 A",
+      "hl": {
+       "a": [
+        0,
+        1
+       ],
+       "b": [
+        0,
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "这样 pA 走过 a私有+b私有+c 公共，pB 走过 b私有+a私有+c 公共——总步数相同！",
+      "hl": {
+       "c": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "长度差被「换道」抵消，两指针必在公共段的入口 8 处同时到达",
+      "ptr": {
+       "pA": -1,
+       "pB": -1
+      },
+      "hl": {
+       "c": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "pA=pB=节点 8，返回它。不相交时两者同时到达 null 同样成立，O(1) 空间",
+      "hl": {
+       "c": [
+        0
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "reverse-linked-list",
+   "num": 2,
+   "leet_id": 206,
+   "title_cn": "反转链表",
+   "title_en": "Reverse Linked List",
+   "difficulty": "简单",
+   "category": "linked-list",
+   "tags": [
+    "递归",
+    "链表"
+   ],
+   "statement": {
+    "desc": [
+     "给你单链表的头节点 `head` ，请你反转链表，并返回反转后的链表。"
+    ],
+    "examples": [
+     {
+      "input": "head = [1,2,3,4,5]",
+      "output": "[5,4,3,2,1]"
+     },
+     {
+      "input": "head = [1,2]",
+      "output": "[2,1]"
+     }
+    ],
+    "constraints": [
+     "链表中节点的数目范围是 [0, 5000]",
+     "-5000 <= Node.val <= 5000"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "迭代三指针是标准写法：`prev`（已反转部分的头，初始 null）、`cur`（待处理节点）。",
+     "每一步：先暂存 `next = cur.next`，然后把 `cur.next` **反指** `prev`，最后两指针同步右移。遍历结束 `prev` 即新头。",
+     "递归解法同理优雅：`newHead = reverse(cur.next)`，再 `cur.next.next = cur; cur.next = None`。"
+    ],
+    "steps": [
+     "`prev = None, cur = head`",
+     "暂存 `next = cur.next`",
+     "反指：`cur.next = prev`",
+     "`prev = cur, cur = next`，重复直到 `cur` 为空",
+     "返回 `prev`（新链表头）"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        prev, cur = None, head\n        while cur:\n            nxt = cur.next      # 暂存后继\n            cur.next = prev     # 反指\n            prev, cur = cur, nxt\n        return prev\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "反转链表 · 迭代三指针"
+    },
+    "views": [
+     {
+      "t": "list",
+      "id": "l",
+      "nodes": [
+       1,
+       2,
+       3,
+       4,
+       5
+      ],
+      "label": "head",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        4,
+        "tail"
+       ]
+      ]
+     },
+     {
+      "t": "ptr",
+      "id": "prev",
+      "on": "l",
+      "name": "prev",
+      "i": -1,
+      "dy": -1,
+      "color": "#e5484d"
+     },
+     {
+      "t": "ptr",
+      "id": "cur",
+      "on": "l",
+      "name": "cur",
+      "i": 0,
+      "dy": 1,
+      "color": "#1d4ed8"
+     }
+    ],
+    "frames": [
+     {
+      "say": "初始化：prev=null，cur 指向头节点 1",
+      "hl": {
+       "l": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "暂存 next=2，断开 1→2，让 1 反指 prev(null)",
+      "list": {
+       "l": {
+        "unlink": [
+         [
+          0,
+          1
+         ]
+        ]
+       }
+      },
+      "hl": {
+       "l": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "prev=1，cur=2。已反转部分：1→null",
+      "ptr": {
+       "prev": 0,
+       "cur": 1
+      },
+      "hl": {
+       "l": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "节点 2 反指 1；prev=2，cur=3",
+      "list": {
+       "l": {
+        "unlink": [
+         [
+          1,
+          2
+         ]
+        ],
+        "link": [
+         [
+          1,
+          0
+         ]
+        ]
+       }
+      },
+      "ptr": {
+       "prev": 1,
+       "cur": 2
+      },
+      "hl": {
+       "l": [
+        1,
+        0
+       ]
+      }
+     },
+     {
+      "say": "节点 3 反指 2；prev=3，cur=4",
+      "list": {
+       "l": {
+        "unlink": [
+         [
+          2,
+          3
+         ]
+        ],
+        "link": [
+         [
+          2,
+          1
+         ]
+        ]
+       }
+      },
+      "ptr": {
+       "prev": 2,
+       "cur": 3
+      }
+     },
+     {
+      "say": "节点 4 反指 3；prev=4，cur=5",
+      "list": {
+       "l": {
+        "unlink": [
+         [
+          3,
+          4
+         ]
+        ],
+        "link": [
+         [
+          3,
+          2
+         ]
+        ]
+       }
+      },
+      "ptr": {
+       "prev": 3,
+       "cur": 4
+      }
+     },
+     {
+      "say": "节点 5 反指 4，cur=null，遍历结束",
+      "list": {
+       "l": {
+        "unlink": [
+         [
+          4,
+          "tail"
+         ]
+        ],
+        "link": [
+         [
+          4,
+          3
+         ]
+        ]
+       }
+      },
+      "ptr": {
+       "prev": 4,
+       "cur": "tail"
+      },
+      "hl": {
+       "l": [
+        4
+       ]
+      }
+     },
+     {
+      "say": "返回 prev：新链表 5→4→3→2→1→null，反转完成",
+      "hl": {
+       "l": [
+        4,
+        3,
+        2,
+        1,
+        0
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "palindrome-linked-list",
+   "num": 3,
+   "leet_id": 234,
+   "title_cn": "回文链表",
+   "title_en": "Palindrome Linked List",
+   "difficulty": "简单",
+   "category": "linked-list",
+   "tags": [
+    "栈",
+    "递归",
+    "链表",
+    "双指针"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个单链表的头节点 `head`，请你判断该链表是否为**回文链表**。如果是，返回 `true`；否则，返回 `false`。"
+    ],
+    "examples": [
+     {
+      "input": "head = [1,2,2,1]",
+      "output": "true"
+     },
+     {
+      "input": "head = [1,2]",
+      "output": "false"
+     }
+    ],
+    "constraints": [
+     "链表中节点数目在范围 [1, 10^5] 内",
+     "0 <= Node.val <= 9",
+     "进阶：能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题？"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "回文 = 前半段与后半段的倒序相同。**快慢指针找中点 + 反转后半段 + 逐一比对**，全程 O(1) 空间。",
+     "slow 每次走 1 步、fast 走 2 步；fast 到尾时 slow 恰在中间。从 slow 开始反转后半段，然后从两头向中间逐值比较。",
+     "（也可以把前半段值压栈比对，空间 O(n)。）"
+    ],
+    "steps": [
+     "快慢指针找中点：`fast` 走两步、`slow` 走一步，`fast` 到尾时 `slow` 在中点",
+     "从 `slow` 起反转后半段链表",
+     "`p1 = head, p2 = 反转后的后半段头`",
+     "逐一比较值，全部相等 → 回文；任一不等 → 不是",
+     "（可选）恢复后半段后返回结果"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def isPalindrome(self, head: Optional[ListNode]) -> bool:\n        # 1) 快慢指针找中点\n        slow = fast = head\n        while fast and fast.next:\n            slow, fast = slow.next, fast.next.next\n        # 2) 反转后半段\n        prev, cur = None, slow\n        while cur:\n            cur.next, prev, cur = prev, cur, cur.next\n        # 3) 两端向中间比对\n        p1, p2 = head, prev\n        while p2:\n            if p1.val != p2.val:\n                return False\n            p1, p2 = p1.next, p2.next\n        return True\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "回文链表 · 找中点 + 反转比对"
+    },
+    "views": [
+     {
+      "t": "list",
+      "id": "l",
+      "nodes": [
+       1,
+       2,
+       2,
+       1,
+       9,
+       9
+      ],
+      "label": "链表(演示)",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        3,
+        4
+       ],
+       [
+        4,
+        5
+       ],
+       [
+        5,
+        "tail"
+       ]
+      ]
+     },
+     {
+      "t": "list",
+      "id": "r",
+      "nodes": [
+       1,
+       2,
+       2,
+       1
+      ],
+      "label": "示例 [1,2,2,1]",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        3,
+        "tail"
+       ]
+      ]
+     },
+     {
+      "t": "var",
+      "id": "ok",
+      "v": "?",
+      "label": "结果"
+     }
+    ],
+    "frames": [
+     {
+      "say": "回文链表 = 正读反读相同，如 [1,2,2,1]。进阶要求 O(n) 时间 + O(1) 空间：不用栈，改用「找中点 → 反转后半段 → 逐一比对」三步走"
+     },
+     {
+      "say": "第一步：快慢指针。slow 一次 1 步、fast 一次 2 步，fast 到尾时 slow 在中点 2（第二个）",
+      "hl": {
+       "r": [
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "第二步：从 slow 起反转后半段 → 前 [1,2] 与反转后 [1,2]",
+      "list": {
+       "r": {
+        "unlink": [
+         [
+          2,
+          3
+         ]
+        ],
+        "link": [
+         [
+          3,
+          2
+         ]
+        ]
+       }
+      },
+      "hl": {
+       "r": [
+        2,
+        3
+       ]
+      }
+     },
+     {
+      "say": "第三步：p1 从头 1↔1 ✓，2↔2 ✓ 逐一比对",
+      "hl": {
+       "r": [
+        0,
+        3
+       ]
+      }
+     },
+     {
+      "say": "全部相等 → [1,2,2,1] 是回文，返回 true",
+      "set": {
+       "ok": "true ✓"
+      },
+      "hl": {
+       "r": [
+        0,
+        1,
+        2,
+        3
+       ]
+      }
+     },
+     {
+      "say": "反例 [1,2,2,1,9,9]？比对 1↔9 立即失败 → false。O(n) 时间 O(1) 空间",
+      "hl": {
+       "l": [
+        0,
+        4
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "linked-list-cycle",
+   "num": 4,
+   "leet_id": 141,
+   "title_cn": "环形链表",
+   "title_en": "Linked List Cycle",
+   "difficulty": "简单",
+   "category": "linked-list",
+   "tags": [
+    "哈希表",
+    "链表",
+    "双指针"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个链表的头节点 `head`，判断链表中是否有环。",
+     "如果链表中有某个节点，可以通过连续跟踪 `next` 指针再次到达，则链表中存在环。"
+    ],
+    "examples": [
+     {
+      "input": "head = [3,2,0,-4], pos = 1",
+      "output": "true",
+      "explain": "尾节点 -4 的 next 指向下标 1 的节点，形成环"
+     },
+     {
+      "input": "head = [1,2], pos = 0",
+      "output": "true"
+     },
+     {
+      "input": "head = [1], pos = -1",
+      "output": "false"
+     }
+    ],
+    "constraints": [
+     "节点数范围是 [0, 10^4]",
+     "-10^5 <= Node.val <= 10^5",
+     "进阶：你能用 O(1)（即常量）内存解决此问题吗？"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "Floyd 判圈（龟兔赛跑）：slow 每次走 1 步、fast 每次走 2 步。",
+     "若无环，fast 先到 null；若有环，fast 会先入圈并一直在圈内转，slow 入圈后，fast 每追一圈与 slow 的距离缩短 1，必然追上相遇。",
+     "相比哈希表记录访问过的节点，双指针只用 O(1) 空间。"
+    ],
+    "steps": [
+     "`slow = fast = head`",
+     "循环：fast 与 fast.next 都非空时，`slow = slow.next, fast = fast.next.next`",
+     "若 `slow == fast` → 有环，返回 true",
+     "fast 到达 null → 无环，返回 false"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, x):\n#         self.val = x\n#         self.next = None\nclass Solution:\n    def hasCycle(self, head: Optional[ListNode]) -> bool:\n        slow = fast = head\n        while fast and fast.next:\n            slow = slow.next\n            fast = fast.next.next\n            if slow is fast:\n                return True\n        return False\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "环形链表 · Floyd 判圈"
+    },
+    "views": [
+     {
+      "t": "list",
+      "id": "l",
+      "nodes": [
+       3,
+       2,
+       0,
+       -4
+      ],
+      "label": "尾指向下标1 → 成环",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        3,
+        1
+       ]
+      ]
+     },
+     {
+      "t": "ptr",
+      "id": "slow",
+      "on": "l",
+      "name": "slow",
+      "i": 0,
+      "dy": -1,
+      "color": "#1d4ed8"
+     },
+     {
+      "t": "ptr",
+      "id": "fast",
+      "on": "l",
+      "name": "fast",
+      "i": 0,
+      "dy": 1,
+      "color": "#e5484d"
+     },
+     {
+      "t": "var",
+      "id": "ok",
+      "v": "?",
+      "label": "有环?"
+     }
+    ],
+    "frames": [
+     {
+      "say": "判断链表是否有环：若某节点 next 指回 earlier 节点，遍历将永不终止。Floyd 判圈：slow 每次走 1 步、fast 每次走 2 步"
+     },
+     {
+      "say": "链表 3→2→0→-4，尾节点 next 指回下标 1，形成环。slow、fast 都从头出发",
+      "hl": {
+       "l": [
+        3
+       ]
+      }
+     },
+     {
+      "say": "第 1 轮：slow→1(2)，fast→2(0)",
+      "ptr": {
+       "slow": 1,
+       "fast": 2
+      },
+      "hl": {
+       "l": [
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "第 2 轮：slow→2(0)，fast→1(-4 绕回 2 再到 1)",
+      "ptr": {
+       "slow": 2,
+       "fast": 1
+      },
+      "hl": {
+       "l": [
+        2,
+        1
+       ]
+      }
+     },
+     {
+      "say": "第 3 轮：slow→3(-4)，fast→3(0→-4) —— 相遇！",
+      "ptr": {
+       "slow": 3,
+       "fast": 3
+      },
+      "hl": {
+       "l": [
+        3
+       ]
+      }
+     },
+     {
+      "say": "slow == fast → 有环！fast 每轮比 slow 多走 1 步，圈内必然追上",
+      "set": {
+       "ok": "true ✓"
+      },
+      "hl": {
+       "ok": [
+        "v"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "linked-list-cycle-ii",
+   "num": 5,
+   "leet_id": 142,
+   "title_cn": "环形链表 II",
+   "title_en": "Linked List Cycle II",
+   "difficulty": "中等",
+   "category": "linked-list",
+   "tags": [
+    "哈希表",
+    "链表",
+    "双指针"
+   ],
+   "statement": {
+    "desc": [
+     "给定一个链表的头节点 `head`，返回链表开始入环的第一个节点。如果链表无环，则返回 `null`。",
+     "不允许修改链表。进阶：你是否可以使用 O(1) 空间解决此题？"
+    ],
+    "examples": [
+     {
+      "input": "head = [3,2,0,-4], pos = 1",
+      "output": "返回下标 1 的节点（值为 2）"
+     },
+     {
+      "input": "head = [1,2], pos = 0",
+      "output": "返回下标 0 的节点（值为 1）"
+     },
+     {
+      "input": "head = [1], pos = -1",
+      "output": "返回 null"
+     }
+    ],
+    "constraints": [
+     "节点数范围在 [0, 10^4] 内",
+     "-10^5 <= Node.val <= 10^5"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "相遇后如何找入环口？设头到入环口距离 a，入环口到相遇点距离 b，环剩余部分 c。",
+     "相遇时 slow 走了 a+b；fast 走了 a+b+n(b+c)（n 圈）。由 fast 速度是 2 倍：`a+b+n(b+c) = 2(a+b)`，化简得 **a = c + (n-1)(b+c)**。",
+     "于是：相遇后让一个指针回到 head，两个指针同速前进，再次相遇处就是入环口。"
+    ],
+    "steps": [
+     "先用快慢指针找到相遇点（同 141 题）",
+     "若相遇：`p = head`，与 `slow` 同速前进",
+     "两指针再次相等的位置即入环口（依据 a = c + (n-1)(b+c)）",
+     "fast 到 null 则无环返回 None"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, x):\n#         self.val = x\n#         self.next = None\nclass Solution:\n    def detectCycle(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        slow = fast = head\n        while fast and fast.next:\n            slow, fast = slow.next, fast.next.next\n            if slow is fast:               # 相遇 → 有环\n                p = head\n                while p is not slow:       # 同速前进\n                    p, slow = p.next, slow.next\n                return p                   # 入环口\n        return None\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "环形链表 II · 数学推导找入口"
+    },
+    "views": [
+     {
+      "t": "list",
+      "id": "l",
+      "nodes": [
+       3,
+       2,
+       0,
+       -4
+      ],
+      "label": "a=1, b=2, c=1",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        3,
+        1
+       ]
+      ]
+     },
+     {
+      "t": "ptr",
+      "id": "p",
+      "on": "l",
+      "name": "p",
+      "i": 0,
+      "dy": -1,
+      "color": "#16a34a"
+     },
+     {
+      "t": "ptr",
+      "id": "slow",
+      "on": "l",
+      "name": "slow",
+      "i": 3,
+      "dy": 1,
+      "color": "#1d4ed8"
+     },
+     {
+      "t": "var",
+      "id": "ans",
+      "v": "?",
+      "label": "入环口"
+     }
+    ],
+    "frames": [
+     {
+      "say": "设头到入环口距离 a，入环口到相遇点 b，环剩余 c。可证 a = c + (n-1)·周长",
+      "hl": {
+       "l": [
+        1
+       ]
+      }
+     },
+     {
+      "say": "快慢指针在 -4（下标 3）相遇。让 p 回到头，slow 留在相遇点",
+      "hl": {
+       "l": [
+        3
+       ]
+      }
+     },
+     {
+      "say": "p 与 slow 同速走：p 走 a 步到入口；slow 从相遇点走 c 步也到入口（再绕 n-1 圈）→ 路程相等必然相遇于入口",
+      "hl": {
+       "l": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "p→1(2)，slow→1(2)：还没相遇继续",
+      "ptr": {
+       "p": 1,
+       "slow": 1
+      },
+      "hl": {
+       "l": [
+        1
+       ]
+      }
+     },
+     {
+      "say": "再同步：p→2(0)，slow→2(0) 继续",
+      "ptr": {
+       "p": 2,
+       "slow": 2
+      },
+      "hl": {
+       "l": [
+        2
+       ]
+      }
+     },
+     {
+      "say": "p 与 slow 相遇于下标 1（节点 2）= 入环口，返回它。整个推导只用了 O(1) 空间",
+      "set": {
+       "ans": "节点 2 (下标1)"
+      },
+      "ptr": {
+       "p": 1,
+       "slow": 1
+      },
+      "hl": {
+       "l": [
+        1
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "merge-two-sorted-lists",
+   "num": 6,
+   "leet_id": 21,
+   "title_cn": "合并两个有序链表",
+   "title_en": "Merge Two Sorted Lists",
+   "difficulty": "简单",
+   "category": "linked-list",
+   "tags": [
+    "递归",
+    "链表"
+   ],
+   "statement": {
+    "desc": [
+     "将两个升序链表合并为一个新的**升序**链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。"
+    ],
+    "examples": [
+     {
+      "input": "l1 = [1,2,4], l2 = [1,3,4]",
+      "output": "[1,1,2,3,4,4]"
+     },
+     {
+      "input": "l1 = [], l2 = [0]",
+      "output": "[0]"
+     }
+    ],
+    "constraints": [
+     "两个链表的节点数目范围是 [0, 50]",
+     "-100 <= Node.val <= 100"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "归并的链表版：用**虚拟头节点 dummy** 统一处理头部边界，`p` 指向结果尾部。",
+     "每轮比较两个链表的当前值，把较小的接到 `p` 后面并后移该链表；一方耗尽后，把另一方整个接上。"
+    ],
+    "steps": [
+     "建虚拟头 `dummy`，`p = dummy`",
+     "两链表都非空时：取较小者的节点接到 `p.next`，该链表后移，`p = p.next`",
+     "一方为空后，`p.next = 另一方剩余部分`",
+     "返回 `dummy.next`"
+    ],
+    "complexity": {
+     "time": "O(m + n)",
+     "space": "O(1)"
+    },
+    "code": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def mergeTwoLists(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:\n        dummy = ListNode()   # 虚拟头节点\n        p = dummy\n        while l1 and l2:\n            if l1.val <= l2.val:\n                p.next, l1 = l1, l1.next\n            else:\n                p.next, l2 = l2, l2.next\n            p = p.next\n        p.next = l1 if l1 else l2   # 接上剩余部分\n        return dummy.next\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "合并两个有序链表 · 归并拼接"
+    },
+    "views": [
+     {
+      "t": "list",
+      "id": "a",
+      "nodes": [
+       1,
+       2,
+       4
+      ],
+      "label": "l1",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        "tail"
+       ]
+      ]
+     },
+     {
+      "t": "list",
+      "id": "b",
+      "nodes": [
+       1,
+       3,
+       4
+      ],
+      "label": "l2",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        "tail"
+       ]
+      ]
+     },
+     {
+      "t": "list",
+      "id": "r",
+      "nodes": [
+       1,
+       1,
+       2,
+       3,
+       4,
+       4
+      ],
+      "label": "结果",
+      "arrows": [
+       [
+        0,
+        1
+       ]
+      ]
+     },
+     {
+      "t": "ptr",
+      "id": "pa",
+      "on": "a",
+      "name": "l1",
+      "i": 1,
+      "dy": 1,
+      "color": "#1d4ed8"
+     },
+     {
+      "t": "ptr",
+      "id": "pb",
+      "on": "b",
+      "name": "l2",
+      "i": 0,
+      "dy": 1,
+      "color": "#e5484d"
+     }
+    ],
+    "frames": [
+     {
+      "say": "用 dummy 虚拟头避免对头节点的特判。逐轮取较小者接到结果尾部",
+      "hl": {
+       "a": [
+        0
+       ],
+       "b": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "1 ≤ 1 → 取 l1 的 1；1 < 2 → 取 l2 的 1。结果 [1,1]",
+      "hl": {
+       "r": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "2 < 3 → 取 l1 的 2；l1 剩 [4]。结果 [1,1,2]",
+      "ptr": {
+       "pa": 2
+      },
+      "hl": {
+       "r": [
+        2
+       ]
+      }
+     },
+     {
+      "say": "4 vs 3 → 取 l2 的 3；结果 [1,1,2,3]",
+      "ptr": {
+       "pa": 2,
+       "pb": 1
+      },
+      "hl": {
+       "r": [
+        3
+       ]
+      }
+     },
+     {
+      "say": "4 vs 4 → 取 l1 的 4（相等优先取 l1）；再取 l2 的 4。结果 [1,1,2,3,4,4]",
+      "ptr": {
+       "pb": 2
+      },
+      "hl": {
+       "r": [
+        4,
+        5
+       ]
+      }
+     },
+     {
+      "say": "一方耗尽后把另一方整体接上。返回 dummy.next → [1,1,2,3,4,4] ✓",
+      "list": {
+       "r": {
+        "link": [
+         [
+          1,
+          2
+         ],
+         [
+          2,
+          3
+         ],
+         [
+          3,
+          4
+         ],
+         [
+          4,
+          5
+         ],
+         [
+          5,
+          "tail"
+         ]
+        ]
+       }
+      },
+      "hl": {
+       "r": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "add-two-numbers",
+   "num": 7,
+   "leet_id": 2,
+   "title_cn": "两数相加",
+   "title_en": "Add Two Numbers",
+   "difficulty": "中等",
+   "category": "linked-list",
+   "tags": [
+    "递归",
+    "链表",
+    "数学"
+   ],
+   "statement": {
+    "desc": [
+     "给你两个**非空**的链表，表示两个非负的整数。它们每位数字都是按照**逆序**的方式存储的，并且每个节点只能存储一位数字。",
+     "请你将两个数相加，并以相同形式返回一个表示和的链表。"
+    ],
+    "examples": [
+     {
+      "input": "l1 = [2,4,3], l2 = [5,6,4]",
+      "output": "[7,0,8]",
+      "explain": "342 + 465 = 807"
+     },
+     {
+      "input": "l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]",
+      "output": "[8,9,9,9,0,0,0,1]"
+     }
+    ],
+    "constraints": [
+     "每个链表中的节点数在范围 [1, 100] 内",
+     "0 <= Node.val <= 9"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "模拟竖式加法：两链表同时从头（个位）往后扫，逐位相加并维护**进位** `carry`。",
+     "每一位的和 = `v1 + v2 + carry`，节点值为 `sum % 10`，新进位为 `sum // 10`。",
+     "循环结束后若 `carry` 仍为 1，要**多补一个节点**（如 99+1=100 的百位）。"
+    ],
+    "steps": [
+     "虚拟头 `dummy`，`p = dummy`，`carry = 0`",
+     "循环：`v1`、`v2` 取当前位（空则 0），`s = v1 + v2 + carry`",
+     "新建节点存 `s % 10`，`carry = s // 10`",
+     "两链表都走完且 `carry == 0` 时结束",
+     "返回 `dummy.next`"
+    ],
+    "complexity": {
+     "time": "O(max(m, n))",
+     "space": "O(1)（结果链表不计）"
+    },
+    "code": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:\n        dummy = p = ListNode()\n        carry = 0\n        while l1 or l2 or carry:\n            s = (l1.val if l1 else 0) + (l2.val if l2 else 0) + carry\n            p.next = ListNode(s % 10)\n            carry = s // 10\n            p = p.next\n            l1 = l1.next if l1 else None\n            l2 = l2.next if l2 else None\n        return dummy.next\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "两数相加 · 竖式加法"
+    },
+    "views": [
+     {
+      "t": "list",
+      "id": "a",
+      "nodes": [
+       2,
+       4,
+       3
+      ],
+      "label": "342"
+     },
+     {
+      "t": "list",
+      "id": "b",
+      "nodes": [
+       5,
+       6,
+       4
+      ],
+      "label": "465"
+     },
+     {
+      "t": "ptr",
+      "id": "pa",
+      "on": "a",
+      "name": "l1",
+      "i": 0,
+      "dy": 1,
+      "color": "#1d4ed8"
+     },
+     {
+      "t": "ptr",
+      "id": "pb",
+      "on": "b",
+      "name": "l2",
+      "i": 0,
+      "dy": 1,
+      "color": "#e5484d"
+     },
+     {
+      "t": "list",
+      "id": "r",
+      "nodes": [
+       7,
+       0,
+       8
+      ],
+      "label": "结果",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ]
+      ]
+     },
+     {
+      "t": "var",
+      "id": "c",
+      "v": 0,
+      "label": "进位"
+     }
+    ],
+    "frames": [
+     {
+      "say": "两个非负数按逆序存于链表（342 = 2→4→3）。逐位相加并维护进位，就像列竖式：同位相加、满十进一"
+     },
+     {
+      "say": "个位对齐：2+5+0 = 7，无进位 → 结果个位 7",
+      "hl": {
+       "a": [
+        0
+       ],
+       "b": [
+        0
+       ],
+       "r": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "十位：4+6+0 = 10 → 本位 0，进位 1",
+      "ptr": {
+       "pa": 1,
+       "pb": 1
+      },
+      "set": {
+       "c": 1
+      },
+      "hl": {
+       "a": [
+        1
+       ],
+       "b": [
+        1
+       ],
+       "r": [
+        1
+       ]
+      }
+     },
+     {
+      "say": "百位：3+4+1(进位) = 8 → 本位 8，进位归零",
+      "ptr": {
+       "pa": 2,
+       "pb": 2
+      },
+      "set": {
+       "c": 0
+      },
+      "hl": {
+       "a": [
+        2
+       ],
+       "b": [
+        2
+       ],
+       "r": [
+        2
+       ]
+      }
+     },
+     {
+      "say": "两链表走完且无进位 → 结束，结果 807 ✓",
+      "hl": {
+       "r": [
+        0,
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "注意：若最后 carry=1（如 99+1），要额外补一个最高位节点，否则会丢位",
+      "hl": {
+       "c": [
+        "v"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "remove-nth-node-from-end-of-list",
+   "num": 8,
+   "leet_id": 19,
+   "title_cn": "删除链表的倒数第 N 个结点",
+   "title_en": "Remove Nth Node From End of List",
+   "difficulty": "中等",
+   "category": "linked-list",
+   "tags": [
+    "链表",
+    "双指针"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个链表，删除链表的倒数第 `n` 个结点，并且返回链表的头结点。要求一趟扫描实现。"
+    ],
+    "examples": [
+     {
+      "input": "head = [1,2,3,4,5], n = 2",
+      "output": "[1,2,3,5]"
+     },
+     {
+      "input": "head = [1], n = 1",
+      "output": "[]"
+     },
+     {
+      "input": "head = [1,2], n = 1",
+      "output": "[1]"
+     }
+    ],
+    "constraints": [
+     "链表中结点的数目为 [1, 10^5]",
+     "1 <= n <= 结点数目"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "一趟扫描的关键是**双指针拉开固定距离 n**：fast 先走 n+1 步（算上 dummy），然后 slow、fast 同速前进。",
+     "fast 到 null 时，slow 恰好停在**待删节点的前驱**上，直接 `slow.next = slow.next.next`。",
+     "用 dummy 虚拟头统一「删除头节点」的边界情况。"
+    ],
+    "steps": [
+     "建 `dummy` 指向 head，`slow = fast = dummy`",
+     "`fast` 先走 n+1 步",
+     "slow、fast 同速前进直到 `fast` 为 null",
+     "此时 `slow` 是待删节点的前驱：`slow.next = slow.next.next`",
+     "返回 `dummy.next`"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:\n        dummy = ListNode(0, head)\n        slow = fast = dummy\n        for _ in range(n + 1):   # fast 先走 n+1 步\n            fast = fast.next\n        while fast:              # 同速前进\n            slow, fast = slow.next, fast.next\n        slow.next = slow.next.next   # 删除倒数第 n 个\n        return dummy.next\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "删除倒数第 N 个 · 间距双指针"
+    },
+    "views": [
+     {
+      "t": "list",
+      "id": "l",
+      "nodes": [
+       1,
+       2,
+       3,
+       4,
+       5
+      ],
+      "label": "n=2",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        4,
+        "tail"
+       ]
+      ]
+     },
+     {
+      "t": "ptr",
+      "id": "slow",
+      "on": "l",
+      "name": "slow",
+      "i": 1,
+      "dy": -1,
+      "color": "#1d4ed8"
+     },
+     {
+      "t": "ptr",
+      "id": "fast",
+      "on": "l",
+      "name": "fast",
+      "i": 3,
+      "dy": 1,
+      "color": "#e5484d"
+     }
+    ],
+    "frames": [
+     {
+      "say": "删除倒数第 n 个节点。单链表不能回退 → 双指针一次遍历：fast 先走 n+1 步拉开固定间距，再同速前进"
+     },
+     {
+      "say": "n=2：fast 先走 3 步（n+1，含 dummy），拉开固定间距",
+      "hl": {
+       "l": [
+        0,
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "slow、fast 同速前进，间距恒为 3",
+      "ptr": {
+       "slow": 2,
+       "fast": 4
+      },
+      "hl": {
+       "l": [
+        2,
+        3,
+        4
+       ]
+      }
+     },
+     {
+      "say": "fast 到 null 时，slow 恰是「倒数第 2 个(4) 的前驱」= 节点 3",
+      "ptr": {
+       "slow": 2,
+       "fast": "tail"
+      },
+      "hl": {
+       "l": [
+        3
+       ]
+      }
+     },
+     {
+      "say": "slow.next = slow.next.next → 节点 4 被跳过删除",
+      "list": {
+       "l": {
+        "unlink": [
+         [
+          2,
+          3
+         ]
+        ],
+        "link": [
+         [
+          2,
+          4
+         ]
+        ]
+       }
+      },
+      "hl": {
+       "l": [
+        2,
+        4
+       ]
+      }
+     },
+     {
+      "say": "返回 [1,2,3,5]。dummy 让「删除头节点」的情况无需特判",
+      "hl": {
+       "l": [
+        0,
+        1,
+        2,
+        4
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "swap-nodes-in-pairs",
+   "num": 9,
+   "leet_id": 24,
+   "title_cn": "两两交换链表中的节点",
+   "title_en": "Swap Nodes in Pairs",
+   "difficulty": "中等",
+   "category": "linked-list",
+   "tags": [
+    "递归",
+    "链表"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个链表，两两交换其中相邻的节点，并返回交换后链表的头节点。你必须在不修改节点内部的值的情况下完成本题（即，只能进行节点交换）。"
+    ],
+    "examples": [
+     {
+      "input": "head = [1,2,3,4]",
+      "output": "[2,1,4,3]"
+     },
+     {
+      "input": "head = []",
+      "output": "[]"
+     },
+     {
+      "input": "head = [1]",
+      "output": "[1]"
+     }
+    ],
+    "constraints": [
+     "链表中节点的数目在范围 [0, 100] 内",
+     "0 <= Node.val <= 100"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "迭代法用一个「前驱指针」：每轮处理一对 `(a, b)`——把 `prev.next` 指向 `b`、`b.next` 指向 `a`、`a.next` 指向原 `b.next`，然后 `prev` 移到 `a`。",
+     "递归写法更短：`swap(head)` = 交换 head 与 head.next，剩下的交给递归处理。"
+    ],
+    "steps": [
+     "建 dummy，`prev = dummy`",
+     "当 `prev` 后至少有两个节点：取出 `a = prev.next, b = a.next`",
+     "重连：`prev.next = b`，`a.next = b.next`，`b.next = a`",
+     "`prev = a`（下一对的前驱），重复",
+     "返回 `dummy.next`"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def swapPairs(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        dummy = ListNode(0, head)\n        prev = dummy\n        while prev.next and prev.next.next:\n            a, b = prev.next, prev.next.next\n            prev.next = b        # 三步重连\n            a.next = b.next\n            b.next = a\n            prev = a             # a 成为下一对的前驱\n        return dummy.next\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "两两交换 · 前驱指针三步重连"
+    },
+    "views": [
+     {
+      "t": "list",
+      "id": "l",
+      "nodes": [
+       1,
+       2,
+       3,
+       4
+      ],
+      "label": "head",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        3,
+        "tail"
+       ]
+      ]
+     },
+     {
+      "t": "var",
+      "id": "v",
+      "v": "-",
+      "label": "处理中"
+     }
+    ],
+    "frames": [
+     {
+      "say": "两两交换相邻节点：1→2→3→4 变 2→1→4→3。头部也会被换 → 加 dummy 哨兵统一处理；每对只需重连 3 条指针"
+     },
+     {
+      "say": "第一对 (1,2)：断开 1→2，让 prev(头)→2、2→1、1→3",
+      "list": {
+       "l": {
+        "unlink": [
+         [
+          0,
+          1
+         ]
+        ],
+        "link": [
+         [
+          0,
+          2
+         ],
+         [
+          1,
+          0
+         ],
+         [
+          1,
+          2
+         ]
+        ]
+       }
+      },
+      "set": {
+       "v": "swap(1,2)"
+      },
+      "hl": {
+       "l": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "第一对 (1,2)：断开 1→2，让 2 反指 1",
+      "set": {
+       "v": "prev=1"
+      },
+      "hl": {
+       "l": [
+        1
+       ]
+      },
+      "list": {
+       "l": {
+        "unlink": [
+         [
+          0,
+          1
+         ]
+        ],
+        "link": [
+         [
+          1,
+          0
+         ]
+        ]
+       }
+      }
+     },
+     {
+      "say": "1 接到下一对的开头 3，此时链表 2→1→3→4",
+      "list": {
+       "l": {
+        "link": [
+         [
+          0,
+          2
+         ]
+        ]
+       }
+      },
+      "set": {
+       "v": "swap(3,4)"
+      },
+      "hl": {
+       "l": [
+        2,
+        3
+       ]
+      }
+     },
+     {
+      "say": "第二对 (3,4)：1 接 4、4 反指 3、3 接到尾部",
+      "list": {
+       "l": {
+        "link": [
+         [
+          0,
+          3
+         ],
+         [
+          3,
+          2
+         ],
+         [
+          2,
+          "tail"
+         ]
+        ]
+       }
+      },
+      "set": {
+       "v": "完成"
+      },
+      "hl": {
+       "l": [
+        0,
+        1,
+        2,
+        3
+       ]
+      }
+     },
+     {
+      "say": "整链变为 2→1→4→3→null ✓（原 1→2→3→4）",
+      "hl": {
+       "l": [
+        [
+         0,
+         null
+        ],
+        [
+         1,
+         null
+        ],
+        [
+         2,
+         null
+        ],
+        [
+         3,
+         null
+        ]
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "reverse-nodes-in-k-group",
+   "num": 10,
+   "leet_id": 25,
+   "title_cn": "K 个一组翻转链表",
+   "title_en": "Reverse Nodes in k-Group",
+   "difficulty": "困难",
+   "category": "linked-list",
+   "tags": [
+    "递归",
+    "链表"
+   ],
+   "statement": {
+    "desc": [
+     "给你链表的头节点 `head` ，每 `k` 个节点一组进行翻转，请你返回修改后的链表。",
+     "`k` 是一个正整数，它的值小于或等于链表的长度。如果节点总数不是 `k` 的整数倍，那么请将最后剩余的节点保持原有顺序。你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。"
+    ],
+    "examples": [
+     {
+      "input": "head = [1,2,3,4,5], k = 2",
+      "output": "[2,1,4,3,5]"
+     },
+     {
+      "input": "head = [1,2,3,4,5], k = 3",
+      "output": "[3,2,1,4,5]"
+     }
+    ],
+    "constraints": [
+     "链表中的节点数目为 n",
+     "1 <= k <= n <= 5000",
+     "0 <= Node.val <= 1000"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "分组处理：先**探查**从当前组头开始是否有 k 个节点——不足则保持原样结束。",
+     "足够则对这 k 个节点做一次普通反转（同 206 题），反转后接回：`前一组尾.next = 新组头`，并把组尾（原组头）作为下一组的前驱。",
+     "递归写法：`reverseKGroup(head, k)` = 反转 [head, head+k) 后，`组尾.next = reverseKGroup(下一组头, k)`。"
+    ],
+    "steps": [
+     "探查：从 `head` 数 k 个节点，不足 k 个直接返回 `head`",
+     "反转本组 k 个节点，得到新组头 `nh` 与组尾 `tail`（原 head）",
+     "递归处理下一组：`tail.next = reverseKGroup(第 k+1 个节点, k)`",
+     "返回 `nh`"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(n/k)（递归栈）"
+    },
+    "code": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:\n        # 1) 探查本组是否凑满 k 个\n        node, cnt = head, 0\n        while node and cnt < k:\n            node, cnt = node.next, cnt + 1\n        if cnt < k:\n            return head            # 不足一组，保持原样\n\n        # 2) 反转本组 k 个（普通反转，终点是 node）\n        prev, cur = node, head     # prev 先指向下一组头\n        while cur is not node:\n            cur.next, prev, cur = prev, cur, cur.next\n\n        # 3) 递归处理后续，接回组尾\n        head.next = self.reverseKGroup(node, k)\n        return prev                # 本组新头\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "K 个一组翻转 · 分组递归"
+    },
+    "views": [
+     {
+      "t": "var",
+      "id": "k",
+      "v": 2,
+      "label": "k=2"
+     },
+     {
+      "t": "list",
+      "id": "l",
+      "nodes": [
+       1,
+       2,
+       3,
+       4,
+       5
+      ],
+      "label": "head",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        4,
+        "tail"
+       ]
+      ]
+     },
+     {
+      "t": "var",
+      "id": "v",
+      "v": "-",
+      "label": "当前组"
+     }
+    ],
+    "frames": [
+     {
+      "say": "每 k 个一组反转链表，不足 k 个的尾段保持原样。是「反转链表」进阶：每组先探查节点数，够 k 个才反转"
+     },
+     {
+      "say": "探查第一组 [1,2]：有 2 个节点 ✓，执行反转 → 2→1，1 接下一组",
+      "list": {
+       "l": {
+        "unlink": [
+         [
+          0,
+          1
+         ]
+        ],
+        "link": [
+         [
+          1,
+          0
+         ],
+         [
+          0,
+          2
+         ]
+        ]
+       }
+      },
+      "set": {
+       "v": "组1: [1,2]→[2,1]"
+      },
+      "hl": {
+       "l": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "递归第二组 [3,4]：反转 → 4→3",
+      "list": {
+       "l": {
+        "unlink": [
+         [
+          2,
+          3
+         ]
+        ],
+        "link": [
+         [
+          3,
+          2
+         ],
+         [
+          2,
+          4
+         ]
+        ]
+       }
+      },
+      "set": {
+       "v": "组2: [3,4]→[4,3]"
+      },
+      "hl": {
+       "l": [
+        2,
+        3
+       ]
+      }
+     },
+     {
+      "say": "第三组 [5]：只有 1 个 < k=2 → 保持原样，不反转",
+      "set": {
+       "v": "组3: [5] 保持"
+      },
+      "hl": {
+       "l": [
+        4
+       ]
+      }
+     },
+     {
+      "say": "拼接：2→1→4→3→5→null，返回 [2,1,4,3,5] ✓",
+      "list": {
+       "l": {
+        "link": [
+         [
+          0,
+          2
+         ],
+         [
+          1,
+          4
+         ],
+         [
+          3,
+          4
+         ],
+         [
+          3,
+          2
+         ]
+        ]
+       }
+      },
+      "set": {
+       "v": "完成"
+      },
+      "hl": {
+       "l": [
+        0,
+        1,
+        2,
+        3,
+        4
+       ]
+      }
+     },
+     {
+      "say": "每节点只被访问常数次 O(n)。「先探查再反转」是本题区别于普通反转的关键",
+      "hl": {
+       "v": [
+        "v"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "copy-list-with-random-pointer",
+   "num": 11,
+   "leet_id": 138,
+   "title_cn": "随机链表的复制",
+   "title_en": "Copy List with Random Pointer",
+   "difficulty": "中等",
+   "category": "linked-list",
+   "tags": [
+    "哈希表",
+    "链表"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个长度为 n 的链表，每个节点包含一个额外增加的随机指针 `random` ，该指针可以指向链表中的任何节点或空节点。",
+     "构造这个链表的**深拷贝**。深拷贝应该正好由 n 个**全新**节点组成，其中每个新节点的值都设为其对应的原节点的值。新节点的 `next` 和 `random` 指针也都应指向复制链表中的新节点，并使原链表和复制链表中的指针表示保持一致。返回复制链表的头节点。"
+    ],
+    "examples": [
+     {
+      "input": "head = [[7,null],[13,0],[11,4],[10,2],[1,0]]",
+      "output": "[[7,null],[13,0],[11,4],[10,2],[1,0]]"
+     },
+     {
+      "input": "head = [[1,1],[2,1]]",
+      "output": "[[1,1],[2,1]]"
+     }
+    ],
+    "constraints": [
+     "0 <= n <= 1000",
+     "-10^4 <= Node.val <= 10^4",
+     "random 为空（null）或指向链表中的节点"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "难点在 random 指针可能指向「还没创建」的节点。哈希表法：第一遍为每个原节点创建副本存 `map[原] = 新`；第二遍按映射补全 `next` 与 `random`。",
+     "O(1) 空间的**原地穿插法**：第一遍把新节点插到每个原节点后面（1→1'→2→2'…）；第二遍 `原.random.next` 就是副本的 random；第三遍拆开两条链。",
+     "动画演示哈希表法（直观），代码给哈希表法。"
+    ],
+    "steps": [
+     "第一遍遍历：为每个原节点 `x` 创建副本 `y`，存 `map[x] = y`",
+     "第二遍：`map[x].next = map[x.next]`，`map[x].random = map[x.random]`（注意 None 情况）",
+     "返回 `map[head]`"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(n)（哈希表）"
+    },
+    "code": "\"\"\"\n# Definition for a Node.\nclass Node:\n    def __init__(self, x, next=None, random=None):\n        self.val = int(x)\n        self.next = next\n        self.random = random\n\"\"\"\nclass Solution:\n    def copyRandomList(self, head: \"Optional[Node]\") -> \"Optional[Node]\":\n        if not head:\n            return None\n        memo = {}                       # 原节点 -> 副本\n        p = head\n        while p:                        # 第一遍：只建节点\n            memo[p] = Node(p.val)\n            p = p.next\n        p = head\n        while p:                        # 第二遍：接 next / random\n            memo[p].next = memo.get(p.next)\n            memo[p].random = memo.get(p.random)\n            p = p.next\n        return memo[head]\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "随机链表复制 · 哈希映射两遍法"
+    },
+    "views": [
+     {
+      "t": "list",
+      "id": "src",
+      "nodes": [
+       7,
+       13,
+       1
+      ],
+      "label": "原链表",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        "tail"
+       ]
+      ]
+     },
+     {
+      "t": "map",
+      "id": "memo",
+      "label": "memo(原→副本)"
+     },
+     {
+      "t": "list",
+      "id": "cp",
+      "nodes": [
+       7,
+       13,
+       1
+      ],
+      "label": "副本",
+      "arrows": [
+       [
+        0,
+        1
+       ]
+      ]
+     }
+    ],
+    "frames": [
+     {
+      "say": "深拷贝带 random 随机指针的链表。难点：复制节点时它 random 指向的节点可能还未创建 → 用哈希表记录「原节点 → 副本」映射"
+     },
+     {
+      "say": "第一遍只建节点不接线：7'、13'、1' 全部创建，memo 记录映射",
+      "add": {
+       "memo": [
+        [
+         "7",
+         "7'"
+        ],
+        [
+         "13",
+         "13'"
+        ],
+        [
+         "1",
+         "1'"
+        ]
+       ]
+      },
+      "hl": {
+       "src": [
+        0,
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "第二遍接线 next：7'→13'→1'→null（照原链表顺序）",
+      "list": {
+       "cp": {
+        "link": [
+         [
+          0,
+          1
+         ],
+         [
+          1,
+          2
+         ],
+         [
+          2,
+          "tail"
+         ]
+        ]
+       }
+      },
+      "hl": {
+       "cp": [
+        0,
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "接线 random：原 13.random 指向 7 → 副本 13'.random = memo[7] = 7'",
+      "hl": {
+       "src": [
+        1
+       ],
+       "cp": [
+        1
+       ]
+      }
+     },
+     {
+      "say": "原 1.random 指向 7 → 副本同理；任意指针都能 O(1) 查映射",
+      "hl": {
+       "memo": [
+        0,
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "返回 memo[head] = 7'。两遍扫描 + 一个哈希表，深拷贝完成",
+      "hl": {
+       "cp": [
+        0,
+        1,
+        2
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "sort-list",
+   "num": 12,
+   "leet_id": 148,
+   "title_cn": "排序链表",
+   "title_en": "Sort List",
+   "difficulty": "中等",
+   "category": "linked-list",
+   "tags": [
+    "链表",
+    "双指针",
+    "分治",
+    "排序",
+    "归并排序"
+   ],
+   "statement": {
+    "desc": [
+     "给你链表的头结点 `head`，请将其按**升序**排列并返回排序后的链表。",
+     "进阶：你可以在 O(n log n) 时间复杂度和常数级空间复杂度下，对链表进行排序吗？"
+    ],
+    "examples": [
+     {
+      "input": "head = [4,2,1,3]",
+      "output": "[1,2,3,4]"
+     },
+     {
+      "input": "head = [-1,5,3,4,0]",
+      "output": "[-1,0,3,4,5]"
+     }
+    ],
+    "constraints": [
+     "链表中节点的数目在范围 [0, 5 * 10^4] 内",
+     "-10^5 <= Node.val <= 10^5"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "链表排序的最优选择是**归并排序**：快慢指针找中点断开 → 递归排序两半 → 合并两个有序链表（同 21 题）。",
+     "数组快排依赖随机访问，链表没有；而归并的 merge 只需要顺序访问，天然适合链表。",
+     "递归自顶向下是 O(log n) 栈空间；自底向上两两合并可做到 O(1) 空间。"
+    ],
+    "steps": [
+     "递归出口：空或单节点直接返回",
+     "快慢指针找中点，从中点**断开**成两半",
+     "两半分别递归排序",
+     "合并两个有序链表，返回"
+    ],
+    "complexity": {
+     "time": "O(n log n)",
+     "space": "O(log n)（递归栈）"
+    },
+    "code": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def sortList(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        if not head or not head.next:\n            return head\n\n        # 快慢指针找中点并断开\n        slow, fast = head, head.next\n        while fast and fast.next:\n            slow, fast = slow.next, fast.next.next\n        mid, slow.next = slow.next, None\n\n        left, right = self.sortList(head), self.sortList(mid)\n        return self.merge(left, right)\n\n    def merge(self, a, b):            # 合并两个有序链表\n        dummy = p = ListNode()\n        while a and b:\n            if a.val <= b.val:\n                p.next, a = a, a.next\n            else:\n                p.next, b = b, b.next\n            p = p.next\n        p.next = a if a else b\n        return dummy.next\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "排序链表 · 归并排序"
+    },
+    "views": [
+     {
+      "t": "list",
+      "id": "src",
+      "nodes": [
+       4,
+       2,
+       1,
+       3
+      ],
+      "label": "原始"
+     },
+     {
+      "t": "list",
+      "id": "h1",
+      "nodes": [
+       4,
+       2
+      ],
+      "label": "左半",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        "tail"
+       ]
+      ]
+     },
+     {
+      "t": "list",
+      "id": "h2",
+      "nodes": [
+       1,
+       3
+      ],
+      "label": "右半",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        "tail"
+       ]
+      ]
+     },
+     {
+      "t": "list",
+      "id": "out",
+      "nodes": [
+       1,
+       2,
+       3,
+       4
+      ],
+      "label": "合并后",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        3
+       ],
+       [
+        3,
+        "tail"
+       ]
+      ]
+     }
+    ],
+    "frames": [
+     {
+      "say": "给链表排序，要求 O(n log n)。链表排序首选归并：快慢指针找中点断开 → 递归排序两半 → 合并两个有序链表"
+     },
+     {
+      "say": "快慢指针找中点：4,2 | 1,3，从中点断开成两半",
+      "hl": {
+       "src": [
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "递归排序左半 [4,2] → [2,4]；右半 [1,3] → [1,3]（递归到单节点自然有序）",
+      "hl": {
+       "h1": [
+        0,
+        1
+       ],
+       "h2": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "merge：2 vs 1 → 取 1；2 vs 3 → 取 2；4 vs 3 → 取 3；剩 4 接上",
+      "hl": {
+       "out": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "合并完成 [1,2,3,4] ✓",
+      "hl": {
+       "out": [
+        0,
+        1,
+        2,
+        3
+       ]
+      }
+     },
+     {
+      "say": "归并 = 找中点 O(n) + 合并 O(n)，共 log n 层 → O(n log n)",
+      "hl": {
+       "src": [
+        0,
+        1,
+        2,
+        3
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "merge-k-sorted-lists",
+   "num": 13,
+   "leet_id": 23,
+   "title_cn": "合并 K 个升序链表",
+   "title_en": "Merge k Sorted Lists",
+   "difficulty": "困难",
+   "category": "linked-list",
+   "tags": [
+    "链表",
+    "分治",
+    "堆",
+    "归并排序"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个链表数组，每个链表都已经按升序排列。",
+     "请你将所有链表合并到一个升序链表中，返回合并后的链表。"
+    ],
+    "examples": [
+     {
+      "input": "lists = [[1,4,5],[1,3,4],[2,6]]",
+      "output": "[1,1,2,3,4,4,5,6]"
+     },
+     {
+      "input": "lists = []",
+      "output": "[]"
+     }
+    ],
+    "constraints": [
+     "k == lists.length",
+     "0 <= k <= 10^4",
+     "0 <= lists[i].length <= 500"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "两两合并分治：把 k 条链表**两两配对合并**（复用 21 题的 merge），链表数每轮减半，log k 轮后只剩一条。总时间 O(N log k)。",
+     "也可以用**小根堆**：把 k 条链表的当前节点入堆，每次弹出最小的接到结果，并把它的 next 补入堆。堆中始终只有 k 个节点，同样是 O(N log k)。"
+    ],
+    "steps": [
+     "`lists` 非空时两两相邻配对，`merged[i] = merge(lists[2i], lists[2i+1])`",
+     "用 `merged` 替换 `lists`，重复直到只剩一条",
+     "返回那条链表"
+    ],
+    "complexity": {
+     "time": "O(N log k)（N 为总节点数）",
+     "space": "O(1)（分治迭代版）"
+    },
+    "code": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:\n        if not lists:\n            return None\n        while len(lists) > 1:          # 两两合并，轮数 = log k\n            merged = []\n            for i in range(0, len(lists), 2):\n                a = lists[i]\n                b = lists[i + 1] if i + 1 < len(lists) else None\n                merged.append(self.merge(a, b))\n            lists = merged\n        return lists[0]\n\n    def merge(self, a, b):             # 同 21 题\n        dummy = p = ListNode()\n        while a and b:\n            if a.val <= b.val:\n                p.next, a = a, a.next\n            else:\n                p.next, b = b, b.next\n            p = p.next\n        p.next = a if a else b\n        return dummy.next\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "合并 K 个升序链表 · 两两分治"
+    },
+    "views": [
+     {
+      "t": "list",
+      "id": "a",
+      "nodes": [
+       1,
+       4,
+       5
+      ],
+      "label": "链表1",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        "tail"
+       ]
+      ]
+     },
+     {
+      "t": "list",
+      "id": "b",
+      "nodes": [
+       1,
+       3,
+       4
+      ],
+      "label": "链表2",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        2
+       ],
+       [
+        2,
+        "tail"
+       ]
+      ]
+     },
+     {
+      "t": "list",
+      "id": "c",
+      "nodes": [
+       2,
+       6
+      ],
+      "label": "链表3",
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        "tail"
+       ]
+      ]
+     },
+     {
+      "t": "list",
+      "id": "ab",
+      "nodes": [
+       1,
+       1,
+       3,
+       4,
+       4,
+       5
+      ],
+      "label": "1∪2",
+      "arrows": [
+       [
+        0,
+        1
+       ]
+      ]
+     },
+     {
+      "t": "list",
+      "id": "fin",
+      "nodes": [
+       1,
+       1,
+       2,
+       3,
+       4,
+       4,
+       5,
+       6
+      ],
+      "label": "最终",
+      "arrows": [
+       [
+        0,
+        1
+       ]
+      ]
+     }
+    ],
+    "frames": [
+     {
+      "say": "合并 k 条已排序链表。逐条两两合并最坏 O(kN)；分治两两归并只需 log k 轮 → O(N log k)"
+     },
+     {
+      "say": "第 1 轮两两合并：链表1 ∪ 链表2 → [1,1,3,4,4,5]；链表3 这轮轮空直接晋级",
+      "hl": {
+       "a": [
+        0,
+        1,
+        2
+       ],
+       "b": [
+        0,
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "第 2 轮：[1,1,3,4,4,5] ∪ [2,6] → 1,1,2,3,…",
+      "hl": {
+       "ab": [
+        0,
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "继续归并：4 vs 6 取 4、4 vs 6 取 4、5 vs 6 取 5，最后接 6",
+      "hl": {
+       "fin": [
+        3,
+        4,
+        5,
+        6
+       ]
+      }
+     },
+     {
+      "say": "只剩一条 → [1,1,2,3,4,4,5,6] ✓",
+      "hl": {
+       "fin": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+       ]
+      }
+     },
+     {
+      "say": "k 条链表 log k 轮，每轮总工作量 N → O(N log k)，比逐条合并 O(kN) 快得多",
+      "hl": {
+       "fin": [
+        0
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "lru-cache",
+   "num": 14,
+   "leet_id": 146,
+   "title_cn": "LRU 缓存",
+   "title_en": "LRU Cache",
+   "difficulty": "中等",
+   "category": "linked-list",
+   "tags": [
+    "设计",
+    "哈希表",
+    "链表",
+    "双向链表"
+   ],
+   "statement": {
+    "desc": [
+     "请你设计并实现一个满足 **LRU (最近最少使用) 约束**的数据结构。",
+     "实现 LRUCache 类：`LRUCache(capacity)` 初始化；`get(key)` 存在则返回值否则 -1；`put(key,value)` 存在则改值，不存在则插入；若超出容量须**逐出最久未使用**的键。`get` 和 `put` 均需 O(1) 平均时间复杂度。"
+    ],
+    "examples": [
+     {
+      "input": "[\"LRUCache\",\"put\",\"put\",\"get\",\"put\",\"get\",\"put\",\"get\",\"get\",\"get\"]\n[[2],[1,1],[2,2],[1],[3,3],[2],[4,4],[1],[3],[4]]",
+      "output": "[null,null,null,1,null,-1,null,-1,3,4]"
+     }
+    ],
+    "constraints": [
+     "1 <= capacity <= 3000",
+     "0 <= key <= 10^4",
+     "最多调用 2 * 10^5 次"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "O(1) 的组合拳：**哈希表定位 + 双向链表维护使用顺序**。",
+     "哈希表 `key → 节点`，双向链表按使用时间排序：头部是最新、尾部是最旧。访问某 key 时把节点摘下移到头部；容量超限时删尾部节点并同步删哈希表项。",
+     "双向链表（而非单向）是因为删除尾节点需要 O(1) 拿到前驱。Python 里也可直接用 `OrderedDict`，但面试建议手写。"
+    ],
+    "steps": [
+     "初始化 dummy 头/尾（head.next 是最新，tail.prev 是最旧）",
+     "`get(key)`：命中则把节点移到头部（摘下再头插），返回值",
+     "`put(key, val)`：已存在则更新值并移到头部；",
+     "否则头插新节点并建哈希映射；若超容量，删除 `tail.prev` 及其映射",
+     "所有操作均 O(1)"
+    ],
+    "complexity": {
+     "time": "各操作均 O(1)",
+     "space": "O(capacity)"
+    },
+    "code": "class Node:\n    def __init__(self, k=0, v=0):\n        self.k, self.v = k, v\n        self.prev = self.next = None\n\nclass LRUCache:\n    def __init__(self, capacity: int):\n        self.cap = capacity\n        self.key2node = {}\n        self.head, self.tail = Node(), Node()   # 哨兵\n        self.head.next, self.tail.prev = self.tail, self.head\n\n    def _remove(self, x: Node):          # 摘除节点\n        x.prev.next, x.next.prev = x.next, x.prev\n\n    def _move_front(self, x: Node):      # 移到头部(最新)\n        self._remove(x)\n        x.next, x.prev = self.head.next, self.head\n        self.head.next.prev = x\n        self.head.next = x\n\n    def get(self, key: int) -> int:\n        if key not in self.key2node:\n            return -1\n        self._move_front(self.key2node[key])\n        return self.key2node[key].v\n\n    def put(self, key: int, value: int) -> None:\n        if key in self.key2node:\n            x = self.key2node[key]\n            x.v = value\n            self._move_front(x)\n            return\n        x = Node(key, value)\n        self.key2node[key] = x\n        x.next, x.prev = self.head.next, self.head\n        self.head.next.prev = x\n        self.head.next = x\n        if len(self.key2node) > self.cap:      # 逐出最旧\n            lru = self.tail.prev\n            self._remove(lru)\n            del self.key2node[lru.k]\n"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "var",
+      "id": "cap",
+      "v": 2,
+      "label": "capacity"
+     },
+     {
+      "t": "list",
+      "id": "l",
+      "nodes": [
+       "2:2",
+       "1:1"
+      ],
+      "arrows": [
+       [
+        0,
+        1
+       ],
+       [
+        1,
+        "tail"
+       ]
+      ],
+      "label": "head（最新）→ tail（最旧）",
+      "marks": {
+       "0": "head",
+       "1": "tail"
+      }
+     },
+     {
+      "t": "var",
+      "id": "out",
+      "v": "-",
+      "label": "操作返回"
+     }
+    ],
+    "frames": [
+     {
+      "say": "LRU = 哈希表 + 双向链表：哈希表 O(1) 定位节点，链表头部放最新、尾部放最旧（逐出端）。此时 put(1,1)、put(2,2) 已完成"
+     },
+     {
+      "say": "get(1)：命中 → 把 1:1 摘下、接到头部（只改指针，不搬节点），返回 1",
+      "set": {
+       "out": "get(1)=1"
+      },
+      "hl": {
+       "l": [
+        [
+         1,
+         "#f5a623"
+        ]
+       ]
+      },
+      "list": {
+       "l": {
+        "link": [
+         [
+          1,
+          0
+         ],
+         [
+          0,
+          "tail"
+         ]
+        ]
+       }
+      },
+      "mark": {
+       "l": {
+        "0": "tail",
+        "1": "head"
+       }
+      }
+     },
+     {
+      "say": "put(3,3)：容量已满 → 哈希表 O(1) 定位尾部最旧的 2:2",
+      "hl": {
+       "l": [
+        [
+         0,
+         "#e5484d"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "摘除 2:2（哈希表同步删除该键），链表只剩 1:1",
+      "del": {
+       "l": {
+        "idx": 0
+       }
+      }
+     },
+     {
+      "say": "头插 3:3：链表 3:3 → 1:1 → ∅",
+      "add": {
+       "l": {
+        "val": "3:3",
+        "idx": 0
+       }
+      },
+      "list": {
+       "l": {
+        "link": [
+         [
+          0,
+          1
+         ],
+         [
+          1,
+          "tail"
+         ]
+        ]
+       }
+      },
+      "mark": {
+       "l": {
+        "0": "head",
+        "1": "tail"
+       }
+      },
+      "hl": {
+       "l": [
+        [
+         0,
+         "#30a46c"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "get(2)：哈希表查不到 2（已被逐出）→ 返回 -1",
+      "set": {
+       "out": "get(2)=-1"
+      }
+     },
+     {
+      "say": "put(4,4)：容量满 → 逐出尾部最旧的 1:1",
+      "hl": {
+       "l": [
+        [
+         1,
+         "#e5484d"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "摘除 1:1，链表只剩 3:3",
+      "del": {
+       "l": {
+        "idx": 1
+       }
+      }
+     },
+     {
+      "say": "头插 4:4：链表 4:4 → 3:3 → ∅",
+      "add": {
+       "l": {
+        "val": "4:4",
+        "idx": 0
+       }
+      },
+      "list": {
+       "l": {
+        "link": [
+         [
+          0,
+          1
+         ],
+         [
+          1,
+          "tail"
+         ]
+        ]
+       }
+      },
+      "mark": {
+       "l": {
+        "0": "head",
+        "1": "tail"
+       }
+      },
+      "hl": {
+       "l": [
+        [
+         0,
+         "#30a46c"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "最终 get(1)=-1、get(3)=3 ✓、get(4)=4 ✓ —— 哈希定位 + 链表调序，全部 O(1)",
+      "set": {
+       "out": "get(3)=3✓ get(4)=4✓"
+      }
+     }
+    ]
+   }
+  }
+ ]
+}

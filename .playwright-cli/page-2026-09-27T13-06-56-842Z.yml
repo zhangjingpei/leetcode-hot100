@@ -1,0 +1,139 @@
+- generic [active] [ref=f4e1]:
+  - banner [ref=f4e2]:
+    - generic [ref=f4e3]:
+      - link "LC Hot 100 · 图解刷题" [ref=f4e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f4e5]: LC
+        - generic [ref=f4e6]: Hot 100 · 图解刷题
+      - generic [ref=f4e7] [cursor=pointer]: 标记为已完成
+  - main [ref=f4e10]:
+    - generic [ref=f4e11]:
+      - generic [ref=f4e12]: 双指针 · Hot 100 第 2 题
+      - heading "2. 盛最多水的容器 中等" [level=1] [ref=f4e13]:
+        - text: 2. 盛最多水的容器
+        - generic [ref=f4e14]: 中等
+      - generic [ref=f4e15]:
+        - generic [ref=f4e16]: Container With Most Water
+        - text: LeetCode 11
+        - generic [ref=f4e17]: 贪心
+        - generic [ref=f4e18]: 数组
+        - generic [ref=f4e19]: 双指针
+    - generic [ref=f4e20]:
+      - heading "题目描述" [level=2] [ref=f4e21]
+      - generic [ref=f4e22]:
+        - paragraph [ref=f4e23]:
+          - text: 给定一个长度为 n 的整数数组
+          - code [ref=f4e24]: height
+          - text: 。有 n 条垂线，第 i 条线的两个端点是
+          - code [ref=f4e25]: (i, 0)
+          - text: 和
+          - code [ref=f4e26]: (i, height[i])
+          - text: 。
+        - paragraph [ref=f4e27]: 找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。返回容器可以储存的最大水量。注意你不能倾斜容器。
+      - generic [ref=f4e28]:
+        - generic [ref=f4e29]: 示例 1：
+        - generic [ref=f4e30]: 输入：height = [1,8,6,2,5,4,8,3,7] 输出：49 解释：选择第 2 条线(8)与第 9 条线(7)，宽 7 × 高 7 = 49
+      - generic [ref=f4e31]:
+        - generic [ref=f4e32]: 示例 2：
+        - generic [ref=f4e33]: 输入：height = [1,1] 输出：1
+      - generic [ref=f4e34]:
+        - text: 提示：
+        - list [ref=f4e35]:
+          - listitem [ref=f4e36]: n == height.length
+          - listitem [ref=f4e37]: 2 <= n <= 10^5
+          - listitem [ref=f4e38]: 0 <= height[i] <= 10^4
+    - generic [ref=f4e39]:
+      - heading "思路讲解" [level=2] [ref=f4e40]
+      - generic [ref=f4e41]:
+        - paragraph [ref=f4e42]:
+          - text: 面积 =
+          - code [ref=f4e43]: min(左高, 右高) × 宽度
+          - text: 。左右指针从两端开始，此时宽度最大。
+        - paragraph [ref=f4e44]: "**贪心移动**：短板决定了水面高度，移动长板不可能让面积变大（宽度变小、高度仍被短板限制），所以每次**移动短板那一侧**才有可能找到更大的面积。"
+        - paragraph [ref=f4e45]: 每次移动后计算新面积并更新最大值，直到两指针相遇。这个「每次排除一个不可能更优的候选」的论证保证了正确性。
+      - list [ref=f4e46]:
+        - listitem [ref=f4e47]:
+          - code [ref=f4e48]: l = 0, r = n-1
+          - text: ，
+          - code [ref=f4e49]: best = 0
+        - listitem [ref=f4e50]:
+          - text: 计算当前面积
+          - code [ref=f4e51]: min(height[l], height[r]) * (r - l)
+          - text: ，更新
+          - code [ref=f4e52]: best
+        - listitem [ref=f4e53]:
+          - text: 若
+          - code [ref=f4e54]: height[l] < height[r]
+          - text: ：
+          - code [ref=f4e55]: l += 1
+          - text: （短板在左）；否则
+          - code [ref=f4e56]: r -= 1
+        - listitem [ref=f4e57]:
+          - text: 重复直到
+          - code [ref=f4e58]: l == r
+          - text: ，返回
+          - code [ref=f4e59]: best
+    - generic [ref=f4e60]:
+      - heading "复杂度分析" [level=2] [ref=f4e61]
+      - generic [ref=f4e62]:
+        - generic [ref=f4e63]:
+          - text: ⏱ 时间复杂度
+          - generic [ref=f4e64]: O(n)
+        - generic [ref=f4e65]:
+          - text: 💾 空间复杂度
+          - generic [ref=f4e66]: O(1)
+    - generic [ref=f4e67]:
+      - heading "Python 题解" [level=2] [ref=f4e68]
+      - generic [ref=f4e69]:
+        - button "复制代码" [ref=f4e70] [cursor=pointer]
+        - code [ref=f4e72]: "class Solution: def maxArea(self, height: List[int]) -> int: l, r = 0, len(height) - 1 best = 0 while l < r: area = min(height[l], height[r]) * (r - l) best = max(best, area) if height[l] < height[r]: l += 1 # 移动短板才可能更优 else: r -= 1 return best"
+    - generic [ref=f4e73]:
+      - heading "2D 算法动画讲解" [level=2] [ref=f4e74]
+      - generic [ref=f4e75]: ▶ 播放 · 空格 播放/暂停 · ← → 单步 · 拖动进度条可跳到任意一步
+      - generic [ref=f4e77]:
+        - img [ref=f4e79]:
+          - generic [ref=f4e80]: height
+          - generic [ref=f4e84]: "1"
+          - generic [ref=f4e86]: "0"
+          - generic [ref=f4e90]: "8"
+          - generic [ref=f4e92]: "1"
+          - generic [ref=f4e96]: "6"
+          - generic [ref=f4e98]: "2"
+          - generic [ref=f4e102]: "2"
+          - generic [ref=f4e104]: "3"
+          - generic [ref=f4e108]: "5"
+          - generic [ref=f4e110]: "4"
+          - generic [ref=f4e114]: "4"
+          - generic [ref=f4e116]: "5"
+          - generic [ref=f4e120]: "8"
+          - generic [ref=f4e122]: "6"
+          - generic [ref=f4e126]: "3"
+          - generic [ref=f4e128]: "7"
+          - generic [ref=f4e132]: "7"
+          - generic [ref=f4e134]: "8"
+          - generic [ref=f4e138]: 面积=min×宽
+          - generic [ref=f4e140]: 1×8=8
+          - generic [ref=f4e144]: best
+          - generic [ref=f4e146]: "8"
+          - generic [ref=f4e150]: l
+          - generic [ref=f4e154]: r
+        - generic [ref=f4e156]:
+          - generic [ref=f4e157]: 1/8
+          - generic [ref=f4e158]: l=0(高1) 与 r=8(高7)：宽 8，面积 min(1,7)×8 = 8，best=8。短板是左边(1)→ 移 l
+        - generic [ref=f4e159]:
+          - button "⏮" [ref=f4e160] [cursor=pointer]
+          - button "◀" [ref=f4e161] [cursor=pointer]
+          - button "▶" [ref=f4e162] [cursor=pointer]
+          - button "▶|" [ref=f4e163] [cursor=pointer]
+          - button "⏭" [ref=f4e164] [cursor=pointer]
+          - slider [ref=f4e165] [cursor=pointer]: "0"
+          - combobox "播放速度" [ref=f4e166] [cursor=pointer]:
+            - option "0.5x"
+            - option "1x" [selected]
+            - option "1.5x"
+            - option "2x"
+  - generic [ref=f4e167]:
+    - link "← 1. 移动零" [ref=f4e168] [cursor=pointer]:
+      - /url: /problem/move-zeroes
+    - link "3. 三数之和 →" [ref=f4e169] [cursor=pointer]:
+      - /url: /problem/3sum

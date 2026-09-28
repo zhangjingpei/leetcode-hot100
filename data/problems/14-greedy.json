@@ -1,0 +1,802 @@
+{
+ "problems": [
+  {
+   "id": "best-time-to-buy-and-sell-stock",
+   "num": 1,
+   "leet_id": 121,
+   "title_cn": "买卖股票的最佳时机",
+   "title_en": "Best Time to Buy and Sell Stock",
+   "difficulty": "简单",
+   "category": "greedy",
+   "tags": [
+    "数组",
+    "动态规划",
+    "贪心"
+   ],
+   "statement": {
+    "desc": [
+     "给定一个数组 `prices`，`prices[i]` 表示股票第 `i` 天的价格。你只能选择**某一天**买入并在**未来的另一个日子**卖出。返回所能获取的最大利润；若不能获利，返回 `0`。"
+    ],
+    "examples": [
+     {
+      "input": "prices = [7,1,5,3,6,4]",
+      "output": "5（第 2 天买、第 5 天卖）"
+     },
+     {
+      "input": "prices = [7,6,4,3,1]",
+      "output": "0"
+     }
+    ],
+    "constraints": [
+     "1 <= prices.length <= 10⁵",
+     "0 <= prices[i] <= 10⁴"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "一次遍历维护两个量：**历史最低价 `minp`** 与 **历史最大利润 `best`**。每一天：先看今天卖能赚多少（`prices[i] - minp`）更新 best，再用今天价格更新 minp。",
+     "贪心正确性：最优卖出日之前的买入日必然是「它之前」的最低价——枚举每个卖出日配对历史最低，答案不会漏。",
+     "注意顺序：先用旧 minp 算利润，再更新 minp（同一天先卖后买不允许，但这里顺序不影响正确性，因为同日买卖利润为 0）。"
+    ],
+    "steps": [
+     "`minp = +∞`，`best = 0`",
+     "遍历每天：`best = max(best, prices[i] - minp)`",
+     "`minp = min(minp, prices[i])`",
+     "返回 best"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def maxProfit(self, prices: List[int]) -> int:\n        minp, best = float(\"inf\"), 0\n        for p in prices:\n            best = max(best, p - minp)   # 今天卖\n            minp = min(minp, p)          # 更新历史最低\n        return best"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "p",
+      "vals": [
+       7,
+       1,
+       5,
+       3,
+       6,
+       4
+      ],
+      "label": "prices"
+     },
+     {
+      "t": "var",
+      "id": "minp",
+      "v": "∞",
+      "label": "历史最低"
+     },
+     {
+      "t": "var",
+      "id": "best",
+      "v": 0,
+      "label": "最大利润"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：prices=[7,1,5,3,6,4] 只能买一次卖一次，求最大利润。贪心：每天记录历史最低买入价，今天卖出试一把"
+     },
+     {
+      "say": "第 0 天 7 元：minp = 7，卖无可卖",
+      "set": {
+       "minp": 7
+      },
+      "hl": {
+       "p": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 1 天 1 元：新低！minp = 1（之前买的都亏，换成今天买）",
+      "set": {
+       "minp": 1
+      },
+      "hl": {
+       "p": [
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 2 天 5 元：今天卖赚 5-1 = 4 → best = 4",
+      "set": {
+       "best": 4
+      },
+      "hl": {
+       "p": [
+        [
+         2,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 3 天 3 元：3-1 = 2 < 4，不更新",
+      "hl": {
+       "p": [
+        [
+         3,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 4 天 6 元：6-1 = 5 → best = 5 ✓",
+      "set": {
+       "best": 5
+      },
+      "hl": {
+       "p": [
+        [
+         4,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 5 天 4 元：4-1 = 3 < 5，不更新",
+      "hl": {
+       "p": [
+        [
+         5,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "答案 5：第 1 天买、第 4 天卖。贪心成立因为「最优卖出日」前面的最低价一定被 minp 记住了"
+     }
+    ]
+   }
+  },
+  {
+   "id": "jump-game",
+   "num": 2,
+   "leet_id": 55,
+   "title_cn": "跳跃游戏",
+   "title_en": "Jump Game",
+   "difficulty": "中等",
+   "category": "greedy",
+   "tags": [
+    "贪心",
+    "数组",
+    "动态规划"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个非负整数数组 `nums`，最初位于第一个下标，数组中每个元素代表在该位置可以跳跃的最大长度。判断你是否能够到达最后一个下标。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [2,3,1,1,4]",
+      "output": "true"
+     },
+     {
+      "input": "nums = [3,2,1,0,4]",
+      "output": "false"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 10⁴",
+     "0 <= nums[i] <= 10⁵"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "维护「最远可达下标 `reach`」：从左往右扫，只要 `i ≤ reach` 就说明当前格可达，用 `i + nums[i]` 扩展 reach。",
+     "一旦 `i > reach`：出现不可达的空档，直接返回 false；能扫完则 true。",
+     "贪心正确性：可达性是一个前缀区间 [0, reach]，每一步只是尽力扩张右端点。"
+    ],
+    "steps": [
+     "`reach = 0`",
+     "遍历 i：若 `i > reach` → false",
+     "否则 `reach = max(reach, i + nums[i])`",
+     "`reach >= n-1` → true"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def canJump(self, nums: List[int]) -> int:\n        reach = 0\n        for i, x in enumerate(nums):\n            if i > reach:                # 空档：i 不可达\n                return False\n            reach = max(reach, i + x)    # 扩张可达区间\n            if reach >= len(nums) - 1:\n                return True\n        return True"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       2,
+       3,
+       1,
+       1,
+       4
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "var",
+      "id": "reach",
+      "v": 0,
+      "label": "最远可达"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：nums=[2,3,1,1,4]，能否从下标 0 跳到最后？维护可达区间右端点 reach"
+     },
+     {
+      "say": "i=0：可达（0 ≤ reach=0）。0+2=2 → reach=2，即下标 1、2 都能到",
+      "set": {
+       "reach": 2
+      },
+      "hl": {
+       "a": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=1：可达（1 ≤ 2）。1+3=4 → reach=4，直接覆盖末尾！",
+      "set": {
+       "reach": 4
+      },
+      "hl": {
+       "a": [
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=2：可达。2+1=3 < 4，不更新",
+      "hl": {
+       "a": [
+        [
+         2,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=3：可达。3+1=4，不变",
+      "hl": {
+       "a": [
+        [
+         3,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=4 = n-1 且 4 ≤ reach=4 → true ✓（3→4 跳 1 步收尾）",
+      "hl": {
+       "a": [
+        [
+         4,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "反例 [3,2,1,0,4]：reach 最多到 3，i=4 时 4 > reach → false —— 「0 空档」跳不过去"
+     }
+    ]
+   }
+  },
+  {
+   "id": "jump-game-ii",
+   "num": 3,
+   "leet_id": 45,
+   "title_cn": "跳跃游戏 II",
+   "title_en": "Jump Game II",
+   "difficulty": "中等",
+   "category": "greedy",
+   "tags": [
+    "贪心",
+    "数组",
+    "动态规划"
+   ],
+   "statement": {
+    "desc": [
+     "给定一个长度为 `n` 的非负整数数组 `nums`，最初位于 `nums[0]`，每个元素代表可以跳跃的最大长度，目标是**用最少跳跃次数**到达 `nums[n-1]`。题目保证可以到达。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [2,3,1,1,4]",
+      "output": "2（先跳到 3，再跳 3 步到末尾）"
+     },
+     {
+      "input": "nums = [2,3,0,1,4]",
+      "output": "2"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 10⁴",
+     "0 <= nums[i] <= 1000",
+     "保证可以到达 nums[n-1]"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "把跳跃次数想成 **BFS 分层**：第 1 跳能到的所有下标是第 1 层……用 `[curEnd, farthest]` 维护层边界。",
+     "扫到 `i == curEnd`（本层边界用尽）必须再跳一层：`jumps+1`，且新层边界就是扫到的 `farthest`。",
+     "贪心正确性：每跳一层都把可达区间推到当前推得最远的位置，层数即最少跳数。"
+    ],
+    "steps": [
+     "`jumps=0, curEnd=0, farthest=0`",
+     "遍历 i：`farthest = max(farthest, i+nums[i])`",
+     "当 `i == curEnd` 且 i 不是终点：jumps+1，curEnd = farthest",
+     "返回 jumps"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def jump(self, nums: List[int]) -> int:\n        jumps, cur_end, farthest = 0, 0, 0\n        for i in range(len(nums) - 1):       # 最后一个下标无需起跳\n            farthest = max(farthest, i + nums[i])\n            if i == cur_end:                 # 本层走完，必须起跳\n                jumps += 1\n                cur_end = farthest\n        return jumps"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       2,
+       3,
+       1,
+       1,
+       4
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "ptr",
+      "id": "i",
+      "on": "a",
+      "i": 0,
+      "name": "i"
+     },
+     {
+      "t": "var",
+      "id": "jumps",
+      "v": 0,
+      "label": "跳跃数"
+     },
+     {
+      "t": "var",
+      "id": "curEnd",
+      "v": 0,
+      "label": "本层边界"
+     },
+     {
+      "t": "var",
+      "id": "farthest",
+      "v": 0,
+      "label": "最远预达"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：nums=[2,3,1,1,4] 求最少跳跃次数。BFS 分层视角：本层边界 curEnd，扫描时记录 farthest"
+     },
+     {
+      "say": "i=0：farthest=2。i==curEnd(0) → 第 1 跳起跳，curEnd=2（第 1 层 = {1,2}）",
+      "ptr": {
+       "i": 0
+      },
+      "set": {
+       "farthest": 2,
+       "jumps": 1,
+       "curEnd": 2
+      },
+      "hl": {
+       "a": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=1：farthest = max(2, 1+3) = 4 —— 从 3 能一步到末尾",
+      "ptr": {
+       "i": 1
+      },
+      "set": {
+       "farthest": 4
+      },
+      "hl": {
+       "a": [
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=2：farthest = max(4, 2+1)=4。i==curEnd(2) → 第 2 跳，curEnd=4 ≥ n-1",
+      "ptr": {
+       "i": 2
+      },
+      "set": {
+       "curEnd": 4,
+       "jumps": 2
+      },
+      "hl": {
+       "a": [
+        [
+         2,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=3：farthest 不变（3+1=4）。i < curEnd，层未走完",
+      "ptr": {
+       "i": 3
+      },
+      "hl": {
+       "a": [
+        [
+         3,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=4 已是末尾（循环到 n-2 为止）→ 总跳跃 = 2 ✓（0→1→4）",
+      "hl": {
+       "a": [
+        [
+         4,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "每层的 [curEnd, farthest] 就是一次跳跃的可达窗口；窗口耗尽才起跳，保证次数最少"
+     }
+    ]
+   }
+  },
+  {
+   "id": "partition-labels",
+   "num": 4,
+   "leet_id": 763,
+   "title_cn": "划分字母区间",
+   "title_en": "Partition Labels",
+   "difficulty": "中等",
+   "category": "greedy",
+   "tags": [
+    "贪心",
+    "哈希表",
+    "双指针",
+    "字符串"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个字符串 `s`，要求把这个字符串划分为尽可能多的片段，使得**同一字母最多出现在一个片段中**。返回每个片段的长度列表。"
+    ],
+    "examples": [
+     {
+      "input": "s = \"abccbefgf\"",
+      "output": "[1,4,1,3]"
+     },
+     {
+      "input": "s = \"eccbbbbdec\"",
+      "output": "[10]"
+     }
+    ],
+    "constraints": [
+     "1 <= s.length <= 500",
+     "s 仅由小写英文字母组成"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "两步贪心：① 先扫描记录每个字母**最后一次出现**的下标 `last[c]`；② 再扫一遍维护当前段 `end = max(end, last[s[i]])`——段内所有字母的最远出现。",
+     "当 `i == end`：当前段已包含其中所有字母的全部出现，可以在此切割。",
+     "正确性：段一旦包含字母 c，就必须延伸到 last[c]，否则 c 会跨段；i==end 是「不得不切又必须切」的最早时机，切得最多。"
+    ],
+    "steps": [
+     "遍历一遍记录 `last[字母]`",
+     "再遍历：`end = max(end, last[s[i]])`",
+     "`i == end` → 切一段（长度 i - anchor + 1），anchor = i + 1",
+     "返回所有段长"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(26)"
+    },
+    "code": "class Solution:\n    def partitionLabels(self, s: str) -> List[int]:\n        last = {c: i for i, c in enumerate(s)}   # 每字母最后出现位置\n        res, anchor, end = [], 0, 0\n        for i, c in enumerate(s):\n            end = max(end, last[c])              # 段必须覆盖到最远出现\n            if i == end:                         # 所有字母都收齐了 → 切！\n                res.append(i - anchor + 1)\n                anchor = i + 1\n        return res"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "s",
+      "vals": [
+       "a",
+       "b",
+       "c",
+       "c",
+       "b",
+       "e",
+       "f",
+       "g",
+       "f"
+      ],
+      "label": "s"
+     },
+     {
+      "t": "map",
+      "id": "last",
+      "label": "last[字母]"
+     },
+     {
+      "t": "var",
+      "id": "end",
+      "v": 0,
+      "label": "段尾 end"
+     },
+     {
+      "t": "var",
+      "id": "anchor",
+      "v": 0,
+      "label": "段首"
+     },
+     {
+      "t": "array",
+      "id": "parts",
+      "vals": [],
+      "label": "段长"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：把 s='abccbefgf' 切成最多段，同字母不跨段。先扫一遍记录每个字母的最后出现位置",
+      "add": {
+       "last": [
+        [
+         "a",
+         0
+        ],
+        [
+         "b",
+         4
+        ],
+        [
+         "c",
+         3
+        ],
+        [
+         "e",
+         5
+        ],
+        [
+         "f",
+         8
+        ],
+        [
+         "g",
+         7
+        ]
+       ]
+      },
+      "hl": {
+       "last": [
+        [
+         0,
+         null
+        ],
+        [
+         1,
+         null
+        ],
+        [
+         2,
+         null
+        ],
+        [
+         3,
+         null
+        ],
+        [
+         4,
+         null
+        ],
+        [
+         5,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=0：a 的 last=0 → end=0 = i → 切！段 \"a\" 长 1，anchor=1",
+      "set": {
+       "end": 0,
+       "parts": [
+        [
+         0,
+         1
+        ]
+       ],
+       "anchor": 1
+      },
+      "hl": {
+       "s": [
+        [
+         0,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=1：b 的 last=4 → end=4（段必须延伸到 4，因为 b 还会再出现）",
+      "set": {
+       "end": 4
+      },
+      "hl": {
+       "s": [
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=2,3：c 的 last=3 ≤ 4，end 不变",
+      "hl": {
+       "s": [
+        [
+         2,
+         null
+        ],
+        [
+         3,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=4：b 的 last=4，end 仍是 4 = i → 切！段 \"bccb\" 长 4，anchor=5",
+      "set": {
+       "parts": [
+        [
+         0,
+         1
+        ],
+        [
+         1,
+         4
+        ]
+       ],
+       "anchor": 5
+      },
+      "hl": {
+       "s": [
+        [
+         4,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=5：e 的 last=5 = i → 切！段 \"e\" 长 1",
+      "set": {
+       "parts": [
+        [
+         0,
+         1
+        ],
+        [
+         1,
+         4
+        ],
+        [
+         2,
+         1
+        ]
+       ],
+       "anchor": 6
+      },
+      "hl": {
+       "s": [
+        [
+         5,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=6：f 的 last=8 → end=8；i=7：g 的 last=7 ≤ 8",
+      "set": {
+       "end": 8
+      },
+      "hl": {
+       "s": [
+        [
+         6,
+         null
+        ],
+        [
+         7,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=8：f 的 last=8 = i → 切！段 \"fgf\" 长 3 ✓",
+      "set": {
+       "parts": [
+        [
+         0,
+         1
+        ],
+        [
+         1,
+         4
+        ],
+        [
+         2,
+         1
+        ],
+        [
+         3,
+         3
+        ]
+       ]
+      },
+      "hl": {
+       "s": [
+        [
+         8,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "答案 [1,4,1,3]：贪心本质 —— 段尾 = 段内所有字母的最远出现，一到 end 立刻切"
+     }
+    ]
+   }
+  }
+ ]
+}

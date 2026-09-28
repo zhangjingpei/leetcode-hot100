@@ -1,0 +1,2376 @@
+{
+ "problems": [
+  {
+   "id": "climbing-stairs",
+   "num": 1,
+   "leet_id": 70,
+   "title_cn": "爬楼梯",
+   "title_en": "Climbing Stairs",
+   "difficulty": "简单",
+   "category": "dp",
+   "tags": [
+    "记忆化搜索",
+    "数学",
+    "动态规划"
+   ],
+   "statement": {
+    "desc": [
+     "假设你正在爬楼梯，需要 `n` 阶你才能到达楼顶。每次可以爬 `1` 或 `2` 个台阶，问有多少种不同的方法可以爬到楼顶。"
+    ],
+    "examples": [
+     {
+      "input": "n = 2",
+      "output": "2（1+1 或 2）"
+     },
+     {
+      "input": "n = 3",
+      "output": "3"
+     }
+    ],
+    "constraints": [
+     "1 <= n <= 45"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "到达第 i 阶的最后一步只有两种可能：从 i-1 跨 1 步、或从 i-2 跨 2 步，因此 `dp[i] = dp[i-1] + dp[i-2]` —— 就是斐波那契数列。",
+     "边界 dp[1]=1、dp[2]=2。可以用滚动变量把空间降到 O(1)。",
+     "这是最经典的「入门状态转移」：先想最后一步怎么走，再写出子问题合并式。"
+    ],
+    "steps": [
+     "`dp[i]` = 爬到第 i 阶的方法数",
+     "dp[1]=1，dp[2]=2",
+     "`dp[i] = dp[i-1] + dp[i-2]`",
+     "滚动变量优化到 O(1) 空间"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def climbStairs(self, n: int) -> int:\n        a, b = 1, 1          # a=dp[0], b=dp[1]\n        for _ in range(n - 1):\n            a, b = b, a + b\n        return b"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "dp",
+      "vals": [
+       1,
+       1,
+       null,
+       null,
+       null,
+       null
+      ],
+      "label": "dp（方法数）"
+     },
+     {
+      "t": "var",
+      "id": "ans",
+      "v": "?",
+      "label": "dp[5]"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：n=5 阶楼梯，每步跨 1 或 2，求方法数。最后一步要么从 i-1 跨 1、要么从 i-2 跨 2"
+     },
+     {
+      "say": "dp[0]=1（站在地面算 1 种）、dp[1]=1（跨 1 步）作为边界",
+      "hl": {
+       "dp": [
+        [
+         0,
+         null
+        ],
+        [
+         1,
+         null
+        ]
+       ]
+      }
+     },
+     {
+      "say": "dp[2] = dp[1] + dp[0] = 2（1+1 或直接 2）",
+      "set": {
+       "dp": [
+        [
+         2,
+         2
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         0,
+         null
+        ],
+        [
+         1,
+         null
+        ],
+        [
+         2,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "dp[3] = dp[2] + dp[1] = 3",
+      "set": {
+       "dp": [
+        [
+         3,
+         3
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         1,
+         null
+        ],
+        [
+         2,
+         null
+        ],
+        [
+         3,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "dp[4] = dp[3] + dp[2] = 5",
+      "set": {
+       "dp": [
+        [
+         4,
+         5
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         2,
+         null
+        ],
+        [
+         3,
+         null
+        ],
+        [
+         4,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "dp[5] = dp[4] + dp[3] = 8 ✓",
+      "set": {
+       "dp": [
+        [
+         5,
+         8
+        ]
+       ],
+       "ans": 8
+      },
+      "hl": {
+       "dp": [
+        [
+         3,
+         null
+        ],
+        [
+         4,
+         null
+        ],
+        [
+         5,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "dp[i] = dp[i-1] + dp[i-2] —— 每个状态只依赖前两个，滚动变量 O(1) 空间即可；这正是斐波那契数列"
+     }
+    ]
+   }
+  },
+  {
+   "id": "pascals-triangle",
+   "num": 2,
+   "leet_id": 118,
+   "title_cn": "杨辉三角",
+   "title_en": "Pascal's Triangle",
+   "difficulty": "简单",
+   "category": "dp",
+   "tags": [
+    "数组",
+    "动态规划"
+   ],
+   "statement": {
+    "desc": [
+     "给定行数 `numRows`，生成杨辉三角的前 `numRows` 行。在杨辉三角中，每个数是它**左上方和上方**的数的和。"
+    ],
+    "examples": [
+     {
+      "input": "numRows = 5",
+      "output": "[[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]"
+     },
+     {
+      "input": "numRows = 1",
+      "output": "[[1]]"
+     }
+    ],
+    "constraints": [
+     "1 <= numRows <= 30"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "每行两端是 1，中间 `row[j] = prev[j-1] + prev[j]`——上一行就是现成的状态。",
+     "逐行构造即可，无需任何搜索。"
+    ],
+    "steps": [
+     "第 1 行 [1]",
+     "每行首尾置 1",
+     "中间位 = 上一行相邻两数之和",
+     "重复 numRows 行"
+    ],
+    "complexity": {
+     "time": "O(n²)",
+     "space": "O(1)（不计输出）"
+    },
+    "code": "class Solution:\n    def generate(self, numRows: int) -> List[List[int]]:\n        res = []\n        for i in range(numRows):\n            row = [1] * (i + 1)\n            for j in range(1, i):        # 中间位 = 上一行相邻之和\n                row[j] = res[i - 1][j - 1] + res[i - 1][j]\n            res.append(row)\n        return res"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "prev",
+      "vals": [],
+      "label": "上一行"
+     },
+     {
+      "t": "array",
+      "id": "cur",
+      "vals": [],
+      "label": "当前行"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：生成杨辉三角前 5 行。每行首尾是 1，中间 = 上一行相邻两数之和"
+     },
+     {
+      "say": "第 1 行：[1]",
+      "set": {
+       "cur": [
+        [
+         0,
+         1
+        ]
+       ]
+      },
+      "hl": {
+       "cur": [
+        [
+         0,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 2 行：两端 1 → [1,1]（上一行挪给 prev）",
+      "set": {
+       "prev": [
+        [
+         0,
+         1
+        ]
+       ],
+       "cur": [
+        [
+         0,
+         1
+        ],
+        [
+         1,
+         1
+        ]
+       ]
+      },
+      "hl": {
+       "cur": [
+        [
+         0,
+         "#2ea44f"
+        ],
+        [
+         1,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 3 行：中间位 = prev[0] + prev[1] = 2 → [1,2,1]",
+      "set": {
+       "prev": [
+        [
+         0,
+         1
+        ],
+        [
+         1,
+         1
+        ]
+       ],
+       "cur": [
+        [
+         0,
+         1
+        ],
+        [
+         1,
+         2
+        ],
+        [
+         2,
+         1
+        ]
+       ]
+      },
+      "hl": {
+       "prev": [
+        [
+         0,
+         null
+        ],
+        [
+         1,
+         null
+        ]
+       ],
+       "cur": [
+        [
+         1,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 4 行：1+1=3、1+2=3 → [1,3,3,1]",
+      "set": {
+       "prev": [
+        [
+         0,
+         1
+        ],
+        [
+         1,
+         2
+        ],
+        [
+         2,
+         1
+        ]
+       ],
+       "cur": [
+        [
+         0,
+         1
+        ],
+        [
+         1,
+         3
+        ],
+        [
+         2,
+         3
+        ],
+        [
+         3,
+         1
+        ]
+       ]
+      },
+      "hl": {
+       "cur": [
+        [
+         1,
+         "#2ea44f"
+        ],
+        [
+         2,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "第 5 行：1+3=4、3+3=6、3+1=4 → [1,4,6,4,1] ✓",
+      "set": {
+       "prev": [
+        [
+         0,
+         1
+        ],
+        [
+         1,
+         3
+        ],
+        [
+         2,
+         3
+        ],
+        [
+         3,
+         1
+        ]
+       ],
+       "cur": [
+        [
+         0,
+         1
+        ],
+        [
+         1,
+         4
+        ],
+        [
+         2,
+         6
+        ],
+        [
+         3,
+         4
+        ],
+        [
+         4,
+         1
+        ]
+       ]
+      },
+      "hl": {
+       "cur": [
+        [
+         1,
+         "#2ea44f"
+        ],
+        [
+         2,
+         "#2ea44f"
+        ],
+        [
+         3,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "杨辉三角是「二维 DP 的入门样板」：每个格子的状态由上一行的两个邻居决定"
+     }
+    ]
+   }
+  },
+  {
+   "id": "house-robber",
+   "num": 3,
+   "leet_id": 198,
+   "title_cn": "打家劫舍",
+   "title_en": "House Robber",
+   "difficulty": "中等",
+   "category": "dp",
+   "tags": [
+    "数组",
+    "动态规划"
+   ],
+   "statement": {
+    "desc": [
+     "你是一个小偷，沿街有一排房屋，`nums[i]` 是第 i 间房内的现金。**相邻房屋**有连通的警报，不能偷相邻两间。求一晚能偷到的最高金额。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [2,7,9,3,1]",
+      "output": "12（偷 2+9+1）"
+     },
+     {
+      "input": "nums = [2,7,9,3,1] 隔一间偷也未必最优",
+      "output": "—"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 100",
+     "0 <= nums[i] <= 400"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "对每间房只有两个决策：偷 or 不偷。`dp[i]` 表示考虑前 i+1 间的最大金额：偷它 → `dp[i-2] + nums[i]`；不偷 → `dp[i-1]`，取大者。",
+     "「不能相邻」这个约束恰好把状态压缩到前两个，滚动变量 O(1) 空间。"
+    ],
+    "steps": [
+     "`dp[i]` = 考虑前 i 间房的最大收益",
+     "dp[0]=nums[0]，dp[1]=max(nums[0], nums[1])",
+     "`dp[i] = max(dp[i-1], dp[i-2] + nums[i])`",
+     "返回 dp[n-1]"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def rob(self, nums: List[int]) -> int:\n        prev, cur = 0, 0            # dp[i-2], dp[i-1]\n        for x in nums:\n            prev, cur = cur, max(cur, prev + x)\n        return cur"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       2,
+       7,
+       9,
+       3,
+       1
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "array",
+      "id": "dp",
+      "vals": [
+       null,
+       null,
+       null,
+       null,
+       null
+      ],
+      "label": "dp"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：[2,7,9,3,1] 不能偷相邻两家，求最大金额。dp[i] = max(不偷 i，偷 i)"
+     },
+     {
+      "say": "dp[0] = 2（只有一间，偷）",
+      "set": {
+       "dp": [
+        [
+         0,
+         2
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         0,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "dp[1] = max(dp[0]=2, nums[1]=7) = 7（两间偷钱多的）",
+      "set": {
+       "dp": [
+        [
+         1,
+         7
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         0,
+         null
+        ],
+        [
+         1,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=2：偷 9 → dp[0]+9 = 11；不偷 → dp[1] = 7 → dp[2] = 11",
+      "set": {
+       "dp": [
+        [
+         2,
+         11
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         0,
+         null
+        ],
+        [
+         1,
+         null
+        ],
+        [
+         2,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=3：偷 3 → dp[1]+3 = 10；不偷 → dp[2] = 11 → dp[3] = 11",
+      "set": {
+       "dp": [
+        [
+         3,
+         11
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         1,
+         null
+        ],
+        [
+         2,
+         null
+        ],
+        [
+         3,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=4：偷 1 → dp[2]+1 = 12；不偷 → dp[3] = 11 → dp[4] = 12 ✓（偷 2、9、1）",
+      "set": {
+       "dp": [
+        [
+         4,
+         12
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         2,
+         null
+        ],
+        [
+         3,
+         null
+        ],
+        [
+         4,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "答案 12。「偷或不偷」两种决策只依赖前两个状态 —— 滚动变量即可"
+     }
+    ]
+   }
+  },
+  {
+   "id": "perfect-squares",
+   "num": 4,
+   "leet_id": 279,
+   "title_cn": "完全平方数",
+   "title_en": "Perfect Squares",
+   "difficulty": "中等",
+   "category": "dp",
+   "tags": [
+    "广度优先搜索",
+    "数学",
+    "动态规划"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个整数 `n`，返回和为 `n` 的完全平方数的**最少数量**。完全平方数是能表示成某个整数平方的数（1、4、9、16 …）。"
+    ],
+    "examples": [
+     {
+      "input": "n = 12",
+      "output": "3（4+4+4）"
+     },
+     {
+      "input": "n = 13",
+      "output": "2（4+9）"
+     }
+    ],
+    "constraints": [
+     "1 <= n <= 10⁴"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "完全背包变形：`dp[i]` = 凑出 i 的最少平方数个数；`dp[i] = min(dp[i - s²]) + 1`，s² ≤ i。",
+     "直觉：i 的最后一块「砖」一定是某个平方数 s²，剩下的 i-s² 是同样形式的子问题。",
+     "答案上界很小（拉格朗日四平方定理保证 ≤ 4），DP 表足够。"
+    ],
+    "steps": [
+     "`dp[0] = 0`，其余 +∞",
+     "i 从 1 到 n：枚举平方数 `s² ≤ i`",
+     "`dp[i] = min(dp[i]) over dp[i - s²] + 1`",
+     "返回 dp[n]"
+    ],
+    "complexity": {
+     "time": "O(n × √n)",
+     "space": "O(n)"
+    },
+    "code": "class Solution:\n    def numSquares(self, n: int) -> int:\n        dp = [0] + [float(\"inf\")] * n\n        for i in range(1, n + 1):\n            s = 1\n            while s * s <= i:\n                dp[i] = min(dp[i], dp[i - s * s] + 1)\n                s += 1\n        return dp[n]"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "dp",
+      "vals": [
+       0,
+       null,
+       null,
+       null,
+       null,
+       null,
+       null,
+       null,
+       null,
+       null,
+       null,
+       null,
+       null
+      ],
+      "label": "dp（最少数量）"
+     },
+     {
+      "t": "var",
+      "id": "ans",
+      "v": "?",
+      "label": "dp[12]"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：n=12 = 4+4+4 → 3 个。dp[i] = 凑出 i 的最少平方数个数（完全背包思想）"
+     },
+     {
+      "say": "dp[0]=0（凑 0 用 0 个）。i=1..3 只能用 1：dp = [0,1,2,3]",
+      "set": {
+       "dp": [
+        [
+         1,
+         1
+        ],
+        [
+         2,
+         2
+        ],
+        [
+         3,
+         3
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         1,
+         "#2ea44f"
+        ],
+        [
+         2,
+         "#2ea44f"
+        ],
+        [
+         3,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=4：试 s²=4 → dp[0]+1 = 1！新平方数登场，dp[4] = 1",
+      "set": {
+       "dp": [
+        [
+         4,
+         1
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         0,
+         null
+        ],
+        [
+         4,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=5..8：dp[5]=min(dp[4]+1, dp[1]+1)=2；dp[6]=3；dp[7]=4；dp[8]=min(dp[7]+1, dp[4]+1)=2",
+      "set": {
+       "dp": [
+        [
+         5,
+         2
+        ],
+        [
+         6,
+         3
+        ],
+        [
+         7,
+         4
+        ],
+        [
+         8,
+         2
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         5,
+         "#2ea44f"
+        ],
+        [
+         8,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=9：试 s²=9 → dp[0]+1 = 1 → dp[9] = 1",
+      "set": {
+       "dp": [
+        [
+         9,
+         1
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         0,
+         null
+        ],
+        [
+         9,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=10,11：dp[10]=min(dp[9]+1, dp[6]+1)=2；dp[11]=min(dp[10]+1, dp[7]+1, dp[2]+1)=3",
+      "set": {
+       "dp": [
+        [
+         10,
+         2
+        ],
+        [
+         11,
+         3
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=12：试 9 → dp[3]+1=4；试 4 → dp[8]+1=3 ✓ → dp[12] = 3",
+      "set": {
+       "dp": [
+        [
+         12,
+         3
+        ]
+       ],
+       "ans": 3
+      },
+      "hl": {
+       "dp": [
+        [
+         8,
+         null
+        ],
+        [
+         3,
+         null
+        ],
+        [
+         12,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "答案 3（4+4+4）。每格枚举「最后一块砖」是哪个平方数 —— 完全背包的典型填表顺序"
+     }
+    ]
+   }
+  },
+  {
+   "id": "coin-change",
+   "num": 5,
+   "leet_id": 322,
+   "title_cn": "零钱兑换",
+   "title_en": "Coin Change",
+   "difficulty": "中等",
+   "category": "dp",
+   "tags": [
+    "广度优先搜索",
+    "数组",
+    "动态规划"
+   ],
+   "statement": {
+    "desc": [
+     "给你整数数组 `coins`（不同面额）和整数 `amount`，计算凑成总金额所需的**最少硬币个数**。每种硬币数量无限；凑不出返回 `-1`。"
+    ],
+    "examples": [
+     {
+      "input": "coins = [1,2,5], amount = 11",
+      "output": "3（5+5+1）"
+     },
+     {
+      "input": "coins = [2], amount = 3",
+      "output": "-1"
+     }
+    ],
+    "constraints": [
+     "1 <= coins.length <= 12",
+     "1 <= coins[i] <= 2³¹ - 1",
+     "0 <= amount <= 10⁴"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "与 279 完全同构，只是「砖块」换成给定面额：`dp[a] = min(dp[a - coin]) + 1` 对每种 coin 取 min。",
+     "dp[0]=0；无解保持 ∞。完全背包正序遍历金额（同一种硬币可重复用）。"
+    ],
+    "steps": [
+     "`dp[0] = 0`",
+     "a 从 1 到 amount：对每种 coin ≤ a 取 `dp[a-coin] + 1` 的最小值",
+     "dp[amount] 为 ∞ → -1"
+    ],
+    "complexity": {
+     "time": "O(amount × |coins|)",
+     "space": "O(amount)"
+    },
+    "code": "class Solution:\n    def coinChange(self, coins: List[int], amount: int) -> int:\n        dp = [0] + [float(\"inf\")] * amount\n        for a in range(1, amount + 1):\n            for c in coins:\n                if c <= a:\n                    dp[a] = min(dp[a], dp[a - c] + 1)\n        return dp[amount] if dp[amount] != float(\"inf\") else -1"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "dp",
+      "vals": [
+       0,
+       null,
+       null,
+       null,
+       null,
+       null,
+       null,
+       null,
+       null,
+       null,
+       null,
+       null
+      ],
+      "label": "dp（最少硬币）"
+     },
+     {
+      "t": "map",
+      "id": "coins",
+      "label": "面额",
+      "kvs": [
+       [
+        "1",
+        "✓"
+       ],
+       [
+        "2",
+        "✓"
+       ],
+       [
+        "5",
+        "✓"
+       ]
+      ]
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：coins=[1,2,5]，amount=11 → 5+5+1 共 3 枚。dp[a] = 凑出 a 的最少硬币数"
+     },
+     {
+      "say": "a=1：只能用 1 → dp[1] = 1",
+      "set": {
+       "dp": [
+        [
+         1,
+         1
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         0,
+         null
+        ],
+        [
+         1,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "a=2：用 2 一枚搞定 → dp[2] = 1（比 dp[1]+1 = 2 优）",
+      "set": {
+       "dp": [
+        [
+         2,
+         1
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         0,
+         null
+        ],
+        [
+         2,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "a=3：dp[2]+1 = 2（2+1）；a=4：dp[2]+1 = 2（2+2）",
+      "set": {
+       "dp": [
+        [
+         3,
+         2
+        ],
+        [
+         4,
+         2
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         2,
+         null
+        ],
+        [
+         3,
+         "#2ea44f"
+        ],
+        [
+         4,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "a=5：用 5 → dp[0]+1 = 1 ✓ 大面额发力",
+      "set": {
+       "dp": [
+        [
+         5,
+         1
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         0,
+         null
+        ],
+        [
+         5,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "a=6..10：dp = [2,3,3,3,2]（dp[10] = dp[5]+1 = 2 用两张 5）",
+      "set": {
+       "dp": [
+        [
+         6,
+         2
+        ],
+        [
+         7,
+         3
+        ],
+        [
+         8,
+         3
+        ],
+        [
+         9,
+         3
+        ],
+        [
+         10,
+         2
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         10,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "a=11：试 5 → dp[6]+1 = 3 ✓（5+5+1）→ dp[11] = 3",
+      "set": {
+       "dp": [
+        [
+         11,
+         3
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         6,
+         null
+        ],
+        [
+         11,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "答案 3。与 279/完全背包同构：金额为外层、硬币为内层的正序填表"
+     }
+    ]
+   }
+  },
+  {
+   "id": "word-break",
+   "num": 6,
+   "leet_id": 139,
+   "title_cn": "单词拆分",
+   "title_en": "Word Break",
+   "difficulty": "中等",
+   "category": "dp",
+   "tags": [
+    "字典树",
+    "记忆化搜索",
+    "哈希表",
+    "字符串",
+    "动态规划"
+   ],
+   "statement": {
+    "desc": [
+     "给你字符串 `s` 和字符串列表 `wordDict` 作字典，判断 `s` 能否由字典中的单词**拼接而成**（字典单词可重复使用）。"
+    ],
+    "examples": [
+     {
+      "input": "s = \"applepenapple\", wordDict = [\"apple\",\"pen\"]",
+      "output": "true"
+     },
+     {
+      "input": "s = \"catsandog\", wordDict = [\"cats\",\"dog\",\"sand\",\"and\",\"cat\"]",
+      "output": "false"
+     }
+    ],
+    "constraints": [
+     "1 <= s.length <= 300",
+     "1 <= wordDict.length <= 1000",
+     "wordDict 中所有字符串互不相同"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "`dp[i]` = s 的前 i 个字符能否被拆分。转移：存在 j < i 使 `dp[j]` 为真且 `s[j:i]` 在字典里。",
+     "dp[0] = true（空串是基准）。把「拼接」反过来想：最后一个单词占掉 s[j:i]，剩下前缀 dp[j] 必须可拆。",
+     "枚举单词长度可加速；配合字典树可做到接近 O(n·最长词)。"
+    ],
+    "steps": [
+     "`dp[0] = true`",
+     "i 从 1 到 n：枚举分割点 j",
+     "`dp[i] = OR( dp[j] && s[j:i] ∈ dict )`",
+     "返回 dp[n]"
+    ],
+    "complexity": {
+     "time": "O(n²)（可优化）",
+     "space": "O(n)"
+    },
+    "code": "class Solution:\n    def wordBreak(self, s: str, wordDict: List[str]) -> bool:\n        words = set(wordDict)\n        n = len(s)\n        dp = [False] * (n + 1)\n        dp[0] = True                       # 空串可拆\n        for i in range(1, n + 1):\n            for j in range(i):             # 最后一个单词 = s[j:i]\n                if dp[j] and s[j:i] in words:\n                    dp[i] = True\n                    break\n        return dp[n]"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "s",
+      "vals": [
+       "a",
+       "p",
+       "p",
+       "l",
+       "e",
+       "p",
+       "e",
+       "n",
+       "a",
+       "p",
+       "p",
+       "l",
+       "e"
+      ],
+      "label": "s = applepenapple"
+     },
+     {
+      "t": "array",
+      "id": "dp",
+      "vals": [
+       "✓",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F"
+      ],
+      "label": "dp（前 i 字符可拆）",
+      "cmap": {
+       "✓": "#d1f5d3"
+      }
+     },
+     {
+      "t": "var",
+      "id": "ans",
+      "v": "?",
+      "label": "dp[13]"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：s='applepenapple'，字典 [apple, pen]，能否拼出？dp[i] = 前 i 个字符能否拆分"
+     },
+     {
+      "say": "dp[0] = true（空串基准）",
+      "set": {
+       "dp": [
+        [
+         0,
+         "✓"
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         0,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=1..4：前缀 a/ap/app/appl 都不在字典 → F",
+      "set": {
+       "dp": [
+        [
+         1,
+         "F"
+        ],
+        [
+         2,
+         "F"
+        ],
+        [
+         3,
+         "F"
+        ],
+        [
+         4,
+         "F"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=5：s[0:5]='apple' ∈ dict 且 dp[0]=✓ → dp[5] = ✓",
+      "set": {
+       "dp": [
+        [
+         5,
+         "✓"
+        ]
+       ]
+      },
+      "hl": {
+       "s": [
+        [
+         0,
+         null
+        ],
+        [
+         1,
+         null
+        ],
+        [
+         2,
+         null
+        ],
+        [
+         3,
+         null
+        ],
+        [
+         4,
+         null
+        ]
+       ],
+       "dp": [
+        [
+         0,
+         null
+        ],
+        [
+         5,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=6,7：dp[6]=dp[7]=F（'applep' 等无解）",
+      "set": {
+       "dp": [
+        [
+         6,
+         "F"
+        ],
+        [
+         7,
+         "F"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=8：s[5:8]='pen' ∈ dict 且 dp[5]=✓ → dp[8] = ✓",
+      "set": {
+       "dp": [
+        [
+         8,
+         "✓"
+        ]
+       ]
+      },
+      "hl": {
+       "s": [
+        [
+         5,
+         null
+        ],
+        [
+         6,
+         null
+        ],
+        [
+         7,
+         null
+        ]
+       ],
+       "dp": [
+        [
+         5,
+         null
+        ],
+        [
+         8,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=9..12：F（'applepena'… 无匹配结尾）",
+      "set": {
+       "dp": [
+        [
+         9,
+         "F"
+        ],
+        [
+         10,
+         "F"
+        ],
+        [
+         11,
+         "F"
+        ],
+        [
+         12,
+         "F"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=13：s[8:13]='apple' ∈ dict 且 dp[8]=✓ → dp[13] = ✓ → true！",
+      "set": {
+       "dp": [
+        [
+         13,
+         "✓"
+        ]
+       ],
+       "ans": "✓"
+      },
+      "hl": {
+       "s": [
+        [
+         8,
+         null
+        ],
+        [
+         9,
+         null
+        ],
+        [
+         10,
+         null
+        ],
+        [
+         11,
+         null
+        ],
+        [
+         12,
+         null
+        ]
+       ],
+       "dp": [
+        [
+         8,
+         null
+        ],
+        [
+         13,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "转移即「最后一个单词」枚举：dp[i] = OR(dp[j] && s[j:i] ∈ dict)。dp[0]=true 是一切拼接的起点"
+     }
+    ]
+   }
+  },
+  {
+   "id": "longest-increasing-subsequence",
+   "num": 7,
+   "leet_id": 300,
+   "title_cn": "最长递增子序列",
+   "title_en": "Longest Increasing Subsequence",
+   "difficulty": "中等",
+   "category": "dp",
+   "tags": [
+    "树状数组",
+    "数组",
+    "二分查找",
+    "动态规划"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个整数数组 `nums`，找到其中**最长严格递增子序列**的长度。子序列可以删减元素但必须保持相对顺序。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [10,9,2,5,3,7,101,18]",
+      "output": "4（[2,3,7,101] 或 [2,5,7,101] 等）"
+     },
+     {
+      "input": "nums = [7,7,7,7,7]",
+      "output": "1"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 2500",
+     "-10⁴ <= nums[i] <= 10⁴"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "`dp[i]` = 以 nums[i] **结尾**的 LIS 长度：看所有比它小的前驱 `dp[j]+1` 取最大，没有前驱则 1。",
+     "注意「严格递增」：相等不算前驱。",
+     "进阶 O(n log n)：维护 tails 数组（长度 k 的递增子序列最小结尾），对每个数二分替换 —— tails 长度即答案。"
+    ],
+    "steps": [
+     "`dp[i]` = 以 nums[i] 结尾的 LIS 长度",
+     "遍历 j < i 且 nums[j] < nums[i]：dp[i] = max(dp[j] + 1)",
+     "无前驱则 dp[i] = 1",
+     "答案 = max(dp)"
+    ],
+    "complexity": {
+     "time": "O(n²)（二分优化 O(n log n)）",
+     "space": "O(n)"
+    },
+    "code": "class Solution:\n    def lengthOfLIS(self, nums: List[int]) -> int:\n        n = len(nums)\n        dp = [1] * n\n        for i in range(1, n):\n            for j in range(i):\n                if nums[j] < nums[i]:\n                    dp[i] = max(dp[i], dp[j] + 1)\n        return max(dp)"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       10,
+       9,
+       2,
+       5,
+       3,
+       7,
+       101,
+       18
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "array",
+      "id": "dp",
+      "vals": [
+       null,
+       null,
+       null,
+       null,
+       null,
+       null,
+       null,
+       null
+      ],
+      "label": "dp（以 i 结尾）"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：[10,9,2,5,3,7,101,18] 的最长严格递增子序列长 4（如 2,3,7,101）。dp[i] = 以 nums[i] 结尾的 LIS"
+     },
+     {
+      "say": "dp[0] = 1（10 单独成列）",
+      "set": {
+       "dp": [
+        [
+         0,
+         1
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         0,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "dp[1]：9 < 10 无前驱 → 1；dp[2]：2 前面没有更小的 → 1",
+      "set": {
+       "dp": [
+        [
+         1,
+         1
+        ],
+        [
+         2,
+         1
+        ]
+       ]
+      }
+     },
+     {
+      "say": "dp[3]：前驱 2（dp=1）→ dp[3] = 2（2,5）",
+      "set": {
+       "dp": [
+        [
+         3,
+         2
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         2,
+         null
+        ],
+        [
+         3,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "dp[4]：前驱 2 → dp[4] = 2（2,3）",
+      "set": {
+       "dp": [
+        [
+         4,
+         2
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         2,
+         null
+        ],
+        [
+         4,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "dp[5]：前驱取 max(dp[3], dp[4]) + 1 = 3（2,5,7 或 2,3,7）",
+      "set": {
+       "dp": [
+        [
+         5,
+         3
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         3,
+         null
+        ],
+        [
+         4,
+         null
+        ],
+        [
+         5,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "dp[6]：101 比谁都大 → max(dp)+1 = 4",
+      "set": {
+       "dp": [
+        [
+         6,
+         4
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         5,
+         null
+        ],
+        [
+         6,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "dp[7]：18 的前驱 7 → dp[5]+1 = 4 → 答案 max(dp) = 4 ✓",
+      "set": {
+       "dp": [
+        [
+         7,
+         4
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         5,
+         null
+        ],
+        [
+         7,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "答案 4。「以 i 结尾」是关键设定，否则不知道子序列尾部还能不能接新元素；二分优化见 tails 数组"
+     }
+    ]
+   }
+  },
+  {
+   "id": "maximum-product-subarray",
+   "num": 8,
+   "leet_id": 152,
+   "title_cn": "乘积最大子数组",
+   "title_en": "Maximum Product Subarray",
+   "difficulty": "中等",
+   "category": "dp",
+   "tags": [
+    "数组",
+    "动态规划"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个整数数组 `nums`，找出数组中乘积最大的**非空连续子数组**，返回该乘积。答案保证在 32 位整数范围内。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [2,3,-2,4]",
+      "output": "6（[2,3]）"
+     },
+     {
+      "input": "nums = [-2,0,-1]",
+      "output": "0"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 2 × 10⁴",
+     "-10 <= nums[i] <= 10",
+     "任何子数组的乘积都在 32 位整数范围内"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "乘法的陷阱：一个很小的（负）最大值乘上负数会**翻转成最大值**。所以同时维护「以 i 结尾的最大积 `f`」和「最小积 `g`」。",
+     "转移：`f = max(x, f·x, g·x)`；`g = min(x, f'·x, g·x)`（注意用更新前的 f！）。答案 = 历史最大的 f。"
+    ],
+    "steps": [
+     "同时维护以 i 结尾的最大积与最小积",
+     "`f = max(x, f_prev·x, g_prev·x)`",
+     "`g = min(x, f_prev·x, g_prev·x)`",
+     "答案 = max(所有 f)"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def maxProduct(self, nums: List[int]) -> int:\n        f = g = ans = nums[0]      # 以 i 结尾的最大积 / 最小积\n        for x in nums[1:]:\n            cands = (x, f * x, g * x)\n            f, g = max(cands), min(cands)\n            ans = max(ans, f)\n        return ans"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       2,
+       3,
+       -2,
+       4
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "array",
+      "id": "f",
+      "vals": [
+       null,
+       null,
+       null,
+       null
+      ],
+      "label": "最大积"
+     },
+     {
+      "t": "array",
+      "id": "g",
+      "vals": [
+       null,
+       null,
+       null,
+       null
+      ],
+      "label": "最小积"
+     },
+     {
+      "t": "var",
+      "id": "ans",
+      "v": "?",
+      "label": "答案"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：[2,3,-2,4] 乘积最大子数组 → 6。负数会翻转 max/min，所以双状态：最大积 f 与最小积 g"
+     },
+     {
+      "say": "i=0：f[0] = g[0] = 2",
+      "set": {
+       "f": [
+        [
+         0,
+         2
+        ]
+       ],
+       "g": [
+        [
+         0,
+         2
+        ]
+       ]
+      },
+      "hl": {
+       "f": [
+        [
+         0,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=1（x=3）：候选 3、2×3=6、2×3=6 → f=6、g=3",
+      "set": {
+       "f": [
+        [
+         1,
+         6
+        ]
+       ],
+       "g": [
+        [
+         1,
+         3
+        ]
+       ]
+      },
+      "hl": {
+       "f": [
+        [
+         1,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=2（x=-2）：候选 -2、6×(-2)=-12、3×(-2)=-6 → f=-2、g=-12（最大变小、最小变大 —— 翻转！）",
+      "set": {
+       "f": [
+        [
+         2,
+         -2
+        ]
+       ],
+       "g": [
+        [
+         2,
+         -12
+        ]
+       ]
+      },
+      "hl": {
+       "g": [
+        [
+         2,
+         "#fde68a"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=3（x=4）：候选 4、-2×4=-8、-12×4=-48 → f=4、g=-48；ans = max(6) = 6 ✓",
+      "set": {
+       "f": [
+        [
+         3,
+         4
+        ]
+       ],
+       "g": [
+        [
+         3,
+         -48
+        ]
+       ],
+       "ans": 6
+      },
+      "hl": {
+       "f": [
+        [
+         3,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "答案 6（[2,3]）。最小说到 g[2]=-12，正是它 × 负数才可能翻回最大 —— 这就是必须同时维护最小积的原因"
+     }
+    ]
+   }
+  },
+  {
+   "id": "partition-equal-subset-sum",
+   "num": 9,
+   "leet_id": 416,
+   "title_cn": "分割等和子集",
+   "title_en": "Partition Equal Subset Sum",
+   "difficulty": "中等",
+   "category": "dp",
+   "tags": [
+    "数组",
+    "动态规划"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个**只包含正整数**的非空数组 `nums`，判断能否把它分割成两个子集，使两个子集的元素和相等。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [1,5,11,5]",
+      "output": "true（[1,5,5] 与 [11]）"
+     },
+     {
+      "input": "nums = [1,2,3,5]",
+      "output": "false"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 200",
+     "1 <= nums[i] <= 100"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "总和 sum 为奇数直接 false；否则问题 = 0-1 背包：能否从数组里**恰好**选出一部分，和为 `target = sum/2`。",
+     "`dp[c]`（布尔）= 容量 c 能否被现有数字凑出。每个数字只能用一次 → **容量倒序**遍历（正序会重复使用）。",
+     "`dp[c] |= dp[c - num]`，dp[0] 恒真。"
+    ],
+    "steps": [
+     "sum 为奇数 → false；target = sum // 2",
+     "dp 布尔表，dp[0] = true",
+     "每个 num：容量 c 从 target 倒序到 num：`dp[c] |= dp[c-num]`",
+     "返回 dp[target]"
+    ],
+    "complexity": {
+     "time": "O(n × target)",
+     "space": "O(target)"
+    },
+    "code": "class Solution:\n    def canPartition(self, nums: List[int]) -> bool:\n        total = sum(nums)\n        if total % 2:\n            return False\n        target = total // 2\n        dp = [False] * (target + 1)\n        dp[0] = True\n        for num in nums:\n            for c in range(target, num - 1, -1):   # 倒序：0-1 背包不重复\n                dp[c] = dp[c] or dp[c - num]\n            if dp[target]:\n                return True\n        return dp[target]"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "a",
+      "vals": [
+       1,
+       5,
+       11,
+       5
+      ],
+      "label": "nums"
+     },
+     {
+      "t": "array",
+      "id": "dp",
+      "vals": [
+       "✓",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F"
+      ],
+      "label": "dp（容量 0..11）",
+      "cmap": {
+       "✓": "#d1f5d3"
+      }
+     },
+     {
+      "t": "var",
+      "id": "ans",
+      "v": "?",
+      "label": "dp[11]"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：[1,5,11,5] 能否分成和相等的两半？sum=22 → 目标：能否选出子集和 = 11。0-1 背包布尔表，容量倒序"
+     },
+     {
+      "say": "dp[0]=✓（什么都不选）。放入数字 1：dp[1] |= dp[0] → ✓",
+      "set": {
+       "dp": [
+        [
+         1,
+         "✓"
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         0,
+         null
+        ],
+        [
+         1,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "放入数字 5：c 从 11 倒序 → dp[6] |= dp[1] ✓；dp[5] |= dp[0] ✓（1+5 与 5 两种凑法）",
+      "set": {
+       "dp": [
+        [
+         5,
+         "✓"
+        ],
+        [
+         6,
+         "✓"
+        ]
+       ]
+      },
+      "hl": {
+       "dp": [
+        [
+         5,
+         "#2ea44f"
+        ],
+        [
+         6,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "放入数字 11：dp[11] |= dp[0] → ✓！dp[11] = true → true",
+      "set": {
+       "dp": [
+        [
+         11,
+         "✓"
+        ]
+       ],
+       "ans": "✓"
+      },
+      "hl": {
+       "dp": [
+        [
+         11,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "注意倒序的原因：正序会让 dp[c-num] 已经包含「本轮刚放入的 num」→ 同一个数字被用两次（变成完全背包）"
+     },
+     {
+      "say": "若不放 11 也可：1+5+5 = 11；两个子集 [1,5,5] 与 [11] ✓。0-1 背包一维化的核心就是「容量倒序」"
+     }
+    ]
+   }
+  },
+  {
+   "id": "longest-valid-parentheses",
+   "num": 10,
+   "leet_id": 32,
+   "title_cn": "最长有效括号",
+   "title_en": "Longest Valid Parentheses",
+   "difficulty": "困难",
+   "category": "dp",
+   "tags": [
+    "栈",
+    "字符串",
+    "动态规划"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个只包含 `'('` 和 `')'` 的字符串，找出最长的**格式正确且连续**的有效括号子串的长度。"
+    ],
+    "examples": [
+     {
+      "input": "s = \"()()())\"",
+      "output": "4（\"()()\"）"
+     },
+     {
+      "input": "s = \")(()())\"",
+      "output": "6"
+     }
+    ],
+    "constraints": [
+     "0 <= s.length <= 3 × 10⁴",
+     "s[i] 为 '(' 或 ')'"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "`dp[i]` = 以 i 结尾的最长有效括号长度（s[i] 必须是 ')' 才可能 > 0）：",
+     "情形 A：`s[i-1]=='('` → `dp[i] = dp[i-2] + 2`（...() 直接拼上）；",
+     "情形 B：`s[i-1]==')'` 且 `s[i-dp[i-1]-1]=='('` → 与更前面的有效段拼接：`dp[i] = dp[i-1] + 2 + dp[i-dp[i-1]-2]`。",
+     "dp 数组天然处理了「连续」要求 —— 断点处 dp=0。栈与正反向计数是另外两种解法。"
+    ],
+    "steps": [
+     "`dp[i]` = 以 i 结尾的最长有效括号长",
+     "s[i]==')' 且 s[i-1]=='('：dp[i] = dp[i-2] + 2",
+     "否则若 s[i-1]==')' 且前面隔着一段有效后还有 '('：dp[i] = dp[i-1] + 2 + dp[i-dp[i-1]-2]",
+     "答案 = max(dp)"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(n)"
+    },
+    "code": "class Solution:\n    def longestValidParentheses(self, s: str) -> int:\n        n = len(s)\n        dp = [0] * n                  # 以 i 结尾的最长有效长度\n        ans = 0\n        for i in range(1, n):\n            if s[i] == \")\":\n                if s[i - 1] == \"(\":    # 情形 A：...()\n                    dp[i] = (dp[i - 2] if i >= 2 else 0) + 2\n                elif (j := i - dp[i - 1] - 1) >= 0 and s[j] == \"(\":\n                    dp[i] = dp[i - 1] + 2 + (dp[j - 1] if j >= 1 else 0)\n                ans = max(ans, dp[i])\n        return ans"
+   },
+   "anim": {
+    "views": [
+     {
+      "t": "array",
+      "id": "s",
+      "vals": [
+       ")",
+       "(",
+       ")",
+       "(",
+       ")",
+       ")"
+      ],
+      "label": "s"
+     },
+     {
+      "t": "array",
+      "id": "dp",
+      "vals": [
+       null,
+       null,
+       null,
+       null,
+       null,
+       null
+      ],
+      "label": "dp（以 i 结尾）"
+     },
+     {
+      "t": "var",
+      "id": "ans",
+      "v": 0,
+      "label": "答案"
+     }
+    ],
+    "frames": [
+     {
+      "say": "题意：')()())' 最长有效连续子串 → \"()()\" 长 4。dp[i] = 以 i 结尾的最长有效长度"
+     },
+     {
+      "say": "i=0：')' 结尾不可能有效 → dp[0]=0",
+      "set": {
+       "dp": [
+        [
+         0,
+         0
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=1：s[1]=')' 且 s[0]='(' → 情形 A：dp[1] = dp[-1](0) + 2 = 2",
+      "set": {
+       "dp": [
+        [
+         1,
+         2
+        ]
+       ],
+       "ans": 2
+      },
+      "hl": {
+       "s": [
+        [
+         0,
+         null
+        ],
+        [
+         1,
+         null
+        ]
+       ],
+       "dp": [
+        [
+         1,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=2：s[2]='(' → dp[2]=0（'(' 结尾必无效）",
+      "set": {
+       "dp": [
+        [
+         2,
+         0
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=3：')' 且 s[2]='(' → 情形 A：dp[3] = dp[1] + 2 = 4？等等 —— dp[1]=2 + 2 = 4？s='()(？'\n实际 s[3]=')' 配 s[2]='(' 得 \"()\"；前面 dp[0]=0 → dp[3] = 0 + 2 = 2",
+      "set": {
+       "dp": [
+        [
+         3,
+         2
+        ]
+       ]
+      },
+      "hl": {
+       "s": [
+        [
+         2,
+         null
+        ],
+        [
+         3,
+         null
+        ]
+       ],
+       "dp": [
+        [
+         3,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=4：s[4]=')'、s[3]=')' → 情形 B：跳过 dp[3]=2 段，j = 4-2-1 = 1，s[1]='(' ✓ → dp[4] = dp[3]+2+dp[0] = 4 ✓（整段 \"()()\"）",
+      "set": {
+       "dp": [
+        [
+         4,
+         4
+        ]
+       ],
+       "ans": 4
+      },
+      "hl": {
+       "s": [
+        [
+         1,
+         null
+        ],
+        [
+         2,
+         null
+        ],
+        [
+         3,
+         null
+        ],
+        [
+         4,
+         null
+        ]
+       ],
+       "dp": [
+        [
+         4,
+         "#2ea44f"
+        ]
+       ]
+      }
+     },
+     {
+      "say": "i=5：')'、跳过 dp[4]=4 段后 j = 5-4-1 = 0，s[0]=')' ✗ → dp[5]=0 → 答案 4",
+      "set": {
+       "dp": [
+        [
+         5,
+         0
+        ]
+       ]
+      }
+     },
+     {
+      "say": "答案 4。情形 B 的「拼接更早的有效段」是本题最难的一步 —— dp 数组恰好编码了「连续有效段」的边界"
+     }
+    ]
+   }
+  }
+ ]
+}

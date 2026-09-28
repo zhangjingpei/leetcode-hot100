@@ -1,0 +1,1033 @@
+{
+ "problems": [
+  {
+   "id": "maximum-subarray",
+   "num": 1,
+   "leet_id": 53,
+   "title_cn": "最大子数组和",
+   "title_en": "Maximum Subarray",
+   "difficulty": "中等",
+   "category": "array",
+   "tags": [
+    "数组",
+    "分治",
+    "动态规划"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个整数数组 `nums`，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。",
+     "**子数组**是数组中的一个连续部分。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [-2,1,-3,4,-1,2,1,-5,4]",
+      "output": "6",
+      "explain": "连续子数组 [4,-1,2,1] 的和最大，为 6"
+     },
+     {
+      "input": "nums = [1]",
+      "output": "1"
+     },
+     {
+      "input": "nums = [-1]",
+      "output": "-1"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 10^5",
+     "-10^4 <= nums[i] <= 10^4"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "经典的「前缀贪心 / Kadane 算法」。定义 `cur` 为**以当前元素结尾**的最大子数组和。",
+     "转移只有两种选择：要么把当前元素接到前面的子数组后面（`cur + x`），要么从当前元素另起炉灶（`x`）——取较大者，即 `cur = max(x, cur + x)`。",
+     "直观理解：如果之前的 `cur` 是负数，它只会拖累后续的和，不如丢弃。全局答案 `best = max(best, cur)`。"
+    ],
+    "steps": [
+     "初始化 `cur = best = nums[0]`",
+     "从 `i = 1` 遍历：`cur = max(nums[i], cur + nums[i])`——接上前缀或另起炉灶",
+     "每步用 `cur` 更新全局 `best = max(best, cur)`",
+     "遍历结束返回 `best`"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def maxSubArray(self, nums: List[int]) -> int:\n        cur = best = nums[0]\n        for x in nums[1:]:\n            cur = max(x, cur + x)   # 接上前缀，或另起炉灶\n            best = max(best, cur)\n        return best\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "最大子数组和 · Kadane 贪心"
+    },
+    "views": [
+     {
+      "t": "array",
+      "id": "nums",
+      "vals": [
+       -2,
+       1,
+       -3,
+       4,
+       -1,
+       2,
+       1,
+       -5,
+       4
+      ]
+     },
+     {
+      "t": "ptr",
+      "id": "i",
+      "on": "nums",
+      "name": "i",
+      "i": 0,
+      "dy": 1
+     },
+     {
+      "t": "var",
+      "id": "cur",
+      "v": -2,
+      "label": "cur(以i结尾)"
+     },
+     {
+      "t": "var",
+      "id": "best",
+      "v": -2,
+      "label": "best"
+     }
+    ],
+    "frames": [
+     {
+      "say": "cur 表示「以当前元素结尾」的最大子数组和。初始 cur = best = -2",
+      "hl": {
+       "nums": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "i=1 (1)：cur = max(1, -2+1) = 1——前缀 -2 是负数，拖累总和，丢弃！best=1",
+      "ptr": {
+       "i": 1
+      },
+      "set": {
+       "cur": 1,
+       "best": 1
+      },
+      "hl": {
+       "nums": [
+        1
+       ]
+      }
+     },
+     {
+      "say": "i=2 (-3)：cur = max(-3, 1-3) = -2，接上仍更优；best 不变",
+      "ptr": {
+       "i": 2
+      },
+      "set": {
+       "cur": -2
+      },
+      "hl": {
+       "nums": [
+        2
+       ]
+      }
+     },
+     {
+      "say": "i=3 (4)：cur = max(4, -2+4) = 4——负前缀又拖累，另起炉灶！best=4",
+      "ptr": {
+       "i": 3
+      },
+      "set": {
+       "cur": 4,
+       "best": 4
+      },
+      "hl": {
+       "nums": [
+        3
+       ]
+      }
+     },
+     {
+      "say": "i=4 (-1)：cur = 4-1 = 3，继续接上；i=5 (2)：cur = 5，best=5",
+      "ptr": {
+       "i": 5
+      },
+      "set": {
+       "cur": 5,
+       "best": 5
+      },
+      "hl": {
+       "nums": [
+        4,
+        5
+       ]
+      }
+     },
+     {
+      "say": "i=6 (1)：cur = 5+1 = 6，best=6（这就是最终答案对应的子数组 [4,-1,2,1]）",
+      "ptr": {
+       "i": 6
+      },
+      "set": {
+       "cur": 6,
+       "best": 6
+      },
+      "hl": {
+       "nums": [
+        3,
+        4,
+        5,
+        6
+       ]
+      }
+     },
+     {
+      "say": "i=7 (-5)：cur = 1；i=8 (4)：cur = 5。best 始终是 6",
+      "ptr": {
+       "i": 8
+      },
+      "set": {
+       "cur": 5
+      },
+      "hl": {
+       "nums": [
+        7,
+        8
+       ]
+      }
+     },
+     {
+      "say": "遍历结束，最大子数组和 best=6（子数组 [4,-1,2,1]），一次遍历 O(n) O(1)",
+      "hl": {
+       "best": [
+        "v"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "merge-intervals",
+   "num": 2,
+   "leet_id": 56,
+   "title_cn": "合并区间",
+   "title_en": "Merge Intervals",
+   "difficulty": "中等",
+   "category": "array",
+   "tags": [
+    "数组",
+    "排序"
+   ],
+   "statement": {
+    "desc": [
+     "以数组 `intervals` 表示若干个区间的集合，其中单个区间为 `intervals[i] = [starti, endi]`。请你合并所有重叠的区间，并返回一个不重叠的区间数组，该数组需恰好覆盖输入中的所有区间。"
+    ],
+    "examples": [
+     {
+      "input": "intervals = [[1,3],[2,6],[8,10],[15,18]]",
+      "output": "[[1,6],[8,10],[15,18]]",
+      "explain": "[1,3] 与 [2,6] 重叠，合并为 [1,6]"
+     },
+     {
+      "input": "intervals = [[1,4],[4,5]]",
+      "output": "[[1,5]]",
+      "explain": "[1,4] 与 [4,5] 可视为重叠区间"
+     }
+    ],
+    "constraints": [
+     "1 <= intervals.length <= 10^4",
+     "intervals[i].length == 2",
+     "0 <= starti <= endi <= 10^4"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "**按左端点排序**后，重叠的区间必然相邻。维护「当前合并区间 `last`」，逐个考察后续区间：",
+     "若新区间的起点 `start ≤ last.end`，说明有重叠（或相接），把 `last` 的终点扩展为 `max(last.end, end)`；",
+     "否则无重叠，把 `last` 存入结果、以新区间开启新的合并段。排序 O(n log n) + 一遍扫描 O(n)。"
+    ],
+    "steps": [
+     "将 `intervals` 按起点升序排序",
+     "`last = intervals[0]`，`merged = []`",
+     "对每个后续区间 `[s, e]`：若 `s <= last[1]`，`last[1] = max(last[1], e)`（扩展）",
+     "否则把 `last` 追加进 `merged`，`last = [s, e]`",
+     "收尾时把最后一个 `last` 也追加进 `merged`，返回 `merged`"
+    ],
+    "complexity": {
+     "time": "O(n log n)",
+     "space": "O(log n)（排序栈）"
+    },
+    "code": "class Solution:\n    def merge(self, intervals: List[List[int]]) -> List[List[int]]:\n        intervals.sort(key=lambda x: x[0])   # 按左端点排序\n        merged = []\n        for iv in intervals:\n            if merged and iv[0] <= merged[-1][1]:   # 与上一段重叠\n                merged[-1][1] = max(merged[-1][1], iv[1])\n            else:\n                merged.append(list(iv))\n        return merged\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "合并区间 · 排序后线性扫描"
+    },
+    "views": [
+     {
+      "t": "array",
+      "id": "ivs",
+      "vals": [
+       "[1,3]",
+       "[2,6]",
+       "[8,10]",
+       "[15,18]"
+      ],
+      "label": "排序后"
+     },
+     {
+      "t": "ptr",
+      "id": "i",
+      "on": "ivs",
+      "name": "i",
+      "i": 1,
+      "dy": 1
+     },
+     {
+      "t": "var",
+      "id": "last",
+      "v": "[1,3]",
+      "label": "last(当前合并段)"
+     },
+     {
+      "t": "var",
+      "id": "merged",
+      "v": "[]",
+      "label": "merged"
+     }
+    ],
+    "frames": [
+     {
+      "say": "按左端点排序后，重叠区间必相邻。last=[1,3]，从 i=1 开始考察",
+      "hl": {
+       "ivs": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "i=1 [2,6]：起点 2 ≤ last 终点 3 → 重叠！扩展终点：last=[1,6]",
+      "set": {
+       "last": "[1,6]"
+      },
+      "hl": {
+       "ivs": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "i=2 [8,10]：起点 8 > 6 → 不重叠。先把 last 存入 merged=[ [1,6] ]，last 换成 [8,10]",
+      "ptr": {
+       "i": 2
+      },
+      "set": {
+       "merged": "[[1,6]]",
+       "last": "[8,10]"
+      },
+      "hl": {
+       "ivs": [
+        2
+       ]
+      }
+     },
+     {
+      "say": "i=3 [15,18]：起点 15 > 10 → 不重叠。merged 加 [8,10]，last=[15,18]",
+      "ptr": {
+       "i": 3
+      },
+      "set": {
+       "merged": "[[1,6],[8,10]]",
+       "last": "[15,18]"
+      },
+      "hl": {
+       "ivs": [
+        3
+       ]
+      }
+     },
+     {
+      "say": "扫描结束，收尾把最后一个 last 追加：merged=[[1,6],[8,10],[15,18]]",
+      "set": {
+       "merged": "[[1,6],[8,10],[15,18]]"
+      }
+     },
+     {
+      "say": "排序 O(n log n) + 扫描 O(n)。关键判断只有一句：新起点 ≤ 上一段终点即重叠",
+      "hl": {
+       "merged": [
+        "v"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "rotate-array",
+   "num": 3,
+   "leet_id": 189,
+   "title_cn": "轮转数组",
+   "title_en": "Rotate Array",
+   "difficulty": "中等",
+   "category": "array",
+   "tags": [
+    "数组",
+    "数学",
+    "双指针"
+   ],
+   "statement": {
+    "desc": [
+     "给定一个整数数组 `nums`，将数组中的元素向右轮转 `k` 个位置，其中 `k` 是非负数。",
+     "要求使用空间复杂度为 O(1) 的**原地**算法。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [1,2,3,4,5,6,7], k = 3",
+      "output": "[5,6,7,1,2,3,4]",
+      "explain": "向右轮转 3 位：[7,1,2,3,4,5,6] → [6,7,1,2,3,4,5] → [5,6,7,1,2,3,4]"
+     },
+     {
+      "input": "nums = [-1,-100,3,99], k = 2",
+      "output": "[3,99,-1,-100]"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 10^5",
+     "-2^31 <= nums[i] <= 2^31 - 1",
+     "0 <= k <= 10^5"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "环状替换较难写对，**三次反转法**最优雅：先把整体反转，再分别反转前 k 个与后 n-k 个。",
+     "原理：右旋 k 等价于把数组分成两段 `[A | B]`（B 是最后 k 个），结果为 `[B | A]`——这正好等于 `reverse(reverse(A) reverse(B))`。",
+     "注意先做 `k %= n` 防止 k 超过数组长度。三次反转各 O(n)，总时间 O(n)、空间 O(1)。"
+    ],
+    "steps": [
+     "`k %= n`，规范化 k",
+     "整体反转：`reverse(nums[0:n])`",
+     "反转前 k 个：`reverse(nums[0:k])`",
+     "反转后 n-k 个：`reverse(nums[k:n])`，完成轮转"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def rotate(self, nums: List[int], k: int) -> None:\n        n = len(nums)\n        k %= n\n\n        def reverse(l: int, r: int) -> None:  # 反转 [l, r]\n            while l < r:\n                nums[l], nums[r] = nums[r], nums[l]\n                l, r = l + 1, r - 1\n\n        reverse(0, n - 1)   # 整体反转\n        reverse(0, k - 1)   # 反转前 k 个\n        reverse(k, n - 1)   # 反转后 n-k 个\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "轮转数组 · 三次反转法"
+    },
+    "views": [
+     {
+      "t": "var",
+      "id": "k",
+      "v": 3,
+      "label": "k=3"
+     },
+     {
+      "t": "array",
+      "id": "nums",
+      "vals": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7
+      ]
+     }
+    ],
+    "frames": [
+     {
+      "say": "目标：右旋 3 位。三次反转法 = 整体反转 + 反转前 k 个 + 反转剩余部分",
+      "hl": {
+       "nums": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+       ]
+      }
+     },
+     {
+      "say": "原理：右旋 k 位 = 把数组分成 [A|B]（B 是末尾 k 个），结果是 [B|A]。而 [B|A] = 反转(反转A 反转B)，所以只需三次反转",
+      "hl": {
+       "nums": [
+        0,
+        1,
+        2,
+        3
+       ]
+      }
+     },
+     {
+      "say": "第一步：整体反转 [1..7] → [7,6,5,4,3,2,1]。此时目标的前 k 个（5,6,7）已就位但顺序反了",
+      "set": {
+       "nums": [
+        [
+         0,
+         7
+        ],
+        [
+         1,
+         6
+        ],
+        [
+         2,
+         5
+        ],
+        [
+         3,
+         4
+        ],
+        [
+         4,
+         3
+        ],
+        [
+         5,
+         2
+        ],
+        [
+         6,
+         1
+        ]
+       ]
+      },
+      "hl": {
+       "nums": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+       ]
+      }
+     },
+     {
+      "say": "第二步：反转前 k=3 个 [7,6,5] → [5,6,7] ✓",
+      "set": {
+       "nums": [
+        [
+         0,
+         5
+        ],
+        [
+         1,
+         6
+        ],
+        [
+         2,
+         7
+        ]
+       ]
+      },
+      "hl": {
+       "nums": [
+        0,
+        1,
+        2
+       ]
+      }
+     },
+     {
+      "say": "第三步：反转后 n-k=4 个 [4,3,2,1] → [1,2,3,4] ✓",
+      "set": {
+       "nums": [
+        [
+         3,
+         1
+        ],
+        [
+         4,
+         2
+        ],
+        [
+         5,
+         3
+        ],
+        [
+         6,
+         4
+        ]
+       ]
+      },
+      "hl": {
+       "nums": [
+        3,
+        4,
+        5,
+        6
+       ]
+      }
+     },
+     {
+      "say": "完成 [5,6,7,1,2,3,4]！原地 O(1) 空间，不需要额外数组",
+      "hl": {
+       "nums": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "product-of-array-except-self",
+   "num": 4,
+   "leet_id": 238,
+   "title_cn": "除自身以外数组的乘积",
+   "title_en": "Product of Array Except Self",
+   "difficulty": "中等",
+   "category": "array",
+   "tags": [
+    "数组",
+    "前缀和"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个整数数组 `nums`，返回数组 `answer`，其中 `answer[i]` 等于 `nums` 中除 `nums[i]` 之外其余各元素的乘积。",
+     "题目保证任意前缀和后缀的乘积都在 32 位整数范围内。请**不要使用除法**，且在 O(n) 时间内完成。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [1,2,3,4]",
+      "output": "[24,12,8,6]"
+     },
+     {
+      "input": "nums = [-1,1,0,-3,3]",
+      "output": "[0,0,9,0,0]"
+     }
+    ],
+    "constraints": [
+     "2 <= nums.length <= 10^5",
+     "-30 <= nums[i] <= 30",
+     "除法运算不被允许"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "`answer[i] = (i 左边所有数的积) × (i 右边所有数的积)`——两段前缀乘积。",
+     "先从左到右扫一遍：`answer[i]` 暂存「i 左侧全部乘积」（用一个滚动变量 `p`）；",
+     "再从右到左扫一遍：把 `answer[i]` 乘上「i 右侧全部乘积」。两次线性扫描、一个变量，空间 O(1)（输出数组不计）。"
+    ],
+    "steps": [
+     "初始化 `answer` 全 1，`p = 1`",
+     "正序扫描：`answer[i] = p`，然后 `p *= nums[i]`（p 变为左侧乘积含 nums[i]）",
+     "重置 `p = 1`",
+     "逆序扫描：`answer[i] *= p`，然后 `p *= nums[i]`（乘上右侧乘积）",
+     "返回 `answer`"
+    ],
+    "complexity": {
+     "time": "O(n)",
+     "space": "O(1)（输出数组除外）"
+    },
+    "code": "class Solution:\n    def productExceptSelf(self, nums: List[int]) -> List[int]:\n        n = len(nums)\n        ans = [1] * n\n        p = 1\n        for i in range(n):        # 先乘上左侧乘积\n            ans[i] = p\n            p *= nums[i]\n        p = 1\n        for i in range(n - 1, -1, -1):  # 再乘上右侧乘积\n            ans[i] *= p\n            p *= nums[i]\n        return ans\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "除自身以外数组的乘积 · 双向前缀积"
+    },
+    "views": [
+     {
+      "t": "array",
+      "id": "nums",
+      "vals": [
+       1,
+       2,
+       3,
+       4
+      ]
+     },
+     {
+      "t": "ptr",
+      "id": "i",
+      "on": "nums",
+      "name": "i",
+      "i": 0,
+      "dy": 1
+     },
+     {
+      "t": "array",
+      "id": "ans",
+      "vals": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "label": "answer"
+     },
+     {
+      "t": "var",
+      "id": "p",
+      "v": 1,
+      "label": "p(滚动积)"
+     }
+    ],
+    "frames": [
+     {
+      "say": "answer[i] = 左边全部之积 × 右边全部之积。第一遍从左到右填左侧乘积",
+      "hl": {
+       "ans": [
+        0,
+        1,
+        2,
+        3
+       ]
+      }
+     },
+     {
+      "say": "i=0：左边没有数 → ans[0]=1，p 变 1×1=1",
+      "ptr": {
+       "i": 0
+      },
+      "hl": {
+       "nums": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "i=1：ans[1]=p=1（左边只有 1），p=1×2=2",
+      "ptr": {
+       "i": 1
+      },
+      "set": {
+       "ans": [
+        [
+         1,
+         1
+        ]
+       ],
+       "p": 2
+      },
+      "hl": {
+       "nums": [
+        1
+       ]
+      }
+     },
+     {
+      "say": "i=2：ans[2]=p=2（左边 1×2），p=2×3=6",
+      "ptr": {
+       "i": 2
+      },
+      "set": {
+       "ans": [
+        [
+         2,
+         2
+        ]
+       ],
+       "p": 6
+      },
+      "hl": {
+       "nums": [
+        2
+       ]
+      }
+     },
+     {
+      "say": "i=3：ans[3]=p=6（左边 1×2×3），p=24。左遍完成 [1,1,2,6]",
+      "ptr": {
+       "i": 3
+      },
+      "set": {
+       "ans": [
+        [
+         3,
+         6
+        ]
+       ],
+       "p": 24
+      },
+      "hl": {
+       "nums": [
+        3
+       ]
+      }
+     },
+     {
+      "say": "第二遍从右到左乘上右侧乘积，p 重置为 1：ans[3] ×= 1 → 6，p=4",
+      "set": {
+       "p": 4
+      },
+      "hl": {
+       "ans": [
+        3
+       ]
+      }
+     },
+     {
+      "say": "i=2：ans[2] ×= 4 → 8，p=12",
+      "ptr": {
+       "i": 2
+      },
+      "set": {
+       "ans": [
+        [
+         2,
+         8
+        ]
+       ],
+       "p": 12
+      },
+      "hl": {
+       "ans": [
+        2
+       ]
+      }
+     },
+     {
+      "say": "i=1：ans[1] ×= 12 → 12，p=24",
+      "ptr": {
+       "i": 1
+      },
+      "set": {
+       "ans": [
+        [
+         1,
+         12
+        ]
+       ],
+       "p": 24
+      },
+      "hl": {
+       "ans": [
+        1
+       ]
+      }
+     },
+     {
+      "say": "i=0：ans[0] ×= 24 → 24。最终 [24,12,8,6]，不用除法、两次线性扫描",
+      "ptr": {
+       "i": 0
+      },
+      "set": {
+       "ans": [
+        [
+         0,
+         24
+        ]
+       ]
+      },
+      "hl": {
+       "ans": [
+        0,
+        1,
+        2,
+        3
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "first-missing-positive",
+   "num": 5,
+   "leet_id": 41,
+   "title_cn": "缺失的第一个正数",
+   "title_en": "First Missing Positive",
+   "difficulty": "困难",
+   "category": "array",
+   "tags": [
+    "数组",
+    "哈希表"
+   ],
+   "statement": {
+    "desc": [
+     "给你一个未排序的整数数组 `nums`，请你找出其中没有出现的最小的正整数。",
+     "请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。"
+    ],
+    "examples": [
+     {
+      "input": "nums = [1,2,0]",
+      "output": "3"
+     },
+     {
+      "input": "nums = [3,4,-1,1]",
+      "output": "2"
+     },
+     {
+      "input": "nums = [7,8,9,11,12]",
+      "output": "1"
+     }
+    ],
+    "constraints": [
+     "1 <= nums.length <= 5 * 10^5",
+     "-2^31 <= nums[i] <= 2^31 - 1"
+    ]
+   },
+   "solution": {
+    "idea": [
+     "关键观察：答案一定在 `[1, n+1]` 之间（n 是数组长度）——最好的情况是数组恰好装着 1..n。",
+     "于是可以**原地哈希**：把值 `x`（1 ≤ x ≤ n）通过交换搬到下标 `x-1` 上。交换后每个位置若 `nums[i] == i+1` 就是归位。",
+     "最后从左到右找第一个 `nums[i] != i+1` 的位置，答案即 `i+1`；若全部归位，答案是 `n+1`。交换总次数不超过 n，仍为 O(n)。"
+    ],
+    "steps": [
+     "遍历 `i`，只要 `1 <= nums[i] <= n` 且 `nums[nums[i]-1] != nums[i]`，就把 `nums[i]` 交换到它该在的下标",
+     "注意交换后 `i` 不前进（换来的数可能也要归位），直到当前位置无法继续归位",
+     "全部处理完后，扫描找第一个 `nums[i] != i + 1` 的下标，返回 `i + 1`",
+     "若 1..n 全部归位，返回 `n + 1`"
+    ],
+    "complexity": {
+     "time": "O(n)（每个数最多被换到位一次）",
+     "space": "O(1)"
+    },
+    "code": "class Solution:\n    def firstMissingPositive(self, nums: List[int]) -> int:\n        n = len(nums)\n        for i in range(n):\n            # 把 nums[i] 换到它该在的位置 nums[x-1] = x\n            while 1 <= nums[i] <= n and nums[nums[i] - 1] != nums[i]:\n                j = nums[i] - 1\n                nums[i], nums[j] = nums[j], nums[i]\n        for i in range(n):\n            if nums[i] != i + 1:\n                return i + 1\n        return n + 1\n"
+   },
+   "anim": {
+    "version": 1,
+    "meta": {
+     "title": "缺失的第一个正数 · 原地哈希"
+    },
+    "views": [
+     {
+      "t": "array",
+      "id": "nums",
+      "vals": [
+       3,
+       4,
+       -1,
+       1
+      ],
+      "cmap": {
+       "-1": "#e9ecef"
+      }
+     },
+     {
+      "t": "ptr",
+      "id": "i",
+      "on": "nums",
+      "name": "i",
+      "i": 0,
+      "dy": 1
+     }
+    ],
+    "frames": [
+     {
+      "say": "答案必在 [1, n+1]=[1,5]。思路：把值 x 归位到下标 x-1（原地哈希），再扫第一个不归位的位置",
+      "hl": {
+       "nums": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "i=0：nums[0]=3 → 应归位到下标 2。交换 nums[0] 与 nums[2] → [-1,4,3,1]",
+      "swap": {
+       "nums": [
+        0,
+        2
+       ]
+      },
+      "hl": {
+       "nums": [
+        0,
+        2
+       ]
+      }
+     },
+     {
+      "say": "i=0 换来 -1：不在 [1,4]，无法归位 → i 前进",
+      "ptr": {
+       "i": 1
+      },
+      "hl": {
+       "nums": [
+        0
+       ]
+      }
+     },
+     {
+      "say": "i=1：nums[1]=4 → 归位到下标 3。交换 → [-1,1,3,4]",
+      "swap": {
+       "nums": [
+        1,
+        3
+       ]
+      },
+      "hl": {
+       "nums": [
+        1,
+        3
+       ]
+      }
+     },
+     {
+      "say": "i=1 换来 1 → 归位到下标 0。交换 → [1,-1,3,4]；再换来的 -1 无法归位",
+      "swap": {
+       "nums": [
+        1,
+        0
+       ]
+      },
+      "hl": {
+       "nums": [
+        0,
+        1
+       ]
+      }
+     },
+     {
+      "say": "i=2：3 已在位（nums[2]=3=i+1）✓；i=3：4 已在位 ✓",
+      "ptr": {
+       "i": 3
+      },
+      "hl": {
+       "nums": [
+        2,
+        3
+       ]
+      }
+     },
+     {
+      "say": "归位完成。现在扫描：nums[0]=1 ✓，nums[1]=-1 ≠ 2 ✗ —— 第一个缺失的正数就是 2",
+      "hl": {
+       "nums": [
+        1
+       ]
+      }
+     },
+     {
+      "say": "答案 2。每个元素最多被换到位一次 → O(n)，无额外空间",
+      "hl": {
+       "nums": [
+        0,
+        1,
+        2,
+        3
+       ]
+      }
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,62 @@
+/* 基础样式：变量 / 顶栏 / 通用容器 */
+:root {
+  --bg: #f6f7f9;
+  --card: #ffffff;
+  --ink: #1f2430;
+  --muted: #6b7280;
+  --line: #e5e8ee;
+  --brand: #ff9432;
+  --brand-deep: #f97316;
+  --easy: #16a34a;
+  --easy-bg: #e8f7ee;
+  --medium: #d97706;
+  --medium-bg: #fdf3e3;
+  --hard: #dc2626;
+  --hard-bg: #fdeaea;
+  --accent: #4f6ef2;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(15, 23, 42, .06), 0 4px 14px rgba(15, 23, 42, .04);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.65;
+}
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+
+/* 顶栏 */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255, 255, 255, .92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner {
+  max-width: 1080px; margin: 0 auto; padding: 0 20px;
+  height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; }
+.brand-logo {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-deep));
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; letter-spacing: .5px;
+}
+.progress-wrap { display: flex; align-items: center; gap: 10px; }
+.progress-bar { width: 180px; height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--brand), var(--brand-deep)); border-radius: 4px; transition: width .4s; }
+.progress-text { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.container { max-width: 1080px; margin: 0 auto; padding: 22px 20px 60px; }
+.footer { text-align: center; color: #9aa3b2; font-size: 12.5px; padding: 26px 16px 34px; }
+.loading { text-align: center; color: var(--muted); padding: 80px 0; }
+
+/* 难度徽章 */
+.badge { display: inline-block; padding: 1px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+.badge.简单 { color: var(--easy); background: var(--easy-bg); }
+.badge.中等 { color: var(--medium); background: var(--medium-bg); }
+.badge.困难 { color: var(--hard); background: var(--hard-bg); }

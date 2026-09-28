@@ -1,0 +1,180 @@
+{
+  "problems": [
+    {
+      "id": "subarray-sum-equals-k",
+      "num": 1,
+      "leet_id": 560,
+      "title_cn": "和为 K 的子数组",
+      "title_en": "Subarray Sum Equals K",
+      "difficulty": "中等",
+      "category": "substring",
+      "tags": ["数组", "哈希表", "前缀和"],
+      "statement": {
+        "desc": [
+          "给你一个整数数组 `nums` 和一个整数 `k`，请你统计并返回该数组中和为 `k` 的**子数组**的个数。",
+          "子数组是数组中元素的连续非空序列。"
+        ],
+        "examples": [
+          { "input": "nums = [1,1,1], k = 2", "output": "2" },
+          { "input": "nums = [1,2,3], k = 3", "output": "2" }
+        ],
+        "constraints": ["1 <= nums.length <= 2 * 10^4", "-1000 <= nums[i] <= 1000", "-10^7 <= k <= 10^7"]
+      },
+      "solution": {
+        "idea": [
+          "前缀和 + 哈希表。设 `pre[i]` 是前 i 个数之和，那么「和为 k 的子数组 (j, i]」等价于 `pre[i] - pre[j] = k`，即 `pre[j] = pre[i] - k`。",
+          "所以从左到右维护每个**前缀和出现的次数**：走到 i 时，答案累加「`pre[i] - k` 这个值之前出现过几次」。",
+          "注意：先把空前缀 `pre[0] = 0` 计入哈希表（计数 1），否则会漏掉「从头开始的子数组」。这题数组含负数，不能用滑动窗口。"
+        ],
+        "steps": [
+          "初始化 `preCount = {0: 1}`（空前缀），`pre = 0`，`ans = 0`",
+          "遍历每个数：`pre += nums[i]`",
+          "若 `pre - k` 在哈希表中，`ans += preCount[pre - k]`",
+          "把当前前缀和计入：`preCount[pre] += 1`",
+          "遍历结束，`ans` 即为和为 k 的子数组个数"
+        ],
+        "complexity": { "time": "O(n)", "space": "O(n)" },
+        "code": "from collections import defaultdict\n\nclass Solution:\n    def subarraySum(self, nums: List[int], k: int) -> int:\n        pre_count = defaultdict(int)\n        pre_count[0] = 1          # 空前缀，和为 0\n        pre = ans = 0\n        for x in nums:\n            pre += x\n            ans += pre_count[pre - k]   # 之前有多少个前缀和 = pre-k\n            pre_count[pre] += 1\n        return ans\n"
+      },
+      "anim": {
+        "version": 1,
+        "meta": { "title": "和为 K 的子数组 · 前缀和 + 哈希" },
+        "views": [
+          { "t": "var", "id": "k", "v": 2, "label": "k" },
+          { "t": "array", "id": "nums", "vals": [1, 1, 1] },
+          { "t": "ptr", "id": "i", "on": "nums", "name": "i", "i": 0, "dy": 1 },
+          { "t": "var", "id": "pre", "v": 0, "label": "前缀和" },
+          { "t": "map", "id": "pc", "label": "preCount(前缀和→次数)" },
+          { "t": "var", "id": "ans", "v": 0, "label": "ans" }
+        ],
+        "frames": [
+          { "say": "核心：子数组 (j,i] 的和 = pre[i]-pre[j]。要找和为 2 的子数组，就是查「pre-2 之前出现过几次」", "add": { "pc": [["0", 1]] } },
+          { "say": "i=0：pre = 0+1 = 1。查 pre-k = -1 → 哈希表中不存在，ans 不变", "ptr": { "i": 0 }, "set": { "pre": 1 }, "hl": { "nums": [0] } },
+          { "say": "记录前缀和 1：preCount = {0:1, 1:1}", "add": { "pc": [["1", 1]] }, "hl": { "pc": [1] } },
+          { "say": "i=1：pre = 1+1 = 2。查 pre-k = 0 → 出现过 1 次！ans=1（对应子数组 [1,1]）", "ptr": { "i": 1 }, "set": { "pre": 2, "ans": 1 }, "hl": { "nums": [1], "pc": [0] } },
+          { "say": "记录前缀和 2", "add": { "pc": [["2", 1]] } },
+          { "say": "i=2：pre = 2+1 = 3。查 pre-k = 1 → 出现过 1 次！ans=2（对应子数组 nums[1..2]）", "ptr": { "i": 2 }, "set": { "pre": 3, "ans": 2 }, "hl": { "nums": [2], "pc": [1] } },
+          { "say": "记录后遍历结束，ans=2：两个和为 2 的子数组。一次遍历 O(n)", "add": { "pc": [["3", 1]] }, "hl": { "ans": ["v"] } }
+        ]
+      }
+    },
+    {
+      "id": "sliding-window-maximum",
+      "num": 2,
+      "leet_id": 239,
+      "title_cn": "滑动窗口最大值",
+      "title_en": "Sliding Window Maximum",
+      "difficulty": "困难",
+      "category": "substring",
+      "tags": ["队列", "数组", "滑动窗口", "单调队列", "堆"],
+      "statement": {
+        "desc": [
+          "给你一个整数数组 `nums`，有一个大小为 `k` 的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口内的 k 个数字，窗口每次向右移一位。",
+          "返回滑动窗口中的最大值。"
+        ],
+        "examples": [
+          { "input": "nums = [1,3,-1,-3,5,3,6,7], k = 3", "output": "[3,3,5,5,6,7]" },
+          { "input": "nums = [1], k = 1", "output": "[1]" }
+        ],
+        "constraints": ["1 <= nums.length <= 10^5", "-10^4 <= nums[i] <= 10^4", "1 <= k <= nums.length"]
+      },
+      "solution": {
+        "idea": [
+          "暴力每个窗口取 max 是 O(nk)。用**单调递减队列**可以把每个元素最多进队、出队各一次，总时间 O(n)。",
+          "队列里存**下标**，对应的值从队头到队尾递减。新元素入队前，把队尾所有「比它小」的元素弹出——它们在窗口内不可能再成为最大值（比它小又比它先过期）。",
+          "窗口滑动时检查队头下标是否过期（`<= i-k`），过期则从队头弹出；每个窗口的答案就是队头的值。"
+        ],
+        "steps": [
+          "初始化空队列 `dq`（存下标）与答案数组",
+          "对每个 `i`：先检查队头下标 `dq[0] <= i-k` 则弹出（过期）",
+          "从队尾弹出所有 `nums[dq[-1]] <= nums[i]` 的下标，然后 `i` 入队",
+          "当 `i >= k-1`（窗口形成）时，`ans = nums[dq[0]]`",
+          "返回答案数组"
+        ],
+        "complexity": { "time": "O(n)（每个元素进出队各一次）", "space": "O(k)" },
+        "code": "from collections import deque\n\nclass Solution:\n    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:\n        dq = deque()  # 存下标，对应值单调递减\n        ans = []\n        for i, x in enumerate(nums):\n            if dq and dq[0] <= i - k:      # 队头过期\n                dq.popleft()\n            while dq and nums[dq[-1]] <= x: # 队尾比 x 小的都没用了\n                dq.pop()\n            dq.append(i)\n            if i >= k - 1:\n                ans.append(nums[dq[0]])    # 队头即窗口最大值\n        return ans\n"
+      },
+      "anim": {
+        "version": 1,
+        "meta": { "title": "滑动窗口最大值 · 单调队列" },
+        "views": [
+          { "t": "var", "id": "k", "v": 3, "label": "k" },
+          { "t": "array", "id": "nums", "vals": [1, 3, -1, -3, 5, 3, 6, 7] },
+          { "t": "ptr", "id": "i", "on": "nums", "name": "i", "i": 0, "dy": 1 },
+          { "t": "queue", "id": "dq", "label": "dq(队头=最大)", "items": [] },
+          { "t": "array", "id": "ans", "vals": ["-", "-", "-", "-", "-", "-"], "label": "ans" }
+        ],
+        "frames": [
+          { "say": "单调递减队列存下标：队头永远是窗口最大值。新元素入队前先弹掉队尾比它小的（它们不可能再当最大）", "hl": { "nums": [0] } },
+          { "say": "i=0 (1)：入队 → dq=[1]", "ptr": { "i": 0 }, "add": { "dq": [1] }, "hl": { "nums": [0] } },
+          { "say": "i=1 (3)：3 比队尾 1 大 → 弹出 1，3 入队 → dq=[3]", "ptr": { "i": 1 }, "del": { "dq": 1 }, "add": { "dq": [3] }, "hl": { "nums": [1] } },
+          { "say": "i=2 (-1)：直接入队 → dq=[3,-1]。窗口 [1,3,-1] 形成最大值 = 队头 3 → ans[0]=3", "ptr": { "i": 2 }, "add": { "dq": [-1] }, "set": { "ans": [[0, 3]] }, "hl": { "nums": [0, 1, 2], "dq": [0] } },
+          { "say": "i=3 (-3)：入队 → dq=[3,-1,-3]。队头 3 的下标 1 仍在窗口 [1..3] 内 → ans[1]=3", "ptr": { "i": 3 }, "add": { "dq": [-3] }, "set": { "ans": [[1, 3]] }, "hl": { "nums": [1, 2, 3] } },
+          { "say": "i=4 (5)：队头 3 下标 1 过期（<= 4-3）→ 出队；5 弹掉队尾全部 → dq=[5] → ans[2]=5", "ptr": { "i": 4 }, "del": { "dq": { "n": 3, "side": "head" } }, "add": { "dq": [5] }, "set": { "ans": [[2, 5]] }, "hl": { "nums": [4], "dq": [0] } },
+          { "say": "i=5 (3)：3 < 5 直接入队 → dq=[5,3] → ans[3]=5", "ptr": { "i": 5 }, "add": { "dq": [3] }, "set": { "ans": [[3, 5]] }, "hl": { "nums": [5] } },
+          { "say": "i=6 (6)：6 弹掉 3、5 → dq=[6] → ans[4]=6", "ptr": { "i": 6 }, "del": { "dq": 2 }, "add": { "dq": [6] }, "set": { "ans": [[4, 6]] }, "hl": { "nums": [6] } },
+          { "say": "i=7 (7)：7 弹 6 → dq=[7] → ans[5]=7。完成 [3,3,5,5,6,7]，每个元素进出各一次 O(n)", "ptr": { "i": 7 }, "del": { "dq": 1 }, "add": { "dq": [7] }, "set": { "ans": [[5, 7]] }, "hl": { "ans": [0, 1, 2, 3, 4, 5] } }
+        ]
+      }
+    },
+    {
+      "id": "minimum-window-substring",
+      "num": 3,
+      "leet_id": 76,
+      "title_cn": "最小覆盖子串",
+      "title_en": "Minimum Window Substring",
+      "difficulty": "困难",
+      "category": "substring",
+      "tags": ["哈希表", "字符串", "滑动窗口"],
+      "statement": {
+        "desc": [
+          "给你一个字符串 `s`、一个字符串 `t`。返回 `s` 中涵盖 `t` 所有字符的**最短子串**。如果 `s` 中不存在涵盖 `t` 的子串，则返回空字符串 `\"\"`。",
+          "注意：如果 `s` 中存在这样的子串，我们保证它是唯一的答案。"
+        ],
+        "examples": [
+          { "input": "s = \"ADOBECODEBANC\", t = \"ABC\"", "output": "\"BANC\"", "explain": "最短覆盖子串 \"BANC\" 包含来自 t 的 A、B 和 C" },
+          { "input": "s = \"a\", t = \"a\"", "output": "\"a\"" },
+          { "input": "s = \"a\", t = \"aa\"", "output": "\"\"", "explain": "t 中两个 a 都必须被覆盖" }
+        ],
+        "constraints": ["m == s.length, n == t.length", "1 <= m, n <= 10^5", "s 和 t 由英文大小写字母组成"]
+      },
+      "solution": {
+        "idea": [
+          "不定长滑动窗口的经典模板。用**差值计数** `cnt`（初始为 t 的字符需求）和缺口数 `need`（还缺多少个目标字符）。",
+          "`r` 不断右移扩张：每进一个字符，若它「正被需要」则 `need--`。当 `need == 0` 时窗口已覆盖 t，进入收缩阶段。",
+          "收缩阶段：只要 `need == 0` 就记录答案并右移 `l` 移除左端字符（移掉仍需要的字符会让 `need++`、循环停止）。「扩张到覆盖 → 收缩到恰好」反复进行，每个字符进出各一次。"
+        ],
+        "steps": [
+          "`cnt = Counter(t)`，`need = len(t)`，`l = 0`，`best = (0, -1)`",
+          "`r` 遍历 `s`：若 `cnt[s[r]] > 0` 则 `need -= 1`；`cnt[s[r]] -= 1`",
+          "当 `need == 0`（窗口覆盖 t）：记录更短的 `(l, r)`，然后移除 `s[l]`——若 `cnt[s[l]]` 加回后 `> 0` 则 `need += 1`；`l += 1`",
+          "重复直到 `need > 0`（不再覆盖），回到扩张阶段",
+          "最后返回 `s[best_l : best_r+1]`"
+        ],
+        "complexity": { "time": "O(m + n)", "space": "O(|Σ|)" },
+        "code": "from collections import Counter\n\nclass Solution:\n    def minWindow(self, s: str, t: str) -> str:\n        cnt = Counter(t)\n        need = len(t)\n        l = 0\n        best_l, best_r = 0, -1\n        for r, ch in enumerate(s):\n            if cnt[ch] > 0:\n                need -= 1\n            cnt[ch] -= 1\n            while need == 0:                 # 窗口已覆盖 t，尝试收缩\n                if best_r == -1 or r - l < best_r - best_l:\n                    best_l, best_r = l, r\n                out = s[l]\n                cnt[out] += 1\n                if cnt[out] > 0:             # 移掉了仍需要的字符\n                    need += 1\n                l += 1\n        return \"\" if best_r == -1 else s[best_l:best_r + 1]\n"
+      },
+      "anim": {
+        "version": 1,
+        "meta": { "title": "最小覆盖子串 · 不定长滑动窗口" },
+        "views": [
+          { "t": "array", "id": "s", "vals": ["A", "D", "O", "B", "E", "C", "O", "D", "E", "B", "A", "N", "C"], "label": "s" },
+          { "t": "ptr", "id": "l", "on": "s", "name": "l", "i": 0, "dy": -1, "color": "#1d4ed8" },
+          { "t": "ptr", "id": "r", "on": "s", "name": "r", "i": 0, "dy": 1, "color": "#e5484d" },
+          { "t": "var", "id": "need", "v": 3, "label": "need(缺口)" },
+          { "t": "var", "id": "best", "v": "-", "label": "best" }
+        ],
+        "frames": [
+          { "say": "t=\"ABC\"，need=3。扩张 r 直到覆盖，再收缩 l 到恰好——这是不定长窗口模板", "hl": { "need": ["v"] } },
+          { "say": "r=0..5 扩张：A、B、C 依次补上缺口（D/O/E 是多余字符），need: 3→2→1→0。窗口 \"ADOBEC\" 长 6，best=6", "ptr": { "r": 5 }, "set": { "need": 0, "best": "ADOBEC(6)" }, "hl": { "s": [0, 3, 5] } },
+          { "say": "收缩：移除 s[0]=A——它是需要的字符，need 0→1，收缩停止。l=1，回到扩张阶段", "ptr": { "l": 1 }, "set": { "need": 1 }, "hl": { "s": [0] } },
+          { "say": "r=6..9：加入 O、D、E、B——B 变得多余，但缺口 A 还在，need 仍 1", "ptr": { "r": 9 }, "hl": { "s": [9] } },
+          { "say": "r=10 加入 A：need=0！窗口 [1..10] 长 10 太长；收缩连移 D、O、B、E（都多余）→ l=5，窗口 [5..10] 长 6 不更优；再移 C（需要）→ need=1，l=6", "ptr": { "r": 10, "l": 6 }, "set": { "need": 1, "best": "ADOBEC(6)" }, "hl": { "s": [5, 10] } },
+          { "say": "r=11 加入 N（多余）。缺口 C 仍缺，need=1", "ptr": { "r": 11 }, "hl": { "s": [11] } },
+          { "say": "r=12 加入 C：need=0！收缩：移 O(l=7)、移 D(l=8) → 窗口 [8..12] 长 5，best=5；移 E(l=9) → 长 4，best=\"BANC\"！移 B（需要）→ need=1，l=10", "ptr": { "r": 12, "l": 10 }, "set": { "need": 1, "best": "BANC(4)" }, "hl": { "s": [9, 10, 11, 12] } },
+          { "say": "r 走完，答案 \"BANC\" 长 4。每个字符最多进出窗口各一次 → O(m+n)", "hl": { "best": ["v"] } }
+        ]
+      }
+    }
+  ]
+}

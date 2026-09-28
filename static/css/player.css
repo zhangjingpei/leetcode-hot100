@@ -1,0 +1,43 @@
+/* 动画播放器 */
+.lcp {
+  background: #fbfcfe; border: 1px solid var(--line); border-radius: 14px;
+  overflow: hidden; box-shadow: var(--shadow);
+}
+.lcp-stage { padding: 10px 8px 2px; }
+.lcp-stage svg { width: 100%; height: auto; display: block; }
+
+.lcp-saybar {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 10px 18px 4px; min-height: 46px;
+}
+.lcp-step {
+  font-size: 12px; color: var(--muted); background: #eef2f7;
+  padding: 1px 9px; border-radius: 999px; font-variant-numeric: tabular-nums; flex-shrink: 0;
+}
+.lcp-say { font-size: 14.5px; color: #2a3446; }
+
+.lcp-ctrl {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px 14px; flex-wrap: wrap;
+}
+.lcp-btn {
+  width: 34px; height: 30px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--card); color: #3c4658; cursor: pointer; font-size: 12.5px;
+  display: flex; align-items: center; justify-content: center; transition: all .13s;
+}
+.lcp-btn:hover { border-color: var(--brand); color: var(--brand-deep); }
+.lcp-play { width: 44px; background: linear-gradient(135deg, var(--brand), var(--brand-deep)); color: #fff; border: none; font-size: 14px; }
+.lcp-play:hover { color: #fff; filter: brightness(1.06); }
+.lcp-range { flex: 1; min-width: 140px; accent-color: var(--brand-deep); height: 4px; cursor: pointer; }
+.lcp-count { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.lcp-speed {
+  border: 1px solid var(--line); border-radius: 8px; background: var(--card);
+  padding: 4px 8px; font-size: 12.5px; color: #3c4658; outline: none; cursor: pointer;
+}
+
+/* SVG 图元动画 */
+.shape { transition: transform .45s cubic-bezier(.4, 0, .2, 1), opacity .3s ease; }
+.shape rect, .shape circle, .shape text, .shape line, .shape path { transition: fill .35s, stroke .35s, stroke-width .35s; }
+.shape.out { opacity: 0 !important; }
+@keyframes lcpflash { 0% { opacity: 1; } 50% { opacity: .35; } 100% { opacity: 1; } }
+.shape.flash text { animation: lcpflash .5s ease; }
